@@ -1,0 +1,135 @@
+[main-layout] {
+  color: #eee;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    "menu header"
+    "menu content";
+}
+
+[main-background] {
+  background-image: url('../images/pattern.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-color: #333;
+}
+
+[main-menu] {
+  background-color: #444;
+  width: 2.6rem;
+  grid-area: menu;
+  padding: .3rem;
+  padding-top: .5rem;
+  display: grid;
+  grid-gap: .5rem;
+  grid-auto-rows: max-content;
+}
+
+[main-button] {
+  transition: all ease .2s;
+  box-shadow: 3px 3px 2px rgba(0, 0, 0, .075);
+  border: 0;
+  background-color: #555;
+  padding: .3rem;
+  border-radius: .2rem;
+  cursor: pointer;
+}
+
+[main-button]:hover {
+  background-color: #666;
+}
+
+[main-button][active], [main-button][active]:hover {
+  background-color: #777;
+}
+
+[main-content] {
+  grid-area: content;
+  justify-self: center;
+  margin: .5rem;
+  width: 95%;
+  max-width: 50rem;
+}
+
+[main-header] {
+  grid-area: header;
+  justify-self: center;
+  margin: .5rem;
+  display: flex;
+  width: 95%;
+  max-width: 50rem;
+}
+
+[main-search-box] {
+  flex: auto;
+  margin-right: 1rem;
+  font-family: 'Inter', Helvetica, Arial, sans-serif;
+  padding: 1rem;
+  border: 0;
+  box-sizing: border-box;
+  border-radius: .5rem;
+  box-shadow: 3px 3px 2px rgba(0, 0, 0, .4);
+}
+
+[main-search-box]:focus {
+  outline: none;
+}
+
+[main-header-button] {
+  align-self: center;
+  width: 1.5rem;
+  width: 1.5rem;
+  padding: .75rem;
+}
+
+[category-title] {
+  font-size: 1.5rem;
+  padding-bottom: .5rem;
+  border-bottom: 1px solid #444;
+}
+
+[category] {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 3rem;
+}
+
+[password] {
+  box-sizing: border-box;
+  width: calc(50% - .5rem);
+  padding: 1rem;
+  background-color: rgba(100, 100, 100, .3);
+  border-radius: .5rem;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: 1fr auto;
+  grid-template-areas: 
+    "title icon"
+    "description icon";
+}
+
+[password-title] {
+  grid-area: title;
+}
+
+[password-description] {
+  grid-area: description;
+  color: #aaa;
+}
+
+[password-icon] {
+  grid-area: icon;
+  width: 1rem;
+}
+
+@media (max-width: 56rem) {
+  [password] {
+    width: 100%;
+  }
+}
