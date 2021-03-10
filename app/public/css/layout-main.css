@@ -1,4 +1,4 @@
-[main-layout] {
+.main-layout {
   color: #eee;
   height: 100vh;
   display: grid;
@@ -9,7 +9,7 @@
     "menu content";
 }
 
-[main-background] {
+.main-background {
   background-image: url('../images/pattern.png');
   background-size: cover;
   background-position: center;
@@ -17,7 +17,7 @@
   background-color: #333;
 }
 
-[main-menu] {
+.main-menu {
   background-color: #444;
   width: 2.6rem;
   grid-area: menu;
@@ -28,7 +28,7 @@
   grid-auto-rows: max-content;
 }
 
-[main-button] {
+.main-button {
   transition: all ease .2s;
   box-shadow: 3px 3px 2px rgba(0, 0, 0, .075);
   border: 0;
@@ -38,15 +38,15 @@
   cursor: pointer;
 }
 
-[main-button]:hover {
+.main-button:hover {
   background-color: #666;
 }
 
-[main-button][active], [main-button][active]:hover {
+.main-button.active, .main-button.active:hover {
   background-color: #777;
 }
 
-[main-content] {
+.main-content {
   grid-area: content;
   justify-self: center;
   margin: .5rem;
@@ -54,7 +54,7 @@
   max-width: 50rem;
 }
 
-[main-header] {
+.main-header {
   grid-area: header;
   justify-self: center;
   margin: .5rem;
@@ -63,7 +63,7 @@
   max-width: 50rem;
 }
 
-[main-search-box] {
+.main-search-box {
   flex: auto;
   margin-right: 1rem;
   font-family: 'Inter', Helvetica, Arial, sans-serif;
@@ -74,24 +74,24 @@
   box-shadow: 3px 3px 2px rgba(0, 0, 0, .4);
 }
 
-[main-search-box]:focus {
+.main-search-box:focus {
   outline: none;
 }
 
-[main-header-button] {
+.main-header-button {
   align-self: center;
   width: 1.5rem;
   width: 1.5rem;
   padding: .75rem;
 }
 
-[category-title] {
+.category-title {
   font-size: 1.5rem;
   padding-bottom: .5rem;
   border-bottom: 1px solid #444;
 }
 
-[category] {
+.category {
   display: flex;
   flex-flow: row wrap;
   justify-content: space-between;
@@ -100,7 +100,7 @@
   margin-bottom: 3rem;
 }
 
-[password] {
+.password {
   box-sizing: border-box;
   width: calc(50% - .5rem);
   padding: 1rem;
@@ -114,22 +114,22 @@
     "description icon";
 }
 
-[password-title] {
+.password-title {
   grid-area: title;
 }
 
-[password-description] {
+.password-description {
   grid-area: description;
   color: #aaa;
 }
 
-[password-icon] {
+.password-icon {
   grid-area: icon;
   width: 1rem;
 }
 
 @media (max-width: 56rem) {
-  [password] {
+  .password {
     width: 100%;
   }
 }

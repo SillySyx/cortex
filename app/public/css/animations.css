@@ -16,10 +16,10 @@
   }
 }
 
-[animation-fade] {
+.animation-fade {
   animation: fade .5s;
 }
 
-[animation-spin] {
+.animation-spin {
   animation: spin 1s infinite linear;
 }
