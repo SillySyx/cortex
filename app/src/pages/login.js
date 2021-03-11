@@ -13,7 +13,7 @@ export class LoginPage extends React.Component {
       if (e.code === "Enter") {
          this.setState({view: "loading"});
 
-         setTimeout(() => this.props.history.push("/main"), 4000);
+         setTimeout(() => this.props.history.push("/main"), 1000);
       }
    }
 

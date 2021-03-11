@@ -23,6 +23,7 @@
   .login-loader {
     grid-area: content;
     width: 10rem;
+    height: 10rem;
   }
   
   .login-logo {
