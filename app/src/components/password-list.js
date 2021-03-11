@@ -1,8 +1,6 @@
 import React from 'react';
 import './password-list.css'
 
-import { test } from 'cortexWasm';
-
 import { Button } from './button';
 
 export class PasswordList extends React.Component {
@@ -10,8 +8,13 @@ export class PasswordList extends React.Component {
         super(props);
 
         this.state = {
-            categories: loadCategories(),
+            categories: [],
         };
+    }
+
+    async componentDidMount() {
+        const categories = await loadCategories();
+        this.setState({categories: categories});
     }
 
     render() {
@@ -43,11 +46,18 @@ export class PasswordList extends React.Component {
     }
 }
 
-function loadPasswords() {
+async function loadPasswords() {
+    const wasm = await window.wasm;
+    
+    console.log(wasm.test());
+    console.log(wasm.test2(2));
+    console.log(wasm.test3());
+    console.log(wasm.test4([4,8,2,5]));
+
     // localStorage.setItem("passwords", JSON.stringify([1,2,3]));
     // const data = JSON.parse(localStorage.getItem("passwords"));
 
-    console.log(test());
+
     // load password list from webassembly (decrypts bytes and returns password list)
 
     return [
@@ -76,8 +86,8 @@ function loadPasswords() {
     ];
 }
 
-function loadCategories() {
-    const passwords = loadPasswords();
+async function loadCategories() {
+    const passwords = await loadPasswords();
 
     return passwords
         .sort((a, b) => a.category.localeCompare(b.category))
