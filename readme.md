@@ -6,36 +6,18 @@
 
 
 # Features
-* Progressive web application
+* Offline progressive web application
 * Webassembly
+* Data encryption
+* Password manager
+* Knowledgebase
 
 
 # Requirements
 * Rust
-* NodeJS
 
-
-# Build
-**Setup**
+Setup
 ```
-rustup target add wasm32-unknown-unknown
-
-cd app
-npm i
+cargo install wasm-pack
+cargo +nightly install miniserve
 ```
-
-**Building wasm**
-```
-cd lib
-wasm-pack build --target no-modules
-```
-
-**Building app**
-```
-cd app
-npm build
-```
-
-
-# Release
-...

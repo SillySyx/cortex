@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500&display=swap');
 
+@import url('./animations.css');
+@import url('./layout-login.css');
+@import url('./layout-main.css');
+@import url('./main-button.css');
+
 * {
   font-family: 'Inter', Helvetica, Arial, sans-serif;
   margin: 0;
