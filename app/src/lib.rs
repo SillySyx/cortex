@@ -8,5 +8,5 @@ use yew::prelude::*;
 
 #[wasm_bindgen(start)]
 pub fn run_app() {
-    App::<components::PageLayout>::new().mount_to_body();
+    App::<components::App>::new().mount_to_body();
 }

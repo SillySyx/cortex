@@ -21,3 +21,8 @@ Setup
 cargo install wasm-pack
 cargo +nightly install miniserve
 ```
+
+
+# Resources
+* https://yew.rs/docs/en/
+* https://rustwasm.github.io/docs/wasm-bindgen/

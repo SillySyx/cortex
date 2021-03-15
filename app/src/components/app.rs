@@ -1,12 +1,13 @@
 use yew::prelude::*;
+use yew::services::ConsoleService;
 
 use super::{Messages, LoginPage, MainPage};
 
-pub struct PageLayout {
+pub struct App {
     page: &'static str,
 }
 
-impl Component for PageLayout {
+impl Component for App {
     type Message = Messages;
     type Properties = ();
 
@@ -18,10 +19,15 @@ impl Component for PageLayout {
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
-            Messages::ChangePage(page) => self.page = page,
-            _ => {},
-        };
-        true
+            Messages::ChangePage(page) => {
+                self.page = page;
+                true
+            },
+            Messages::UnlockApp(password) => {
+                self.unlock_app(password)
+            },
+            _ => false,
+        }
     }
 
     fn change(&mut self, _props: Self::Properties) -> ShouldRender {
@@ -29,18 +35,22 @@ impl Component for PageLayout {
     }
 
     fn view(&self) -> Html {
-        let change_page = |page| {
-            self.send_message(Messages::ChangePage(page));
-        };
         match self.page {
             "login" => html! {
-                <LoginPage change_page=change_page />
+                <LoginPage />
             },
             "main" => html! {
                 <MainPage />
             },
             _ => html! {},
         }
+    }
+}
+
+impl App {
+    fn unlock_app(&self, _password: &str) -> bool {
+        ConsoleService::log("unlock app");
+        true
     }
 }
 

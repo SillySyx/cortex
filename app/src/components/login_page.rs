@@ -1,24 +1,27 @@
 use yew::prelude::*;
-use yew::services::ConsoleService;
 
-use super::Messages;
+pub enum Message {
+    KeyPressed(KeyboardEvent),
+}
+
+#[derive(Clone, PartialEq, Properties)]
+pub struct Props {
+    pub unlock_app: Callback<&'static str>,
+}
 
 pub struct LoginPage {
+    props: Props,
     link: ComponentLink<Self>,
     view: &'static str,
 }
 
-#[derive(Properties, Clone, PartialEq)]
-struct Props {
-    change_page: Fn<&str>,
-}
-
 impl Component for LoginPage {
-    type Message = Messages;
+    type Message = Message;
     type Properties = Props;
 
-    fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
+    fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
         Self {
+            props,
             link,
             view: "login",
         }
@@ -26,19 +29,14 @@ impl Component for LoginPage {
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
-            Messages::LoginPageChangeView(view) => {
-                self.view = view;
-                true
-            },
-            Messages::LoginPageKeyPressed(key) => {
+            Message::KeyPressed(key) => {
                 if key.key() == String::from("Enter") {
-                    ConsoleService::log("huh");
-                    self.link.props.change_page("main");
+                    self.view = "loading";
+                    self.props.unlock_app.emit("");
                     return true;
                 }
                 false
-            },
-            _ => false,
+            }
         }
     }
 
@@ -57,7 +55,7 @@ impl Component for LoginPage {
                            class="login-box login-input" 
                            type="password" 
                            placeholder="Enter your password"
-                           onkeyup=self.link.callback(|e| Messages::LoginPageKeyPressed(e)) />
+                           onkeyup=self.link.callback(|e| Message::KeyPressed(e)) />
                     },
                     "loading" => html! {
                         <img class="login-box login-loader animation-spin" src="icons/loading.svg" alt="" />
