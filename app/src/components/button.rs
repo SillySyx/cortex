@@ -7,8 +7,7 @@ pub enum Messages {
 #[derive(Clone, PartialEq, Properties)]
 pub struct Props {
     pub active: bool,
-    pub name: &'static str,
-    pub icon: &'static str,
+    pub children: Children,
     pub clicked: Callback<()>,
 }
 
@@ -52,7 +51,7 @@ impl Component for Button {
 
         html! {
             <div class=("main-button", active) onclick=self.link.callback(|_| Messages::Clicked)>
-                <img src=self.props.icon alt=self.props.name />
+                { self.props.children.clone() }
             </div>
         }
     }

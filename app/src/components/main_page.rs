@@ -1,6 +1,6 @@
 use yew::prelude::*;
 
-use super::Button;
+use super::{Button, PasswordList};
 
 #[derive(PartialEq)]
 pub enum Views {
@@ -37,8 +37,8 @@ impl Component for MainPage {
         }
     }
 
-    fn change(&mut self, _props: Self::Properties) -> ShouldRender {
-        true
+    fn change(&mut self, _: Self::Properties) -> ShouldRender {
+        false
     }
 
     fn view(&self) -> Html {
@@ -50,23 +50,19 @@ impl Component for MainPage {
                 <aside class="main-menu">
                     <img class="main-menu-logo" src="icons/brain.svg" alt="" />
 
-                    <Button
-                        active=password_active
-                        name="Passwords"
-                        icon="icons/password.svg"
-                        clicked=self.link.callback(|_| Messages::ChangeView(Views::PasswordList)) />
+                    <Button active=password_active clicked=self.link.callback(|_| Messages::ChangeView(Views::PasswordList))>
+                        <img src="icons/password.svg" alt="Passwords" />
+                    </Button>
 
-                    <Button
-                        active=knowledge_active
-                        name="Knowledge"
-                        icon="icons/knowledge.svg"
-                        clicked=self.link.callback(|_| Messages::ChangeView(Views::Knowledge)) />
+                    <Button active=knowledge_active clicked=self.link.callback(|_| Messages::ChangeView(Views::Knowledge))>
+                        <img src="icons/knowledge.svg" alt="Knowledge" />
+                    </Button>
                 </aside>
                 <section class="main-content">
                 {
                     match self.view {
                         Views::PasswordList => html! {
-                            <div>{"passy"}</div>
+                            <PasswordList />
                         },
                         Views::Knowledge => html! {
                             <div>{"huh?"}</div>
