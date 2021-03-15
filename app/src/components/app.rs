@@ -1,32 +1,35 @@
 use yew::prelude::*;
-use yew::services::ConsoleService;
 
-use super::{Messages, LoginPage, MainPage};
+use super::{LoginPage, MainPage};
+
+pub enum Pages {
+    Login,
+    Main
+}
+
+pub enum Messages {
+    UnlockApp(String),
+}
 
 pub struct App {
-    page: &'static str,
+    link: ComponentLink<Self>,
+    page: Pages,
 }
 
 impl Component for App {
     type Message = Messages;
     type Properties = ();
 
-    fn create(_: Self::Properties, _: ComponentLink<Self>) -> Self {
+    fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
         Self {
+            link,
             page: determin_initial_page(),
         }
     }
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
-            Messages::ChangePage(page) => {
-                self.page = page;
-                true
-            },
-            Messages::UnlockApp(password) => {
-                self.unlock_app(password)
-            },
-            _ => false,
+            Messages::UnlockApp(password) => self.unlock_app(password),
         }
     }
 
@@ -36,31 +39,37 @@ impl Component for App {
 
     fn view(&self) -> Html {
         match self.page {
-            "login" => html! {
-                <LoginPage />
+            Pages::Login => html! {
+                <LoginPage unlock_app=self.link.callback(|password| Messages::UnlockApp(password)) />
             },
-            "main" => html! {
+            Pages::Main => html! {
                 <MainPage />
             },
-            _ => html! {},
         }
     }
 }
 
 impl App {
-    fn unlock_app(&self, _password: &str) -> bool {
-        ConsoleService::log("unlock app");
-        true
+    fn unlock_app(&mut self, password: String) -> bool {
+        if password == "123" {
+            // convert password to key
+            // verify key matches what has been used before
+            // set self.key
+
+            self.page = Pages::Main;
+            return true;
+        }
+        false
     }
 }
 
-fn determin_initial_page() -> &'static str {
+fn determin_initial_page() -> Pages {
     match is_logged_in() {
-        true => "main",
-        false => "login",
+        true => Pages::Main,
+        false => Pages::Login,
     }
 }
 
 fn is_logged_in() -> bool {
-    false
+    true
 }

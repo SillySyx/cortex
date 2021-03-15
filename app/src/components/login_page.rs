@@ -1,42 +1,54 @@
 use yew::prelude::*;
 
-pub enum Message {
+pub enum Views {
+    Login,
+    Loading,
+}
+
+pub enum Messages {
     KeyPressed(KeyboardEvent),
+    UpdatePassword(String)
 }
 
 #[derive(Clone, PartialEq, Properties)]
 pub struct Props {
-    pub unlock_app: Callback<&'static str>,
+    pub unlock_app: Callback<String>,
 }
 
 pub struct LoginPage {
     props: Props,
     link: ComponentLink<Self>,
-    view: &'static str,
+    view: Views,
+    password: String,
 }
 
 impl Component for LoginPage {
-    type Message = Message;
+    type Message = Messages;
     type Properties = Props;
 
     fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
         Self {
             props,
             link,
-            view: "login",
+            view: Views::Login,
+            password: String::new(),
         }
     }
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
-            Message::KeyPressed(key) => {
+            Messages::KeyPressed(key) => {
                 if key.key() == String::from("Enter") {
-                    self.view = "loading";
-                    self.props.unlock_app.emit("");
+                    self.view = Views::Loading;
+                    self.props.unlock_app.emit(self.password.clone());
                     return true;
                 }
                 false
-            }
+            },
+            Messages::UpdatePassword(value) => {
+                self.password = value;
+                true
+            },
         }
     }
 
@@ -50,17 +62,17 @@ impl Component for LoginPage {
             <img class="login-logo" src="icons/brain.svg" alt="" />
             {
                 match self.view {
-                    "login" => html! {
+                    Views::Login => html! {
                         <input 
                            class="login-box login-input" 
                            type="password" 
                            placeholder="Enter your password"
-                           onkeyup=self.link.callback(|e| Message::KeyPressed(e)) />
+                           oninput=self.link.callback(|e: InputData| Messages::UpdatePassword(e.value))
+                           onkeyup=self.link.callback(|e| Messages::KeyPressed(e)) />
                     },
-                    "loading" => html! {
+                    Views::Loading => html! {
                         <img class="login-box login-loader animation-spin" src="icons/loading.svg" alt="" />
                     },
-                    _ => html! {},
                 }
             }
             </div>

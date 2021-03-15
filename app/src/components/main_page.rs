@@ -1,10 +1,20 @@
 use yew::prelude::*;
 
-use super::Messages;
+use super::Button;
+
+#[derive(PartialEq)]
+pub enum Views {
+    PasswordList,
+    Knowledge,
+}
+
+pub enum Messages {
+    ChangeView(Views),
+}
 
 pub struct MainPage {
     link: ComponentLink<Self>,
-    view: &'static str,
+    view: Views,
 }
 
 impl Component for MainPage {
@@ -14,44 +24,53 @@ impl Component for MainPage {
     fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
         Self {
             link,
-            view: "passwords",
+            view: Views::PasswordList,
         }
     }
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
-            Messages::MainPageChangeView(view) => self.view = view,
-            _ => {},
-        };
-        true
+            Messages::ChangeView(view) => {
+                self.view = view;
+                true
+            },
+        }
     }
 
     fn change(&mut self, _props: Self::Properties) -> ShouldRender {
-        false
+        true
     }
 
     fn view(&self) -> Html {
+        let password_active = self.view == Views::PasswordList;
+        let knowledge_active = self.view == Views::Knowledge;
+
         html! {
             <div class="main-layout main-background animation-fade">
                 <aside class="main-menu">
                     <img class="main-menu-logo" src="icons/brain.svg" alt="" />
-                    <div class="main-button" onclick=self.link.callback(|_| Messages::MainPageChangeView("passwords"))>
-                        <img src="icons/password.svg" alt="Passwords" />
-                    </div>
-                    <div class="main-button" onclick=self.link.callback(|_| Messages::MainPageChangeView("knowledge"))>
-                        <img src="icons/knowledge.svg" alt="Knowledge" />
-                    </div>
+
+                    <Button
+                        active=password_active
+                        name="Passwords"
+                        icon="icons/password.svg"
+                        clicked=self.link.callback(|_| Messages::ChangeView(Views::PasswordList)) />
+
+                    <Button
+                        active=knowledge_active
+                        name="Knowledge"
+                        icon="icons/knowledge.svg"
+                        clicked=self.link.callback(|_| Messages::ChangeView(Views::Knowledge)) />
                 </aside>
                 <section class="main-content">
                 {
                     match self.view {
-                        "passwords" => html! {
+                        Views::PasswordList => html! {
                             <div>{"passy"}</div>
                         },
-                        "knowledge" => html! {
+                        Views::Knowledge => html! {
                             <div>{"huh?"}</div>
                         },
-                        _ => html! {},
                     }
                 }
                 </section>
