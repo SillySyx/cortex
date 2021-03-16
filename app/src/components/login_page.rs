@@ -1,5 +1,7 @@
 use yew::prelude::*;
 
+use crate::services::LoginService;
+
 pub enum Views {
     Login,
     Loading,
@@ -12,7 +14,7 @@ pub enum Messages {
 
 #[derive(Clone, PartialEq, Properties)]
 pub struct Props {
-    pub unlock_app: Callback<String>,
+    pub unlock_app: Callback<()>,
 }
 
 pub struct LoginPage {
@@ -40,7 +42,12 @@ impl Component for LoginPage {
             Messages::KeyPressed(key) => {
                 if key.key() == String::from("Enter") {
                     self.view = Views::Loading;
-                    self.props.unlock_app.emit(self.password.clone());
+
+                    let key = convert_password_to_key(self.password.clone());
+
+                    LoginService::store_key(key.clone());
+
+                    self.props.unlock_app.emit(());
                     return true;
                 }
                 false
@@ -78,4 +85,13 @@ impl Component for LoginPage {
             </div>
         }
     }
+}
+
+fn convert_password_to_key(password: String) -> String {
+    let key = match crypto::generate_key_from_seed(&password) {
+        Ok(data) => data.to_vec(),
+        Err(_) => vec![],
+    };
+
+    format!("{:?}", key)
 }
