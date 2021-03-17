@@ -1,4 +1,7 @@
-use yew::prelude::*;
+use yew::{
+    prelude::*, 
+    web_sys::HtmlInputElement
+};
 
 use crate::services::LoginService;
 
@@ -20,6 +23,7 @@ pub struct Props {
 pub struct LoginPage {
     props: Props,
     link: ComponentLink<Self>,
+    focus_ref: NodeRef,
     view: Views,
     password: String,
 }
@@ -32,6 +36,7 @@ impl Component for LoginPage {
         Self {
             props,
             link,
+            focus_ref: NodeRef::default(),
             view: Views::Login,
             password: String::new(),
         }
@@ -63,6 +68,17 @@ impl Component for LoginPage {
         false
     }
 
+    fn rendered(&mut self, first_render: bool) {
+        if first_render {
+            if let Some(input) = self.focus_ref.cast::<HtmlInputElement>() {
+                match input.focus() {
+                    Ok(_) => {},
+                    Err(_) => {},
+                };
+            }
+        }
+    }
+
     fn view(&self) -> Html {
         html! {
             <div class="login-layout login-background animation-fade">
@@ -71,11 +87,12 @@ impl Component for LoginPage {
                 match self.view {
                     Views::Login => html! {
                         <input 
-                           class="login-box login-input" 
-                           type="password" 
-                           placeholder="Enter your password"
-                           oninput=self.link.callback(|e: InputData| Messages::UpdatePassword(e.value))
-                           onkeyup=self.link.callback(|e| Messages::KeyPressed(e)) />
+                            ref=self.focus_ref.clone()
+                            class="login-box login-input" 
+                            type="password" 
+                            placeholder="Enter your password"
+                            oninput=self.link.callback(|e: InputData| Messages::UpdatePassword(e.value))
+                            onkeyup=self.link.callback(|e| Messages::KeyPressed(e)) />
                     },
                     Views::Loading => html! {
                         <img class="login-box login-loader animation-spin" src="icons/loading.svg" alt="" />
