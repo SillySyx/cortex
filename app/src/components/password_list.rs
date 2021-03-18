@@ -3,18 +3,25 @@ use yew::{
     web_sys::HtmlInputElement,
 };
 
-use super::Button;
+use super::{Button, ContextMenu, ContextMenuContent};
+use crate::services::{PasswordService, Password, Category};
 
 pub enum Messages {
-    SearchButtonClicked,
+    NewPasswordClicked,
+    NewCategoryClicked,
+    ImportClicked,
+    ExportClicked,
     UpdateSearchText(String),
     SearchKeyPressed(KeyboardEvent),
+    CopyPassword(String),
 }
 
 pub struct PasswordList {
     link: ComponentLink<Self>,
     focus_ref: NodeRef,
     search_text: String,
+    passwords: Vec<Category>,
+    context_menu_open: bool,
 }
 
 impl Component for PasswordList {
@@ -26,14 +33,13 @@ impl Component for PasswordList {
             link,
             focus_ref: NodeRef::default(),
             search_text: String::new(),
+            passwords: PasswordService::load_passwords(),
+            context_menu_open: false,
         }
     }
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
-            Messages::SearchButtonClicked => {
-                false
-            },
             Messages::UpdateSearchText(value) => {
                 self.search_text = value;
                 true
@@ -44,6 +50,30 @@ impl Component for PasswordList {
                     return true;
                 }
                 false
+            },
+            Messages::CopyPassword(password) => {
+                yew::services::ConsoleService::log(&format!("Copy password {:?}", password));
+                false
+            },
+            Messages::NewCategoryClicked => {
+                yew::services::ConsoleService::log("NewCategoryClicked");
+                self.context_menu_open = false;
+                true
+            },
+            Messages::NewPasswordClicked => {
+                yew::services::ConsoleService::log("NewPasswordClicked");
+                self.context_menu_open = false;
+                true
+            },
+            Messages::ImportClicked => {
+                yew::services::ConsoleService::log("ImportClicked");
+                self.context_menu_open = false;
+                true
+            },
+            Messages::ExportClicked => {
+                yew::services::ConsoleService::log("ExportClicked");
+                self.context_menu_open = false;
+                true
             },
         }
     }
@@ -64,7 +94,7 @@ impl Component for PasswordList {
     }
 
     fn view(&self) -> Html {
-        let categories = load_categories(self.search_text.clone());
+        let categories = filter_categories(&self.passwords, self.search_text.clone());
 
         html! {
             <div class="password-list">
@@ -77,56 +107,39 @@ impl Component for PasswordList {
                         oninput=self.link.callback(|e: InputData| Messages::UpdateSearchText(e.value)) 
                         onkeyup=self.link.callback(|e| Messages::SearchKeyPressed(e)) />
 
-                    <Button active=false clicked=self.link.callback(|_| Messages::SearchButtonClicked)>
-                        <img src="icons/add.svg" alt="" />
-                    </Button>
+                    <ContextMenu open=self.context_menu_open>
+                        <img class="search-box-button" src="icons/cog.svg" alt="" />
+                        <ContextMenuContent>
+                            <Button active=false clicked=self.link.callback(|_| Messages::NewCategoryClicked)>
+                                {"New category"}
+                            </Button>
+                            <Button active=false clicked=self.link.callback(|_| Messages::NewPasswordClicked)>
+                                {"New password"}
+                            </Button>
+                            <Button active=false clicked=self.link.callback(|_| Messages::ImportClicked)>
+                                {"Import"}
+                            </Button>
+                            <Button active=false clicked=self.link.callback(|_| Messages::ExportClicked)>
+                                {"Export"}
+                            </Button>
+                        </ContextMenuContent>
+                    </ContextMenu>
                 </header>
 
-                { for categories.iter().map(render_category) }
+                { for categories.iter().map(|category| render_category(category, &self.link)) }
             </div>
         }
     }
 }
 
-#[derive(Clone)]
-struct Category {
-    title: String,
-    passwords: Vec<Password>,
-}
-
-#[derive(Clone)]
-struct Password {
-    name: String,
-    desc: String,
-}
-
-fn load_categories(search: String) -> Vec<Category> {
-    let mut data = vec![
-        Category {
-            title: String::from("Games"),
-            passwords: vec![
-                Password {
-                    name: String::from("Black desert"),
-                    desc: String::from(""),
-                },
-            ]
-        },
-        Category {
-            title: String::from("Work"),
-            passwords: vec![
-                Password {
-                    name: String::from("atea.com"),
-                    desc: String::from("kristoffer.hagelstam@atea.com"),
-                },
-            ]
-        },
-    ];
+fn filter_categories(passwords: &Vec<Category>, search: String) -> Vec<Category> {
+    let mut passwords = passwords.to_vec();
 
     if search.is_empty() {
-        return data;
+        return passwords.to_vec();
     }
 
-    data.iter_mut().map(|category| {
+    passwords.iter_mut().map(|category| {
         let mut category = category.to_owned();
 
         category.passwords = category.passwords.iter().filter_map(|p| {
@@ -134,7 +147,7 @@ fn load_categories(search: String) -> Vec<Category> {
                 return Some(p.to_owned());
             }
 
-            if p.desc.to_lowercase().contains(&search.to_lowercase()) {
+            if p.description.to_lowercase().contains(&search.to_lowercase()) {
                 return Some(p.to_owned());
             }
 
@@ -145,23 +158,24 @@ fn load_categories(search: String) -> Vec<Category> {
     }).collect()
 }
 
-fn render_category(category: &Category) -> Html {
+fn render_category(category: &Category, link: &ComponentLink<PasswordList>) -> Html {
     html! {
         <div>
             <h1 class="category-title">{&category.title}</h1>
             <div class="category">
-                { for category.passwords.iter().map(render_password) }
+                { for category.passwords.iter().map(|password| render_password(password, link)) }
             </div>
         </div>
     }
 }
 
-fn render_password(password: &Password) -> Html {
+fn render_password(password: &Password, link: &ComponentLink<PasswordList>) -> Html {
+    let password_clone = password.clone();
     html! {
         <div class="password">
             <h1 class="password-title">{&password.name}</h1>
-            <p class="password-description">{&password.desc}</p>
-            <img class="main-button password-icon" src="icons/add.svg" alt="" />
+            <p class="password-description">{&password.description}</p>
+            <img class="password-icon" src="icons/key.svg" alt="" onclick=link.callback(move |_| Messages::CopyPassword(password_clone.password.clone())) />
         </div>
     }
 }

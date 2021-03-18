@@ -5,6 +5,7 @@
 @import url('./layout-main.css');
 @import url('./main-button.css');
 @import url('./password-list.css');
+@import url('./context-menu.css');
 
 * {
   font-family: 'Inter', Helvetica, Arial, sans-serif;

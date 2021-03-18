@@ -49,8 +49,13 @@ impl Component for Button {
             false => "",
         };
 
+        let clicked = self.link.callback(|e: MouseEvent| {
+            e.stop_propagation();
+            Messages::Clicked
+        });
+
         html! {
-            <div class=("main-button", active) onclick=self.link.callback(|_| Messages::Clicked)>
+            <div class=("main-button", active) onclick=clicked>
                 { self.props.children.clone() }
             </div>
         }
