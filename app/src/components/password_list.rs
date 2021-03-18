@@ -7,7 +7,7 @@ use super::{Button, ContextMenu, ContextMenuContent};
 use crate::services::{PasswordService, Password, Category};
 
 pub enum Messages {
-    NewPasswordClicked,
+    NewPasswordClicked(String),
     NewCategoryClicked,
     ImportClicked,
     ExportClicked,
@@ -56,12 +56,19 @@ impl Component for PasswordList {
                 false
             },
             Messages::NewCategoryClicked => {
-                yew::services::ConsoleService::log("NewCategoryClicked");
+                self.passwords.push(Category {
+                    title: String::from("wooop"),
+                    passwords: vec![],
+                });
                 self.context_menu_open = false;
                 true
             },
-            Messages::NewPasswordClicked => {
-                yew::services::ConsoleService::log("NewPasswordClicked");
+            Messages::NewPasswordClicked(category_name) => {
+                self.add_password_to_category(category_name, Password {
+                    description: String::from("asd"),
+                    name: String::from("test"),
+                    password: String::from("Secret123"),
+                });
                 self.context_menu_open = false;
                 true
             },
@@ -113,9 +120,6 @@ impl Component for PasswordList {
                             <Button active=false clicked=self.link.callback(|_| Messages::NewCategoryClicked)>
                                 {"New category"}
                             </Button>
-                            <Button active=false clicked=self.link.callback(|_| Messages::NewPasswordClicked)>
-                                {"New password"}
-                            </Button>
                             <Button active=false clicked=self.link.callback(|_| Messages::ImportClicked)>
                                 {"Import"}
                             </Button>
@@ -158,9 +162,22 @@ fn filter_categories(passwords: &Vec<Category>, search: String) -> Vec<Category>
     }).collect()
 }
 
+impl PasswordList {
+    fn add_password_to_category(&mut self, category_name: String, password: Password) {
+        match self.passwords.iter_mut().find(|c| c.title == category_name) {
+            Some(category) => {
+                category.passwords.push(password);
+            },
+            None => {},
+        };
+    }
+}
+
 fn render_category(category: &Category, link: &ComponentLink<PasswordList>) -> Html {
+    let category_clone = category.clone();
     html! {
         <div>
+            <img class="category-add" src="icons/add.svg" alt="New password" onclick=link.callback(move |_| Messages::NewPasswordClicked(category_clone.title.clone())) />
             <h1 class="category-title">{&category.title}</h1>
             <div class="category">
                 { for category.passwords.iter().map(|password| render_password(password, link)) }
@@ -175,7 +192,7 @@ fn render_password(password: &Password, link: &ComponentLink<PasswordList>) -> H
         <div class="password">
             <h1 class="password-title">{&password.name}</h1>
             <p class="password-description">{&password.description}</p>
-            <img class="password-icon" src="icons/key.svg" alt="" onclick=link.callback(move |_| Messages::CopyPassword(password_clone.password.clone())) />
+            <img class="password-icon" src="icons/key.svg" alt="Copy password" onclick=link.callback(move |_| Messages::CopyPassword(password_clone.password.clone())) />
         </div>
     }
 }

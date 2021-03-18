@@ -24,5 +24,5 @@ cargo +nightly install miniserve
 
 
 # Resources
-* https://yew.rs/docs/en/
+* https://github.com/yewstack/yew
 * https://rustwasm.github.io/docs/wasm-bindgen/
