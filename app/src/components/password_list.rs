@@ -3,7 +3,7 @@ use yew::{
     web_sys::HtmlInputElement,
 };
 
-use super::{Button, ContextMenu, ContextMenuContent, PasswordCategoryEditor};
+use super::{Button, ContextMenu, ContextMenuContent, PasswordEditor, PasswordCategoryEditor};
 use crate::services::{PasswordService, Password, Category};
 
 pub enum Views {
@@ -25,7 +25,7 @@ pub enum Messages {
 
     AddPassword(String, String, String, String),
     CopyPassword(String, String),
-    EditPassword(String, String, Option<String>, Option<String>, Option<String>),
+    EditPassword(String, String, String, String, String),
     RemovePassword(String, String),
 
     UpdateSearchText(String),
@@ -130,17 +130,9 @@ impl Component for PasswordList {
             Messages::EditPassword(category_id, password_id, name, desc, pass) => {
                 if let Some(category) = self.passwords.iter_mut().find(|c| c.title == category_id) {
                     if let Some(password) = category.passwords.iter_mut().find(|p| p.name == password_id) {
-                        if let Some(name) = name {
-                            password.name = name;
-                        }
-
-                        if let Some(desc) = desc {
-                            password.description = desc;
-                        }
-
-                        if let Some(pass) = pass {
-                            password.password = pass;
-                        }
+                        password.name = name;
+                        password.description = desc;
+                        password.password = pass;
 
                         PasswordService::save_passwords(&self.passwords);
                     }
@@ -256,11 +248,13 @@ impl PasswordList {
     }
 
     fn render_password(&self, category_id: String, password: &Password) -> Html {
-        let category_id = category_id.clone();
+        let category_id_clone = category_id.clone();
         let password_id = password.name.clone();
-        let copy_password = self.link.callback(move |_| Messages::CopyPassword(category_id.clone(), password_id.clone()));
+        let copy_password = self.link.callback(move |_| Messages::CopyPassword(category_id_clone.clone(), password_id.clone()));
 
-        let edit_password = self.link.callback(move |_| Messages::ChangeView(Views::EditPassword));
+        let category_id_clone = category_id.clone();
+        let password_id = password.name.clone();
+        let edit_password = self.link.callback(move |_| Messages::ChangeViewWithId(Views::EditPassword, Some(category_id_clone.clone()), Some(password_id.clone())));
 
         html! {
             <div class="password animation-fade">
@@ -275,44 +269,58 @@ impl PasswordList {
     }
 
     fn render_new_password(&self) -> Html {
-        let category_id = "".to_string(); 
-        let add_password = self.link.callback(move |_| Messages::AddPassword(category_id.clone(), String::from("test1"), String::from("test2"), String::from("test3")));
+        let category_id = self.selected_category_id.clone();
 
         html! {
-            <div class="animation-fade">
-                <div>{"new password"}</div>
-                <Button active=false clicked=add_password>
-                    {"Add"}
-                </Button>
-                <Button active=false clicked=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords))>
-                    {"Back"}
-                </Button>
-            </div>
+            <PasswordEditor
+                id="".to_string()
+                name="".to_string()
+                description="".to_string()
+                password="".to_string()
+                new_mode=true
+                added=self.link.callback(move |(name, desc, pass)| Messages::AddPassword(category_id.clone(), name, desc, pass))
+                backed=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords))
+                saved=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords))
+                removed=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords)) />
         }
     }
 
     fn render_edit_password(&self) -> Html {
-        let category_id = "".to_string(); 
-        let password_id = "".to_string();
-        let edit_password = self.link.callback(move |_| Messages::EditPassword(category_id.clone(), password_id.clone(), Some(String::from("new")), None, None));
+        let category_id = self.selected_category_id.clone();
+        let password_id = self.selected_password_id.clone();
         
-        let category_id = "".to_string(); 
-        let password_id = "".to_string();
-        let remove_password = self.link.callback(move |_| Messages::RemovePassword(category_id.clone(), password_id.clone()));
+        let category = match self.passwords.iter().find(|c| c.title == category_id) {
+            Some(category) => category,
+            None => return self.render_error("failed to find category"),
+        };
+
+        let password = match category.passwords.iter().find(|p| p.name == password_id) {
+            Some(password) => password,
+            None => return self.render_error("failed to find password"),
+        };
+
+        let category_id = self.selected_category_id.clone();
+        let saved = self.link.callback(move |(id, name, desc, pass)| Messages::EditPassword(category_id.clone(), id, name, desc, pass));
+
+        let category_id = self.selected_category_id.clone();
+        let removed = self.link.callback(move |id| Messages::RemovePassword(category_id.clone(), id));
+
+        let id = password.name.clone();
+        let name = password.name.clone();
+        let desc = password.description.clone();
+        let pass = password.password.clone();
 
         html! {
-            <div class="animation-fade">
-                <div>{"edit password"}</div>
-                <Button active=false clicked=edit_password>
-                    {"Change"}
-                </Button>
-                <Button active=false clicked=remove_password>
-                    {"Remove"}
-                </Button>
-                <Button active=false clicked=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords))>
-                    {"Back"}
-                </Button>
-            </div>
+            <PasswordEditor
+                id=id
+                name=name
+                description=desc
+                password=pass
+                new_mode=false
+                added=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords))
+                backed=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords))
+                saved=saved
+                removed=removed />
         }
     }
 

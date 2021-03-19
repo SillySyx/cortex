@@ -6,6 +6,7 @@ mod button;
 mod password_list;
 mod context_menu;
 mod context_menu_content;
+mod password_editor;
 mod password_category_editor;
 
 pub use {
@@ -16,5 +17,6 @@ pub use {
     password_list::PasswordList,
     context_menu::ContextMenu,
     context_menu_content::ContextMenuContent,
+    password_editor::PasswordEditor,
     password_category_editor::PasswordCategoryEditor,
 };

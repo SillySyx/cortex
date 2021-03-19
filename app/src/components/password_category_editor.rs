@@ -1,4 +1,7 @@
-use yew::prelude::*;
+use yew::{
+    prelude::*, 
+    web_sys::HtmlInputElement,
+};
 
 use super::Button;
 
@@ -32,6 +35,7 @@ pub struct Props {
 pub struct PasswordCategoryEditor {
     props: Props,
     link: ComponentLink<Self>,
+    focus_ref: NodeRef,
     id: String,
     name: String,
     mode: Mode,
@@ -53,6 +57,7 @@ impl Component for PasswordCategoryEditor {
         Self {
             props,
             link,
+            focus_ref: NodeRef::default(),
             id,
             name,
             mode,
@@ -88,12 +93,22 @@ impl Component for PasswordCategoryEditor {
         false
     }
 
+    fn rendered(&mut self, first_render: bool) {
+        if first_render {
+            if let Some(input) = self.focus_ref.cast::<HtmlInputElement>() {
+                let _ = input.focus();
+            }
+        }
+    }
+
     fn view(&self) -> Html {
         html! {
-            <div class="category-editor animation-fade">
+            <div class="password-editor animation-fade">
                 { self.render_header() }
 
+                <lable>{"Name"}</lable>
                 <input
+                    ref=self.focus_ref.clone()
                     value=self.name 
                     placeholder="Enter name"
                     oninput=self.link.callback(|e: InputData| Messages::UpdateName(e.value)) />
@@ -108,46 +123,52 @@ impl PasswordCategoryEditor {
     fn render_header(&self) -> Html {
         if self.mode == Mode::New {
             return html! {
-                <>
-                <h1>{"New category"}</h1>
-                <p>{"Categories are used to group similar passwords together so that it's easier to overview."}</p>
-                </>
+                <div class="password-editor-header">
+                    <h1>{"New category"}</h1>
+                    <p>{"Categories are used to group similar passwords together so that it's easier to overview."}</p>
+                </div>
             };
         }
 
         html! {
-            <>
-            <h1>{"Edit category"}</h1>
-            <p>{"Categories are used to group similar passwords together so that it's easier to overview."}</p>
-            </>
+            <div class="password-editor-header">
+                <h1>{"Edit category"}</h1>
+                <p>{"Categories are used to group similar passwords together so that it's easier to overview."}</p>
+            </div>
         }
     }
 
     fn render_buttons(&self) -> Html {
         if self.mode == Mode::New {
             return html! {
-                <>
-                <Button active=false clicked=self.link.callback(|_| Messages::AddClicked)>
-                    {"Add"}
-                </Button>
-                <Button active=false clicked=self.link.callback(|_| Messages::BackClicked)>
-                    {"Back"}
-                </Button>
-                </>
+                <div class="password-editor-buttons">
+                    <Button active=false clicked=self.link.callback(|_| Messages::AddClicked)>
+                        {"Add"}
+                    </Button>
+                    <Button active=false clicked=self.link.callback(|_| Messages::BackClicked)>
+                        {"Back"}
+                    </Button>
+                </div>
             };
         }
 
         html! {
             <>
-            <Button active=false clicked=self.link.callback(|_| Messages::SaveClicked)>
-                {"Save"}
-            </Button>
-            <Button active=false clicked=self.link.callback(|_| Messages::RemoveClicked)>
-                {"Remove"}
-            </Button>
-            <Button active=false clicked=self.link.callback(|_| Messages::BackClicked)>
-                {"Back"}
-            </Button>
+            <div class="password-editor-buttons">
+                <Button active=false clicked=self.link.callback(|_| Messages::SaveClicked)>
+                    {"Save"}
+                </Button>
+                <Button active=false clicked=self.link.callback(|_| Messages::BackClicked)>
+                    {"Back"}
+                </Button>
+            </div>
+            <div class="password-editor-dangerzone">
+                <h1>{"Danger"}</h1>
+                <p>{"Removing this category will also remove all of its passwords, it's not possible to restore any passwords once they have been removed."}</p>
+                <Button active=false clicked=self.link.callback(|_| Messages::RemoveClicked)>
+                    {"Remove"}
+                </Button>
+            </div>
             </>
         }
     }
