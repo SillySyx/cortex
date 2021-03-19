@@ -3,7 +3,7 @@ use yew::{
     web_sys::HtmlInputElement,
 };
 
-use super::{Button, ContextMenu, ContextMenuContent};
+use super::{Button, ContextMenu, ContextMenuContent, PasswordCategoryEditor};
 use crate::services::{PasswordService, Password, Category};
 
 pub enum Views {
@@ -17,6 +17,7 @@ pub enum Views {
 
 pub enum Messages {
     ChangeView(Views),
+    ChangeViewWithId(Views, Option<String>, Option<String>),
 
     AddCategory(String),
     EditCategory(String, String),
@@ -33,11 +34,13 @@ pub enum Messages {
 
 pub struct PasswordList {
     link: ComponentLink<Self>,
-    focus_ref: NodeRef,
+    search_ref: NodeRef,
     search_text: String,
     passwords: Vec<Category>,
     context_menu_open: bool,
     view: Views,
+    selected_category_id: String,
+    selected_password_id: String,
 }
 
 impl Component for PasswordList {
@@ -47,11 +50,13 @@ impl Component for PasswordList {
     fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
         Self {
             link,
-            focus_ref: NodeRef::default(),
+            search_ref: NodeRef::default(),
             search_text: String::new(),
             passwords: PasswordService::load_passwords(),
             context_menu_open: false,
             view: Views::ListPasswords,
+            selected_category_id: String::new(),
+            selected_password_id: String::new(),
         }
     }
 
@@ -62,8 +67,18 @@ impl Component for PasswordList {
                 self.context_menu_open = false;
                 true
             },
+            Messages::ChangeViewWithId(view, category_id, password_id) => {
+                if let Some(id) = category_id {
+                    self.selected_category_id = id;
+                }
+                if let Some(id) = password_id {
+                    self.selected_password_id = id;
+                }
+                self.view = view;
+                self.context_menu_open = false;
+                true
+            },
             Messages::AddCategory(name) => {
-                // check that no category with that namn exists
                 self.passwords.push(Category {
                     title: name,
                     passwords: vec![],
@@ -83,40 +98,63 @@ impl Component for PasswordList {
                 self.view = Views::ListPasswords;
                 true
             },
-            Messages::RemoveCategory(_category_id) => {
-                // remove category
-                PasswordService::save_passwords(&self.passwords);
+            Messages::RemoveCategory(category_id) => {
+                if let Some(index) = self.passwords.iter().position(|c| c.title == category_id) {
+                    self.passwords.remove(index);
+                    PasswordService::save_passwords(&self.passwords);
+                }
                 self.view = Views::ListPasswords;
                 true
             },
             Messages::AddPassword(category_id, name, description, password) => {
-                match self.passwords.iter_mut().find(move |c| c.title == category_id) {
-                    Some(category) => {
-                        category.passwords.push(Password {
-                            name,
-                            description,
-                            password,
-                        });
-                    },
-                    None => {},
-                };
+                if let Some(category) = self.passwords.iter_mut().find(|c| c.title == category_id) {
+                    category.passwords.push(Password {
+                        name,
+                        description,
+                        password,
+                    });
+                }
                 PasswordService::save_passwords(&self.passwords);
                 self.view = Views::ListPasswords;
                 true
             }
-            Messages::CopyPassword(_category_id, _password_id) => {
-                yew::services::ConsoleService::log("Copy password");
+            Messages::CopyPassword(category_id, password_id) => {
+                if let Some(category) = self.passwords.iter().find(|c| c.title == category_id) {
+                    if let Some(password) = category.passwords.iter().find(|p| p.name == password_id) {
+                        // copy password to clipboard!
+                        yew::services::ConsoleService::log(&format!("copy password {:?}", password.password));
+                    }
+                }
                 false
             },
-            Messages::EditPassword(_category_id, _password_id, _new_name, _new_desc, _new_password) => {
-                yew::services::ConsoleService::log("EditPassword");
-                PasswordService::save_passwords(&self.passwords);
+            Messages::EditPassword(category_id, password_id, name, desc, pass) => {
+                if let Some(category) = self.passwords.iter_mut().find(|c| c.title == category_id) {
+                    if let Some(password) = category.passwords.iter_mut().find(|p| p.name == password_id) {
+                        if let Some(name) = name {
+                            password.name = name;
+                        }
+
+                        if let Some(desc) = desc {
+                            password.description = desc;
+                        }
+
+                        if let Some(pass) = pass {
+                            password.password = pass;
+                        }
+
+                        PasswordService::save_passwords(&self.passwords);
+                    }
+                }
                 self.view = Views::ListPasswords;
-                false
+                true
             },
-            Messages::RemovePassword(_category_id, _password_id) => {
-                // remove password from category
-                PasswordService::save_passwords(&self.passwords);
+            Messages::RemovePassword(category_id, password_id) => {
+                if let Some(category) = self.passwords.iter_mut().find(|c| c.title == category_id) {
+                    if let Some(index) = category.passwords.iter().position(|p| p.name == password_id) {
+                        category.passwords.remove(index);
+                        PasswordService::save_passwords(&self.passwords);
+                    }
+                }
                 self.view = Views::ListPasswords;
                 true
             },
@@ -140,7 +178,7 @@ impl Component for PasswordList {
 
     fn rendered(&mut self, first_render: bool) {
         if first_render {
-            if let Some(input) = self.focus_ref.cast::<HtmlInputElement>() {
+            if let Some(input) = self.search_ref.cast::<HtmlInputElement>() {
                 let _ = input.focus();
             }
         }
@@ -173,7 +211,7 @@ impl PasswordList {
             <div class="animation-fade">
             <header class="search-box">
                 <input 
-                    ref=self.focus_ref.clone()
+                    ref=self.search_ref.clone()
                     value=self.search_text
                     class="main-search-box" 
                     placeholder="Search for passwords"
@@ -199,14 +237,16 @@ impl PasswordList {
     }
 
     fn render_category(&self, category: &Category) -> Html {
-        let edit_category = self.link.callback(move |_| Messages::ChangeView(Views::EditCategory));
+        let category_id = category.title.clone();
+        let edit_category = self.link.callback(move |_| Messages::ChangeViewWithId(Views::EditCategory, Some(category_id.clone()), None));
 
-        let new_category = self.link.callback(move |_| Messages::ChangeView(Views::NewPassword));
+        let category_id = category.title.clone();
+        let new_password = self.link.callback(move |_| Messages::ChangeViewWithId(Views::NewPassword, Some(category_id.clone()), None));
 
         html! {
             <div class="animation-fade">
                 <img class="category-icon" src="icons/edit.svg" alt="Edit category" onclick=edit_category />
-                <img class="category-icon" src="icons/add.svg" alt="New password" onclick=new_category />
+                <img class="category-icon" src="icons/add.svg" alt="New password" onclick=new_password />
                 <h1 class="category-title">{&category.title}</h1>
                 <div class="category">
                     { for category.passwords.iter().map(|password| self.render_password(category.title.clone(), password)) }
@@ -278,38 +318,37 @@ impl PasswordList {
 
     fn render_new_category(&self) -> Html {
         html! {
-            <div class="animation-fade">
-                <div>{"new category"}</div>
-                <Button active=false clicked=self.link.callback(|_| Messages::AddCategory(String::from("test")))>
-                    {"Add"}
-                </Button>
-                <Button active=false clicked=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords))>
-                    {"Back"}
-                </Button>
-            </div>
+            <PasswordCategoryEditor
+                id="".to_string()
+                name="".to_string()
+                new_mode=true
+                added=self.link.callback(|name| Messages::AddCategory(name))
+                backed=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords))
+                saved=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords))
+                removed=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords)) />
         }
     }
 
     fn render_edit_category(&self) -> Html {
-        let category_id = "".to_string();
-        let edit_category = self.link.callback(move |_| Messages::EditCategory(category_id.clone(), String::from("new")));
+        let category_id = self.selected_category_id.clone();
 
-        let category_id = "".to_string();
-        let remove_category = self.link.callback(move |_| Messages::RemoveCategory(category_id.clone()));
+        let category = match self.passwords.iter().find(|c| c.title == category_id) {
+            Some(category) => category,
+            None => return self.render_error("failed to find category"),
+        };
+
+        let id = category.title.clone();
+        let name = category.title.clone();
 
         html! {
-            <div class="animation-fade">
-                <div>{"edit category"}</div>
-                <Button active=false clicked=edit_category>
-                    {"Change"}
-                </Button>
-                <Button active=false clicked=remove_category>
-                    {"Remove"}
-                </Button>
-                <Button active=false clicked=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords))>
-                    {"Back"}
-                </Button>
-            </div>
+            <PasswordCategoryEditor
+                id=id
+                name=name
+                new_mode=false
+                added=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords))
+                backed=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords))
+                saved=self.link.callback(|(id, name)| Messages::EditCategory(id, name))
+                removed=self.link.callback(|id| Messages::RemoveCategory(id)) />
         }
     }
 
@@ -317,6 +356,17 @@ impl PasswordList {
         html! {
             <div class="animation-fade">
                 <div>{"Import/Export"}</div>
+                <Button active=false clicked=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords))>
+                    {"Back"}
+                </Button>
+            </div>
+        }
+    }
+
+    fn render_error(&self, message: &'static str) -> Html {
+        html! {
+            <div class="animation-fade error-message">
+                <p>{message}</p>
                 <Button active=false clicked=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords))>
                     {"Back"}
                 </Button>
