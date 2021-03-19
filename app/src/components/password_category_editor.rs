@@ -71,6 +71,10 @@ impl Component for PasswordCategoryEditor {
                 true
             },
             Messages::AddClicked => {
+                if self.name.is_empty() {
+                    return false;
+                }
+
                 self.props.added.emit(self.name.clone());
                 false
             },
@@ -79,6 +83,10 @@ impl Component for PasswordCategoryEditor {
                 false
             },
             Messages::SaveClicked => {
+                if self.name.is_empty() {
+                    return false;
+                }
+                
                 self.props.saved.emit((self.id.clone(), self.name.clone()));
                 false
             },

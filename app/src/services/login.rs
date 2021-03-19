@@ -1,10 +1,4 @@
-use yew::{
-    format::Text, 
-    services::{
-        StorageService,
-        storage::Area
-    }
-};
+use yew::services::{StorageService,storage::Area};
 
 pub struct LoginService {
 }
@@ -25,7 +19,7 @@ impl LoginService {
             Err(_) => return None,
         };
 
-        match storage.restore::<Text>("key") {
+        match storage.restore("key") {
             Ok(key) => Some(key),
             Err(_) => None,
         }

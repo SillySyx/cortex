@@ -13,6 +13,7 @@ pub enum Views {
     NewCategory,
     EditCategory,
     ImportExport,
+    DecryptError,
 }
 
 pub enum Messages {
@@ -48,13 +49,23 @@ impl Component for PasswordList {
     type Properties = ();
 
     fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
+        let mut view = Views::ListPasswords;
+
+        let passwords = match PasswordService::load_passwords() {
+            Some(passwords) => passwords,
+            None => {
+                view = Views::DecryptError;
+                vec![]
+            },
+        };
+
         Self {
             link,
             search_ref: NodeRef::default(),
             search_text: String::new(),
-            passwords: PasswordService::load_passwords(),
+            passwords,
             context_menu_open: false,
-            view: Views::ListPasswords,
+            view,
             selected_category_id: String::new(),
             selected_password_id: String::new(),
         }
@@ -187,6 +198,9 @@ impl Component for PasswordList {
                         Views::NewCategory => self.render_new_category(),
                         Views::EditCategory => self.render_edit_category(),
                         Views::ImportExport => self.render_import_export(),
+                        Views::DecryptError => html! {
+                            <p>{"AAAAH"}</p>
+                        },
                     }
                 }
             </div>

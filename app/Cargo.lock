@@ -17,6 +17,8 @@ name = "app"
 version = "0.1.0"
 dependencies = [
  "crypto",
+ "serde",
+ "serde_json",
  "wasm-bindgen",
  "web-sys",
  "yew",

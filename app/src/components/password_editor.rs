@@ -89,6 +89,13 @@ impl Component for PasswordEditor {
                 true
             },
             Messages::AddClicked => {
+                if self.name.is_empty() {
+                    return false;
+                }
+                if self.password.is_empty() {
+                    return false;
+                }
+
                 self.props.added.emit((self.name.clone(), self.description.clone(), self.password.clone()));
                 false
             },
@@ -97,6 +104,13 @@ impl Component for PasswordEditor {
                 false
             },
             Messages::SaveClicked => {
+                if self.name.is_empty() {
+                    return false;
+                }
+                if self.password.is_empty() {
+                    return false;
+                }
+                
                 self.props.saved.emit((self.id.clone(), self.name.clone(), self.description.clone(), self.password.clone()));
                 false
             },
