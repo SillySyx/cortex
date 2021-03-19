@@ -4,7 +4,7 @@ use yew::{
 };
 
 use super::{Button, ContextMenu, ContextMenuContent, PasswordEditor, PasswordCategoryEditor};
-use crate::services::{PasswordService, Password, Category};
+use crate::services::{PasswordService, Password, Category, ClipboardService};
 
 pub enum Views {
     ListPasswords,
@@ -121,8 +121,7 @@ impl Component for PasswordList {
             Messages::CopyPassword(category_id, password_id) => {
                 if let Some(category) = self.passwords.iter().find(|c| c.title == category_id) {
                     if let Some(password) = category.passwords.iter().find(|p| p.name == password_id) {
-                        // copy password to clipboard!
-                        yew::services::ConsoleService::log(&format!("copy password {:?}", password.password));
+                        ClipboardService::copy_to_clipboard(password.password.clone());
                     }
                 }
                 false
