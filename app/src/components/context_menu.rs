@@ -66,7 +66,7 @@ impl Component for ContextMenu {
 
         html! {
             <div class=("context-menu", open) onclick=open_event>
-                <div class="context-menu-backdrop" onclick=close_event></div>
+                <div class="context-menu-backdrop animation-fade" onclick=close_event></div>
                 { self.props.children.clone() }
             </div>
         }

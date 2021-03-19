@@ -22,4 +22,7 @@ impl PasswordService {
 
         vec![]
     }
+
+    pub fn save_passwords(_passwords: &Vec<Category>) {
+    }
 }
