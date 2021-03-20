@@ -27,6 +27,7 @@ cargo +nightly install miniserve
 * Setup automatic github pages deployment, trigger on tags
 * Notification when password has been copied
 * Remove password from clipboard after 10sec
+* Automatic passphrase generation when adding passwords
 * Import/Export passwords
 * Knowledgebase
 

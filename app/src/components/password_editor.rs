@@ -174,7 +174,7 @@ impl PasswordEditor {
         if self.mode == Mode::New {
             return html! {
                 <div class="password-editor-header">
-                    <h1>{"New password"}</h1>
+                    <h1>{"Add password"}</h1>
                 </div>
             };
         }

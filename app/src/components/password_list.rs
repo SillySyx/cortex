@@ -4,7 +4,7 @@ use yew::{
 };
 
 use super::{Button, ContextMenu, ContextMenuContent, PasswordEditor, PasswordCategoryEditor};
-use crate::services::{PasswordService, Password, Category, ClipboardService};
+use crate::services::{Category, ClipboardService, LoginService, Password, PasswordService};
 
 pub enum Views {
     ListPasswords,
@@ -19,6 +19,7 @@ pub enum Views {
 pub enum Messages {
     ChangeView(Views),
     ChangeViewWithId(Views, Option<String>, Option<String>),
+    Logout,
 
     AddCategory(String),
     EditCategory(String, String),
@@ -88,6 +89,10 @@ impl Component for PasswordList {
                 self.view = view;
                 self.context_menu_open = false;
                 true
+            },
+            Messages::Logout => {
+                LoginService::logout();
+                false
             },
             Messages::AddCategory(name) => {
                 self.passwords.push(Category {
@@ -198,9 +203,7 @@ impl Component for PasswordList {
                         Views::NewCategory => self.render_new_category(),
                         Views::EditCategory => self.render_edit_category(),
                         Views::ImportExport => self.render_import_export(),
-                        Views::DecryptError => html! {
-                            <p>{"AAAAH"}</p>
-                        },
+                        Views::DecryptError => self.render_decrypt_error(),
                     }
                 }
             </div>
@@ -387,9 +390,22 @@ impl PasswordList {
     fn render_error(&self, message: &'static str) -> Html {
         html! {
             <div class="animation-fade error-message">
-                <p>{message}</p>
+                <img class="error-icon" src="icons/error.svg" alt="" />
+                <h1 class="error-text">{message}</h1>
                 <Button active=false clicked=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords))>
                     {"Back"}
+                </Button>
+            </div>
+        }
+    }
+
+    fn render_decrypt_error(&self) -> Html {
+        html! {
+            <div class="animation-fade error-message">
+                <img class="error-icon" src="icons/error.svg" alt="" />
+                <h1 class="error-text">{"Failed to decrypt passwords"}</h1>
+                <Button active=false clicked=self.link.callback(|_| Messages::Logout)>
+                    {"Logout"}
                 </Button>
             </div>
         }

@@ -4,6 +4,25 @@ pub struct LoginService {
 }
 
 impl LoginService {
+    pub fn logout() {
+        let mut storage = match StorageService::new(Area::Session) {
+            Ok(store) => store,
+            Err(_) => return,
+        };
+
+        storage.remove("key");
+
+        let window = match web_sys::window() {
+            Some(value) => value,
+            None => return,
+        };
+
+
+        let location = window.location();
+
+        let _ = location.reload();
+    }
+
     pub fn store_key(value: String) {
         let mut storage = match StorageService::new(Area::Session) {
             Ok(store) => store,
