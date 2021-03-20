@@ -378,11 +378,20 @@ impl PasswordList {
 
     fn render_import_export(&self) -> Html {
         html! {
-            <div class="animation-fade">
-                <div>{"Import/Export"}</div>
-                <Button active=false clicked=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords))>
-                    {"Back"}
-                </Button>
+            <div class="import-export animation-fade">
+                <h1>{"Import/Export"}</h1>
+                <p>{"Not yet implemented"}</p>
+                <div class="import-export-buttons">
+                    <Button active=false clicked=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords))>
+                        {"Import"}
+                    </Button>
+                    <Button active=false clicked=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords))>
+                        {"Export"}
+                    </Button>
+                    <Button active=false clicked=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords))>
+                        {"Back"}
+                    </Button>
+                </div>
             </div>
         }
     }

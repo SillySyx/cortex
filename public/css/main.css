@@ -7,6 +7,7 @@
 @import url('./password-list.css');
 @import url('./context-menu.css');
 @import url('./password-editor.css');
+@import url('./knowledgebase.css');
 
 * {
   font-family: 'Inter', Helvetica, Arial, sans-serif;

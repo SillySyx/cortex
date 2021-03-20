@@ -1,6 +1,6 @@
 use yew::prelude::*;
 
-use super::{Button, PasswordList};
+use super::{Button, PasswordList, Knowledgebase};
 
 #[derive(PartialEq)]
 pub enum Views {
@@ -65,7 +65,7 @@ impl Component for MainPage {
                             <PasswordList />
                         },
                         Views::Knowledge => html! {
-                            <div>{"huh?"}</div>
+                            <Knowledgebase />
                         },
                     }
                 }

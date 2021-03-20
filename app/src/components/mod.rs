@@ -8,6 +8,7 @@ mod context_menu;
 mod context_menu_content;
 mod password_editor;
 mod password_category_editor;
+mod knowledgebase;
 
 pub use {
     app::App,
@@ -19,4 +20,5 @@ pub use {
     context_menu_content::ContextMenuContent,
     password_editor::PasswordEditor,
     password_category_editor::PasswordCategoryEditor,
+    knowledgebase::Knowledgebase,
 };
