@@ -48,12 +48,14 @@ impl Component for LoginPage {
                 if key.key() == String::from("Enter") {
                     self.view = Views::Loading;
 
-                    let key = convert_password_to_key(self.password.clone());
-
-                    LoginService::store_key(key.clone());
-
-                    self.props.unlock_app.emit(());
-                    return true;
+                    match convert_password_to_key(self.password.clone()) {
+                        Some(key) => {
+                            LoginService::store_key(key.clone());
+                            self.props.unlock_app.emit(());
+                            return true;
+                        },
+                        None => {},
+                    };
                 }
                 false
             },
@@ -104,11 +106,16 @@ impl Component for LoginPage {
     }
 }
 
-fn convert_password_to_key(password: String) -> String {
+fn convert_password_to_key(password: String) -> Option<String> {
     let key = match crypto::generate_key_from_seed(&password) {
         Ok(data) => data.to_vec(),
-        Err(_) => vec![],
+        Err(_) => return None,
     };
 
-    format!("{:?}", key)
+    let json = match serde_json::value::to_value(key) {
+        Ok(json) => json,
+        Err(_) => return None,
+    };
+
+    Some(json.to_string())
 }

@@ -1,8 +1,14 @@
+use std::vec;
+
 use yew::services::{StorageService, storage::Area};
-use crypto::{encrypt, decrypt, generate_iv_from_seed};
 use serde::{Serialize, Deserialize};
 
 use super::LoginService;
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+struct EncryptedPasswords {
+    bytes: Vec<u8>,
+}
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Category {
@@ -22,94 +28,110 @@ pub struct PasswordService {
 
 impl PasswordService {
     pub fn load_passwords() -> Option<Vec<Category>> {
-        let key = match load_key() {
-            Some(key) => key,
-            None => return None,
-        };
+        let encrypted_passwords = load_encrypted_passwords_from_storage()?;
 
-        let iv = match generate_iv_from_seed("silly goose") {
-            Ok(iv) => iv,
-            Err(_) => return None,
-        };
-
-        let store = match StorageService::new(Area::Local) {
-            Ok(store) => store,
-            Err(_) => return None,
-        };
-
-        yew::services::ConsoleService::log("store");
-
-        let data = match store.restore("passwords") {
-            Ok(data) => data,
-            Err(_) => String::new(),
-        };
-        
-        yew::services::ConsoleService::log("restore");
-
-        if data.is_empty() {
+        if encrypted_passwords.bytes.is_empty() {
             return Some(vec![]);
         }
 
-        let encrypted_bytes = data.as_bytes();
-
-        yew::services::ConsoleService::log("as_bytes");
-
-        let bytes = match decrypt(encrypted_bytes, &key, &iv) {
-            Ok(bytes) => bytes,
-            Err(_) => return None,
-        };
-
-        yew::services::ConsoleService::log("decrypt");
-
-        let data: Vec<Category> = match serde_json::from_slice(&bytes) {
-            Ok(data) => data,
-            Err(_) => return None,
-        };
-
-        yew::services::ConsoleService::log("json");
-        
-        Some(data)
+        decrypt_passwords(&encrypted_passwords.bytes)
     }
 
     pub fn save_passwords(passwords: &Vec<Category>) {
-        let key = match load_key() {
-            Some(key) => key,
+        let encrypted_bytes = match encrypt_passwords(passwords) {
+            Some(data) => data,
             None => return,
         };
 
-        let iv = match generate_iv_from_seed("silly goose") {
-            Ok(iv) => iv,
-            Err(_) => return,
+        let encrypted_passwords = EncryptedPasswords { 
+            bytes: encrypted_bytes,
         };
 
-        let json = match serde_json::value::to_value(passwords) {
-            Ok(json) => json,
-            Err(_) => return,
-        };
-
-        let data = json.to_string();
-        let bytes = data.as_bytes();
-
-        let encrypted_bytes = match encrypt(bytes, &key, &iv) {
-            Ok(bytes) => bytes,
-            Err(_) => return,
-        };
-
-        let data = format!("{:?}", encrypted_bytes);
-
-        let mut store = match StorageService::new(Area::Local) {
-            Ok(store) => store,
-            Err(_) => return,
-        };
-
-        store.store("passwords", Ok(data));
+        save_encrypted_passwords_to_storage(&encrypted_passwords);
     }
 }
 
-fn load_key() -> Option<[u8; 32]> {
+fn load_key_from_storage() -> Option<[u8; 32]> {
     let key = LoginService::key_present_in_storage()?;
 
     let data: [u8; 32] = match serde_json::from_str(&key) {
+        Ok(data) => data,
+        Err(_) => return None,
+    };
+
+    Some(data)
+}
+
+fn save_encrypted_passwords_to_storage(encrypted_passwords: &EncryptedPasswords) {
+    let data = match serde_json::to_string(encrypted_passwords) {
+        Ok(data) => data,
+        Err(_) => return,
+    };
+
+    let mut store = match StorageService::new(Area::Local) {
+        Ok(store) => store,
+        Err(_) => return,
+    };
+
+    store.store("passwords", Ok(data));
+}
+
+fn load_encrypted_passwords_from_storage() -> Option<EncryptedPasswords> {
+    let store = match StorageService::new(Area::Local) {
+        Ok(store) => store,
+        Err(_) => return None,
+    };
+
+    let data = match store.restore("passwords") {
+        Ok(data) => data,
+        Err(_) => String::new(),
+    };
+    
+    if data.is_empty() {
+        return Some(EncryptedPasswords { bytes: vec![] });
+    }
+
+    let encrypted_passwords: EncryptedPasswords = match serde_json::from_str(&data) {
+        Ok(data) => data,
+        Err(_) => return None,
+    };
+
+    Some(encrypted_passwords)
+}
+
+fn encrypt_passwords(passwords: &Vec<Category>) -> Option<Vec<u8>> {
+    let bytes = match serde_json::to_vec(passwords) {
+        Ok(bytes) => bytes,
+        Err(_) => return None,
+    };
+
+    let key = load_key_from_storage()?;
+
+    let iv = match crypto::generate_iv_from_seed("silly goose") {
+        Ok(iv) => iv,
+        Err(_) => return None,
+    };
+
+    match crypto::encrypt(&bytes, &key, &iv) {
+        Ok(bytes) => Some(bytes),
+        Err(_) => None,
+    }
+}
+
+fn decrypt_passwords(bytes: &[u8]) -> Option<Vec<Category>> {
+    let key = load_key_from_storage()?;
+
+    let iv = match crypto::generate_iv_from_seed("silly goose") {
+        Ok(iv) => iv,
+        Err(_) => return None,
+    };
+
+    let bytes = match crypto::decrypt(bytes, &key, &iv) {
+        Ok(bytes) => bytes,
+        Err(_) => return None,
+    };
+
+    let data: Vec<Category> = match serde_json::from_slice(&bytes) {
         Ok(data) => data,
         Err(_) => return None,
     };

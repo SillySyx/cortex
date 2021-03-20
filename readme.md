@@ -23,6 +23,14 @@ cargo +nightly install miniserve
 ```
 
 
+# Todo
+* Setup automatic github pages deployment, trigger on tags
+* Notification when password has been copied
+* Remove password from clipboard after 10sec
+* Import/Export passwords
+* Knowledgebase
+
+
 # Resources
 * https://github.com/yewstack/yew
 * https://rustwasm.github.io/docs/wasm-bindgen/
