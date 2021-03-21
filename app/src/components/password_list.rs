@@ -227,7 +227,7 @@ impl PasswordList {
                     onkeyup=self.link.callback(|e| Messages::SearchKeyPressed(e)) />
 
                 <ContextMenu open=self.context_menu_open>
-                    <img class="search-box-button" src="icons/cog.svg" alt="" />
+                    <img class="search-box-button animation-grow" src="icons/cog.svg" alt="" />
                     <ContextMenuContent>
                         <Button active=false clicked=self.link.callback(|_| Messages::ChangeView(Views::NewCategory))>
                             {"New category"}
@@ -253,8 +253,8 @@ impl PasswordList {
 
         html! {
             <div class="animation-fade">
-                <img class="category-icon" src="icons/edit.svg" alt="Edit category" onclick=edit_category />
-                <img class="category-icon" src="icons/add.svg" alt="New password" onclick=new_password />
+                <img class="category-icon animation-grow" src="icons/edit.svg" alt="Edit category" onclick=edit_category />
+                <img class="category-icon animation-grow" src="icons/add.svg" alt="New password" onclick=new_password />
                 <h1 class="category-title">{&category.title}</h1>
                 <div class="category">
                     { for category.passwords.iter().map(|password| self.render_password(category.title.clone(), password)) }
@@ -277,8 +277,8 @@ impl PasswordList {
                 <h1 class="password-title">{&password.name}</h1>
                 <p class="password-description">{&password.description}</p>
                 <div class="password-icons">
-                    <img class="password-icon" src="icons/key.svg" alt="Copy password" onclick=copy_password />
-                    <img class="password-icon" src="icons/edit.svg" alt="Edit password" onclick=edit_password />
+                    <img class="password-icon animation-grow" src="icons/key.svg" alt="Copy password" onclick=copy_password />
+                    <img class="password-icon animation-grow" src="icons/edit.svg" alt="Edit password" onclick=edit_password />
                 </div>
             </div>
         }

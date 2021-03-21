@@ -17,3 +17,7 @@
 .main-button.active, .main-button.active:hover {
     background-color: #777;
 }
+
+.main-button.animation-grow:hover {
+  transform: scale(1.1, 1.2);
+}

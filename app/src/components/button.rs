@@ -55,7 +55,7 @@ impl Component for Button {
         });
 
         html! {
-            <div class=("main-button", active) onclick=clicked>
+            <div class=("main-button", "animation-grow", active) onclick=clicked>
                 { self.props.children.clone() }
             </div>
         }

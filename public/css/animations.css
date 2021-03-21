@@ -23,3 +23,11 @@
 .animation-spin {
   animation: spin 1s infinite linear;
 }
+
+.animation-grow {
+  transition: transform .2s ease-out;
+}
+
+.animation-grow:hover {
+  transform: scale(1.3, 1.3);
+}

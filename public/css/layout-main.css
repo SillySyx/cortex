@@ -25,6 +25,10 @@
   grid-auto-rows: max-content;
 }
 
+.main-menu-logo {
+  height: unset;
+}
+
 .main-content {
   grid-area: content;
   padding: 1rem;
