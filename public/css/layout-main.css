@@ -25,6 +25,10 @@
   grid-auto-rows: max-content;
 }
 
+.main-menu .animation-grow:hover {
+  transform: unset;
+}
+
 .main-menu-logo {
   height: unset;
 }

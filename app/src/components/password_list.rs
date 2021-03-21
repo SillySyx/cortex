@@ -235,6 +235,9 @@ impl PasswordList {
                         <Button active=false clicked=self.link.callback(|_| Messages::ChangeView(Views::ImportExport))>
                             {"Import/Export"}
                         </Button>
+                        <Button active=false clicked=self.link.callback(|_| Messages::Logout)>
+                            {"Logout"}
+                        </Button>
                     </ContextMenuContent>
                 </ContextMenu>
             </header>
@@ -274,7 +277,7 @@ impl PasswordList {
 
         html! {
             <div class="password animation-fade">
-                <h1 class="password-title">{&password.name}</h1>
+                <h1 class="password-title" onclick=edit_password.clone()>{&password.name}</h1>
                 <p class="password-description">{&password.description}</p>
                 <div class="password-icons">
                     <img class="password-icon animation-grow" src="icons/key.svg" alt="Copy password" onclick=copy_password />
