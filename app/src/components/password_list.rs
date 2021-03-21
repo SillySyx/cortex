@@ -20,6 +20,7 @@ pub enum Messages {
     ChangeView(Views),
     ChangeViewWithId(Views, Option<String>, Option<String>),
     Logout,
+    ResetData,
 
     AddCategory(String),
     EditCategory(String, String),
@@ -91,6 +92,11 @@ impl Component for PasswordList {
                 true
             },
             Messages::Logout => {
+                LoginService::logout();
+                false
+            },
+            Messages::ResetData => {
+                PasswordService::reset_data();
                 LoginService::logout();
                 false
             },
@@ -380,6 +386,9 @@ impl PasswordList {
     }
 
     fn render_import_export(&self) -> Html {
+        let encrypted_bytes = PasswordService::encrypted_bytes();
+        let href = format!("data:text/plain;charset=utf-8,{:?}", encrypted_bytes);
+
         html! {
             <div class="import-export animation-fade">
                 <h1>{"Import/Export"}</h1>
@@ -388,9 +397,9 @@ impl PasswordList {
                     <Button active=false clicked=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords))>
                         {"Import"}
                     </Button>
-                    <Button active=false clicked=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords))>
+                    <a class="main-button animation-grow" href=href download="passwords.cortex">
                         {"Export"}
-                    </Button>
+                    </a>
                     <Button active=false clicked=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords))>
                         {"Back"}
                     </Button>
@@ -415,10 +424,15 @@ impl PasswordList {
         html! {
             <div class="animation-fade error-message">
                 <img class="error-icon" src="icons/error.svg" alt="" />
-                <h1 class="error-text">{"Failed to decrypt passwords"}</h1>
+                <h1 class="error-text">{"Invalid password specified"}</h1>
                 <Button active=false clicked=self.link.callback(|_| Messages::Logout)>
-                    {"Logout"}
+                    {"Reenter password"}
                 </Button>
+                <div class="password-editor-dangerzone">
+                    <Button active=false clicked=self.link.callback(|_| Messages::ResetData)>
+                        {"Reset application data"}
+                    </Button>
+                </div>
             </div>
         }
     }

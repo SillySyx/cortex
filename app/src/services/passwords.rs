@@ -49,6 +49,24 @@ impl PasswordService {
 
         save_encrypted_passwords_to_storage(&encrypted_passwords);
     }
+
+    pub fn reset_data() {
+        let mut storage = match StorageService::new(Area::Local) {
+            Ok(store) => store,
+            Err(_) => return,
+        };
+
+        storage.remove("passwords");
+    }
+
+    pub fn encrypted_bytes() -> Vec<u8> {
+        let data = match load_encrypted_passwords_from_storage() {
+            Some(data) => data,
+            None => return vec![],
+        };
+
+        data.bytes
+    }
 }
 
 fn load_key_from_storage() -> Option<[u8; 32]> {

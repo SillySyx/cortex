@@ -29,3 +29,8 @@ img {
 input {
   width: 100%;
 }
+
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
