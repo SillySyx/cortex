@@ -1,5 +1,3 @@
-use std::vec;
-
 use yew::services::{StorageService, storage::Area};
 use serde::{Serialize, Deserialize};
 
@@ -59,13 +57,49 @@ impl PasswordService {
         storage.remove("passwords");
     }
 
-    pub fn encrypted_bytes() -> Vec<u8> {
+    pub fn export_bytes() -> Vec<u8> {
         let data = match load_encrypted_passwords_from_storage() {
             Some(data) => data,
             None => return vec![],
         };
 
         data.bytes
+    }
+
+    pub fn import_bytes(bytes: Vec<u8>) -> Option<Vec<Category>> {
+        decrypt_passwords(&bytes)
+    }
+
+    pub fn combine_passwords(categories: &Vec<Category>, new_categories: &Vec<Category>) -> Vec<Category> {
+        let mut categories = categories.clone();
+
+        let combine_passwords = |category: &mut Category, new_category: &Category| {
+            for new_password in new_category.passwords.clone() {
+                match category.passwords.iter_mut().find(|p| p.name == new_password.name) {
+                    Some(password) => {
+                        password.name = new_password.name;
+                        password.description = new_password.description;
+                        password.password = new_password.password;
+                    },
+                    None => {
+                        category.passwords.push(new_password.clone());
+                    },
+                };
+            }
+        };
+
+        for new_category in new_categories {
+            match categories.iter_mut().find(|c| c.title == new_category.title) {
+                Some(category) => {
+                    combine_passwords(category, new_category);
+                },
+                None => {
+                    categories.push(new_category.clone());
+                },
+            };
+        }
+
+        categories
     }
 }
 

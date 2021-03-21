@@ -1,6 +1,9 @@
+use std::vec;
+
 use yew::{
     prelude::*, 
     web_sys::HtmlInputElement,
+    services::reader::{File, FileData, ReaderService, ReaderTask},
 };
 
 use super::{Button, ContextMenu, ContextMenuContent, PasswordEditor, PasswordCategoryEditor};
@@ -33,10 +36,17 @@ pub enum Messages {
 
     UpdateSearchText(String),
     SearchKeyPressed(KeyboardEvent),
+
+    ImportClicked,
+    ImportFile(File),
+    ImportData(Vec<u8>),
 }
 
 pub struct PasswordList {
     link: ComponentLink<Self>,
+    reader_service: ReaderService,
+    reader_task: Option<ReaderTask>,
+    upload_ref: NodeRef,
     search_ref: NodeRef,
     search_text: String,
     passwords: Vec<Category>,
@@ -63,6 +73,9 @@ impl Component for PasswordList {
 
         Self {
             link,
+            reader_service: ReaderService::new(),
+            reader_task: None,
+            upload_ref: NodeRef::default(),
             search_ref: NodeRef::default(),
             search_text: String::new(),
             passwords,
@@ -182,6 +195,40 @@ impl Component for PasswordList {
                 }
                 false
             },
+            Messages::ImportClicked => {
+                if let Some(input) = self.upload_ref.cast::<HtmlInputElement>() {
+                    let _ = input.click();
+                }
+                false
+            },
+            Messages::ImportFile(file) => {
+                let callback = self.link.callback(|data: FileData| Messages::ImportData(data.content));
+                let task = self.reader_service.read_file(file, callback).unwrap();
+                self.reader_task = Some(task);
+                false
+            },
+            Messages::ImportData(data) => {
+                let bytes: Vec<u8> = match serde_json::from_slice(&data) {
+                    Ok(bytes) => bytes,
+                    Err(_) => {
+                        // show import error?!?
+                        return false;
+                    },
+                };
+
+                let mut passwords = match PasswordService::import_bytes(bytes) {
+                    Some(passwords) => passwords,
+                    None => {
+                        // show import error?!?
+                        return false;
+                    },
+                };
+
+                self.passwords = PasswordService::combine_passwords(&self.passwords, &mut passwords);
+
+                self.view = Views::ListPasswords;
+                true
+            },
         }
     }
 
@@ -198,7 +245,6 @@ impl Component for PasswordList {
     }
 
     fn view(&self) -> Html {
-
         html! {
             <div class="password-list">
                 {
@@ -386,15 +432,25 @@ impl PasswordList {
     }
 
     fn render_import_export(&self) -> Html {
-        let encrypted_bytes = PasswordService::encrypted_bytes();
+        let encrypted_bytes = PasswordService::export_bytes();
         let href = format!("data:text/plain;charset=utf-8,{:?}", encrypted_bytes);
+
+        let file_uploaded = self.link.callback(|event: ChangeData| {
+            if let ChangeData::Files(files) = event {
+                if let Some(file) = files.get(0) {
+                    return Messages::ImportFile(file);
+                }
+            }
+            Messages::ImportData(vec![])
+        });
 
         html! {
             <div class="import-export animation-fade">
                 <h1>{"Import/Export"}</h1>
-                <p>{"Not yet implemented"}</p>
+                <p>{"Move passwords between devices by export and import, both devices needs the same master password."}</p>
                 <div class="import-export-buttons">
-                    <Button active=false clicked=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords))>
+                    <input ref=self.upload_ref.clone() type="file" onchange=file_uploaded />
+                    <Button active=false clicked=self.link.callback(|_| Messages::ImportClicked)>
                         {"Import"}
                     </Button>
                     <a class="main-button animation-grow" href=href download="passwords.cortex">
