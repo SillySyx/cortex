@@ -1,16 +1,15 @@
 <div align="center">
     <h1><code>Cortex</code></h1>
-    <strong>The freshest, spiciest, hottest and most progressive application on the web!</strong>
-    <p>🔥 🌶 🔥</p>
+    <strong>An offline password manager and knowledgebase application.</strong>
 </div>
 
 
 # Features
-* Offline progressive web application
-* Webassembly
-* Data encryption
 * Password manager
 * Knowledgebase
+* Data encryption
+* Webassembly
+* Offline progressive web application
 
 
 # Requirements
