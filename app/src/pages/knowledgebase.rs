@@ -29,8 +29,9 @@ impl Component for KnowledgebasePage {
         html! {
             <>
             <PageHeader title={"Knowledgebase"}
-                        description={"Not implemented yet"}>
+                        description={"Save things you dont want to forget."}>
             </PageHeader>
+            <p>{"Not yet implemented"}</p>
             </>
         }
     }

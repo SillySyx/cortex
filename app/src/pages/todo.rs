@@ -28,9 +28,10 @@ impl Component for TodoPage {
     fn view(&self) -> Html {
         html! {
             <>
-            <PageHeader title={"Todo"}
-                        description={"Not implemented yet"}>
+            <PageHeader title={"Todo lists"}
+                        description={"Useful if you have a silly brain."}>
             </PageHeader>
+            <p>{"Not yet implemented"}</p>
             </>
         }
     }

@@ -6,7 +6,7 @@ use yew::{
     services::reader::{File, FileData, ReaderService, ReaderTask},
 };
 
-use crate::components::{Button, ContextMenu, ContextMenuContent, PasswordEditor, PasswordCategoryEditor};
+use crate::components::{Button, ContextMenu, ContextMenuContent, PasswordEditor, PasswordCategoryEditor, PageHeader};
 use crate::services::{Category, ClipboardService, LoginService, Password, PasswordService};
 
 pub enum Views {
@@ -263,6 +263,8 @@ impl PasswordsPage {
         let categories = filter_categories(&self.passwords, self.search_text.clone());
 
         html! {
+            <>
+            <PageHeader title={"Password manager"} description={"Handle your passwords with ease."} />
             <div class="animation-fade">
             <header class="search-box">
                 <input 
@@ -288,6 +290,7 @@ impl PasswordsPage {
 
             { for categories.iter().map(|category| self.render_category(category)) }
             </div>
+            </>
         }
     }
 
