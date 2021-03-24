@@ -10,3 +10,9 @@
 .page-header-content {
 	float: right;
 }
+
+@media (max-width: 56rem) {
+	.page-header {
+		margin-bottom: 2rem;
+	}
+}

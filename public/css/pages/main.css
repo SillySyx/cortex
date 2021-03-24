@@ -43,7 +43,7 @@
 }
 
 @media (max-width: 56rem) {
-	.password {
-		width: 100%;
+	.main-content {
+		width: calc(100% - 2rem);
 	}
 }
