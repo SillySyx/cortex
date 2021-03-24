@@ -65,11 +65,13 @@ impl MainPage {
         html! {
             <div class="main-layout main-background animation-fade">
                 <aside class="main-menu">
-                    <img class="main-menu-logo" src="icons/brain.svg" alt="Homepage" onclick=self.link.callback(|_| Messages::ChangeView(Views::Home)) />
+                    <div class="menu-items">
+                        <img class="main-menu-logo" src="icons/brain.svg" alt="Homepage" onclick=self.link.callback(|_| Messages::ChangeView(Views::Home)) />
 
-                    { self.render_menu_button("icons/password.svg", "Password manager", Views::Passwords) }
-                    { self.render_menu_button("icons/knowledge.svg", "Knowledgebase", Views::Knowledgebase) }
-                    { self.render_menu_button("icons/lists.svg", "Todo lists", Views::Todo) }
+                        { self.render_menu_button("icons/password.svg", "Password manager", Views::Passwords) }
+                        { self.render_menu_button("icons/knowledge.svg", "Knowledgebase", Views::Knowledgebase) }
+                        { self.render_menu_button("icons/lists.svg", "Todo lists", Views::Todo) }
+                    </div>
                 </aside>
                 <section class="main-content">
                 {
