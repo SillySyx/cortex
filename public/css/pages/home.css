@@ -1,25 +1,25 @@
 .home-page {
-    display: grid;
-    grid-template-columns: 1fr 22rem;
+	display: grid;
+	grid-template-columns: 1fr 22rem;
 }
 
-.home-page > img {
-    width: 17rem;
-    place-self: center;
+.home-page>img {
+	width: 17rem;
+	place-self: center;
 }
 
 .quick-link {
-    transition: all .2s ease-out;
-    display: grid;
-    grid-template-columns: 4rem 1fr;
-    gap: 2rem;
-    padding: 1rem;
-    background-color: rgba(100, 100, 100, .3);
-    border-radius: .5rem;
-    margin-bottom: 3rem;
-    align-items: center;
-    cursor: pointer;
-    user-select: none;
+	transition: all .2s ease-out;
+	display: grid;
+	grid-template-columns: 4rem 1fr;
+	gap: 2rem;
+	padding: 1rem;
+	background-color: rgba(100, 100, 100, .3);
+	border-radius: .5rem;
+	margin-bottom: 3rem;
+	align-items: center;
+	cursor: pointer;
+	user-select: none;
 }
 
 .quick-link:hover {
@@ -27,5 +27,5 @@
 }
 
 .quick-link p {
-    color: #aaa;
+	color: #aaa;
 }

@@ -1,33 +1,33 @@
 @keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
 }
-  
+
 @keyframes fade {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
 }
 
 .animation-fade {
-  animation: fade .4s;
+	animation: fade .4s;
 }
 
 .animation-spin {
-  animation: spin 1s infinite linear;
+	animation: spin 1s infinite linear;
 }
 
 .animation-grow {
-  transition: all .2s ease-out;
+	transition: all .2s ease-out;
 }
 
 .animation-grow:hover {
-  transform: scale(1.3, 1.3);
+	transform: scale(1.3, 1.3);
 }

@@ -1,52 +1,49 @@
 .login-layout {
-    min-height: 100vh;
-    display: grid;
-    grid-template-columns: auto;
-    grid-template-rows: 1fr 1fr;
-    grid-template-areas:
-      "header"
-      "content";
-    place-items: center;
-  }
-  
-  .login-background {
-    background-color: #191919;
-    background-image: url("../../images/login.jpeg");
-    background-size: cover;
-    background-position: center;
-  }
-  
-  .login-box {
-    grid-area: content;
-  }
-  
-  .login-loader {
-    grid-area: content;
-    width: 10rem;
-    height: 10rem;
-  }
-  
-  .login-logo {
-    grid-area: header;
-    max-width: 25rem;
-    width: 80%;
-    filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, .5));
-  }
-  
-  .login-input {
-    max-width: 30rem;
-    width: 80%;
-    font-family: 'Inter', Helvetica, Arial, sans-serif;
-    padding: 1rem 1.5rem;
-    border: 0;
-    box-sizing: border-box;
-    border-radius: .5rem;
-    box-shadow: 3px 3px 2px rgba(0, 0, 0, .4);
-  }
-  
-  .login-input:focus {
-    outline: none;
-  }
-  
-  @media (max-width: 56rem) {
-  }
+	min-height: 100vh;
+	display: grid;
+	grid-template-columns: auto;
+	grid-template-rows: 1fr 1fr;
+	grid-template-areas: "header" "content";
+	place-items: center;
+}
+
+.login-background {
+	background-color: #191919;
+	background-image: url("../../images/login.jpeg");
+	background-size: cover;
+	background-position: center;
+}
+
+.login-box {
+	grid-area: content;
+}
+
+.login-loader {
+	grid-area: content;
+	width: 10rem;
+	height: 10rem;
+}
+
+.login-logo {
+	grid-area: header;
+	max-width: 25rem;
+	width: 80%;
+	filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, .5));
+}
+
+.login-input {
+	max-width: 30rem;
+	width: 80%;
+	font-family: 'Inter', Helvetica, Arial, sans-serif;
+	padding: 1rem 1.5rem;
+	border: 0;
+	box-sizing: border-box;
+	border-radius: .5rem;
+	box-shadow: 3px 3px 2px rgba(0, 0, 0, .4);
+}
+
+.login-input:focus {
+	outline: none;
+}
+
+@media (max-width: 56rem) {}
