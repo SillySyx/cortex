@@ -1,5 +1,7 @@
 use yew::prelude::*;
 
+use crate::components::PageHeader;
+
 pub enum Messages {
 }
 
@@ -25,10 +27,11 @@ impl Component for KnowledgebasePage {
 
     fn view(&self) -> Html {
         html! {
-            <div class="knowledgebase">
-                <h1>{"Knowledgebase"}</h1>
-                <p>{"Not implemented yet"}</p>
-            </div>
+            <>
+            <PageHeader title={"Knowledgebase"}
+                        description={"Not implemented yet"}>
+            </PageHeader>
+            </>
         }
     }
 }

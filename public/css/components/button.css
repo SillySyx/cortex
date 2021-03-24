@@ -1,0 +1,24 @@
+.main-button {
+	box-sizing: border-box;
+	transition: all .2s ease-out;
+	box-shadow: 3px 3px 2px rgba(0, 0, 0, .075);
+	background-color: #555;
+	padding: .3rem;
+	border-radius: .2rem;
+	cursor: pointer;
+	display: grid;
+	place-content: center;
+	user-select: none;
+}
+
+.main-button:hover {
+	background-color: #666;
+}
+
+.main-button.active, .main-button.active:hover {
+	background-color: #777;
+}
+
+.main-button.animation-grow:hover {
+	transform: scale(1.1, 1.2);
+}

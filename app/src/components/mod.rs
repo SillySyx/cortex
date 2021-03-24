@@ -3,6 +3,7 @@ mod context_menu;
 mod context_menu_content;
 mod password_editor;
 mod password_category_editor;
+mod page_header;
 
 pub use {
     button::Button,
@@ -10,4 +11,5 @@ pub use {
     context_menu_content::ContextMenuContent,
     password_editor::PasswordEditor,
     password_category_editor::PasswordCategoryEditor,
+    page_header::PageHeader,
 };

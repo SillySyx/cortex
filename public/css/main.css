@@ -1,19 +1,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500&display=swap');
 
+@import url('./components/button.css');
+@import url('./components/context-menu.css');
+@import url('./components/page-header.css');
+@import url('./components/password-editor.css');
+
+@import url('./pages/home.css');
+@import url('./pages/knowledgebase.css');
+@import url('./pages/login.css');
+@import url('./pages/main.css');
+@import url('./pages/passwords.css');
+@import url('./pages/todo.css');
+
 @import url('./animations.css');
-@import url('./main-button.css');
-@import url('./password-list.css');
-@import url('./context-menu.css');
-@import url('./password-editor.css');
-@import url('./knowledgebase.css');
-@import url('./layout-login.css');
-@import url('./layout-main.css');
 
 * {
   font-family: 'Inter', Helvetica, Arial, sans-serif;
   margin: 0;
-  letter-spacing: -.5px;
-  font-weight: 300;
+  letter-spacing: -.03rem;
+  font-weight: normal;
+  font-style: normal;
   font-size: 1rem;
 }
 
@@ -25,6 +31,7 @@ body {
 img {
   width: 100%;
   height: 100%;
+  user-select: none;
 }
 
 input {
@@ -37,13 +44,21 @@ a {
 }
 
 h1 {
+  font-weight: 500;
   font-size: 2rem;
 }
 
 h2 {
+  font-weight: 500;
   font-size: 1.5rem;
 }
 
 h3 {
+  font-weight: 500;
   font-size: 1.25rem;
+}
+
+h4 {
+  font-weight: 500;
+  font-size: 1rem;
 }

@@ -3,7 +3,7 @@ use yew::{
     web_sys::HtmlInputElement,
 };
 
-use super::Button;
+use super::{Button, PageHeader};
 
 #[derive(PartialEq)]
 enum Mode {
@@ -134,9 +134,14 @@ impl Component for PasswordEditor {
     }
 
     fn view(&self) -> Html {
+        let title = match self.mode {
+            Mode::New => "Add password",
+            Mode::Edit => "Edit password",
+        };
+
         html! {
             <div class="password-editor animation-fade">
-                { self.render_header() }
+                <PageHeader title=title />
 
                 <lable>{"Name"}</lable>
                 <input
@@ -165,22 +170,6 @@ impl Component for PasswordEditor {
 }
 
 impl PasswordEditor {
-    fn render_header(&self) -> Html {
-        if self.mode == Mode::New {
-            return html! {
-                <div class="password-editor-header">
-                    <h1>{"Add password"}</h1>
-                </div>
-            };
-        }
-
-        html! {
-            <div class="password-editor-header">
-                <h1>{"Edit password"}</h1>
-            </div>
-        }
-    }
-
     fn render_buttons(&self) -> Html {
         if self.mode == Mode::New {
             return html! {

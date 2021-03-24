@@ -75,7 +75,7 @@ impl MainPage {
                 {
                     match self.view {
                         Views::Home => html! {
-                            <HomePage />
+                            <HomePage change_view={self.link.callback(|view: Views| Messages::ChangeView(view))} />
                         },
                         Views::Passwords => html! {
                             <PasswordsPage />

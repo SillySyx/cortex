@@ -1,0 +1,12 @@
+.page-header {
+	margin-bottom: 4rem;
+	user-select: none;
+}
+
+.page-header > p {
+	color: #aaa;
+}
+
+.page-header-content {
+	float: right;
+}

@@ -1,5 +1,7 @@
 use yew::prelude::*;
 
+use crate::components::PageHeader;
+
 pub enum Messages {
 }
 
@@ -25,10 +27,11 @@ impl Component for TodoPage {
 
     fn view(&self) -> Html {
         html! {
-            <div class="todo">
-                <h1>{"Todo"}</h1>
-                <p>{"Not implemented yet"}</p>
-            </div>
+            <>
+            <PageHeader title={"Todo"}
+                        description={"Not implemented yet"}>
+            </PageHeader>
+            </>
         }
     }
 }

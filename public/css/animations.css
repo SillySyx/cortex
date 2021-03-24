@@ -25,7 +25,7 @@
 }
 
 .animation-grow {
-  transition: transform .2s ease-out;
+  transition: all .2s ease-out;
 }
 
 .animation-grow:hover {

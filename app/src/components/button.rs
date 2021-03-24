@@ -6,6 +6,7 @@ pub enum Messages {
 
 #[derive(Clone, PartialEq, Properties)]
 pub struct Props {
+	#[prop_or(false)]
     pub active: bool,
     pub children: Children,
     pub clicked: Callback<()>,

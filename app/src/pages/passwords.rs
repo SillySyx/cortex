@@ -276,14 +276,11 @@ impl PasswordsPage {
                 <ContextMenu open=self.context_menu_open>
                     <img class="search-box-button animation-grow" src="icons/cog.svg" alt="" />
                     <ContextMenuContent>
-                        <Button active=false clicked=self.link.callback(|_| Messages::ChangeView(Views::NewCategory))>
+                        <Button clicked=self.link.callback(|_| Messages::ChangeView(Views::NewCategory))>
                             {"New category"}
                         </Button>
-                        <Button active=false clicked=self.link.callback(|_| Messages::ChangeView(Views::ImportExport))>
+                        <Button clicked=self.link.callback(|_| Messages::ChangeView(Views::ImportExport))>
                             {"Import/Export"}
-                        </Button>
-                        <Button active=false clicked=self.link.callback(|_| Messages::Logout)>
-                            {"Logout"}
                         </Button>
                     </ContextMenuContent>
                 </ContextMenu>

@@ -9,7 +9,7 @@ pub use {
     home::HomePage,
     knowledgebase::KnowledgebasePage,
     login::LoginPage,
-    main::MainPage,
+    main::{MainPage, Views as MainPageViews},
     passwords::PasswordsPage,
     todo::TodoPage,
 };
