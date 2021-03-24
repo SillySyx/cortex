@@ -225,6 +225,7 @@ impl Component for PasswordList {
                 };
 
                 self.passwords = PasswordService::combine_passwords(&self.passwords, &mut passwords);
+                PasswordService::save_passwords(&self.passwords);
 
                 self.view = Views::ListPasswords;
                 true
