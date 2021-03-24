@@ -19,6 +19,7 @@
 
 body {
   background-color: #222;
+  overflow-y: scroll;
 }
 
 img {
@@ -33,4 +34,16 @@ input {
 a {
   color: inherit;
   text-decoration: inherit;
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+}
+
+h3 {
+  font-size: 1.25rem;
 }

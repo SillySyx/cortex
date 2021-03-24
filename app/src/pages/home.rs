@@ -3,10 +3,10 @@ use yew::prelude::*;
 pub enum Messages {
 }
 
-pub struct Knowledgebase {
+pub struct HomePage {
 }
 
-impl Component for Knowledgebase {
+impl Component for HomePage {
     type Message = Messages;
     type Properties = ();
 
@@ -25,9 +25,10 @@ impl Component for Knowledgebase {
 
     fn view(&self) -> Html {
         html! {
-            <div class="knowledgebase">
-                <h1>{"Knowledgebase"}</h1>
+            <div class="home-page">
+                <h1>{"Home"}</h1>
                 <p>{"Not implemented yet"}</p>
+                <img src="icons/home.svg" alt="Home" />
             </div>
         }
     }

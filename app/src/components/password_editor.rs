@@ -134,11 +134,6 @@ impl Component for PasswordEditor {
     }
 
     fn view(&self) -> Html {
-        let password_type = match self.mode {
-            Mode::New => "text",
-            Mode::Edit => "password",
-        };
-
         html! {
             <div class="password-editor animation-fade">
                 { self.render_header() }
@@ -159,7 +154,7 @@ impl Component for PasswordEditor {
                 <lable>{"Password"}</lable>
                 <input
                     value=self.password 
-                    type=password_type
+                    type="password"
                     placeholder="Enter password"
                     oninput=self.link.callback(|e: InputData| Messages::UpdatePassword(e.value)) />
                     

@@ -6,7 +6,7 @@ use yew::{
     services::reader::{File, FileData, ReaderService, ReaderTask},
 };
 
-use super::{Button, ContextMenu, ContextMenuContent, PasswordEditor, PasswordCategoryEditor};
+use crate::components::{Button, ContextMenu, ContextMenuContent, PasswordEditor, PasswordCategoryEditor};
 use crate::services::{Category, ClipboardService, LoginService, Password, PasswordService};
 
 pub enum Views {
@@ -42,7 +42,7 @@ pub enum Messages {
     ImportData(Vec<u8>),
 }
 
-pub struct PasswordList {
+pub struct PasswordsPage {
     link: ComponentLink<Self>,
     reader_service: ReaderService,
     reader_task: Option<ReaderTask>,
@@ -56,7 +56,7 @@ pub struct PasswordList {
     selected_password_id: String,
 }
 
-impl Component for PasswordList {
+impl Component for PasswordsPage {
     type Message = Messages;
     type Properties = ();
 
@@ -246,25 +246,19 @@ impl Component for PasswordList {
     }
 
     fn view(&self) -> Html {
-        html! {
-            <div class="password-list">
-                {
-                    match self.view {
-                        Views::ListPasswords => self.render_password_list(),
-                        Views::NewPassword => self.render_new_password(),
-                        Views::EditPassword => self.render_edit_password(),
-                        Views::NewCategory => self.render_new_category(),
-                        Views::EditCategory => self.render_edit_category(),
-                        Views::ImportExport => self.render_import_export(),
-                        Views::DecryptError => self.render_decrypt_error(),
-                    }
-                }
-            </div>
+        match self.view {
+            Views::ListPasswords => self.render_password_list(),
+            Views::NewPassword => self.render_new_password(),
+            Views::EditPassword => self.render_edit_password(),
+            Views::NewCategory => self.render_new_category(),
+            Views::EditCategory => self.render_edit_category(),
+            Views::ImportExport => self.render_import_export(),
+            Views::DecryptError => self.render_decrypt_error(),
         }
     }
 }
 
-impl PasswordList {
+impl PasswordsPage {
     fn render_password_list(&self) -> Html {
         let categories = filter_categories(&self.passwords, self.search_text.clone());
 
@@ -311,7 +305,7 @@ impl PasswordList {
             <div class="animation-fade">
                 <img class="category-icon animation-grow" src="icons/edit.svg" alt="Edit category" onclick=edit_category />
                 <img class="category-icon animation-grow" src="icons/add.svg" alt="New password" onclick=new_password />
-                <h1 class="category-title">{&category.title}</h1>
+                <h2 class="category-title">{&category.title}</h2>
                 <div class="category">
                     { for category.passwords.iter().map(|password| self.render_password(category.title.clone(), password)) }
                 </div>
@@ -330,7 +324,7 @@ impl PasswordList {
 
         html! {
             <div class="password animation-fade">
-                <h1 class="password-title" onclick=edit_password.clone()>{&password.name}</h1>
+                <h3 class="password-title" onclick=edit_password.clone()>{&password.name}</h3>
                 <p class="password-description">{&password.description}</p>
                 <div class="password-icons">
                     <img class="password-icon animation-grow" src="icons/key.svg" alt="Copy password" onclick=copy_password />

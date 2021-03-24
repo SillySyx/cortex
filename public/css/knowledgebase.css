@@ -1,9 +1,3 @@
-.knowledgebase {
-  justify-self: center;
-  max-width: 50rem;
-  width: 100%;
-}
-
 .knowledgebase > h1 {
   font-size: 2rem;
 }
