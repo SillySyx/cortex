@@ -6,7 +6,7 @@ use yew::{
     services::reader::{File, FileData, ReaderService, ReaderTask},
 };
 
-use crate::components::{Button, ContextMenu, ContextMenuContent, PasswordEditor, PasswordCategoryEditor, PageHeader};
+use crate::components::{Button, ContextMenu, ContextMenuContent, PasswordEditor, PasswordCategoryEditor, PageHeader, InputBox};
 use crate::services::{Category, ClipboardService, LoginService, Password, PasswordService};
 
 pub enum Views {
@@ -35,7 +35,7 @@ pub enum Messages {
     RemovePassword(String, String),
 
     UpdateSearchText(String),
-    SearchKeyPressed(KeyboardEvent),
+    ClearSearchText,
 
     ImportClicked,
     ImportFile(File),
@@ -188,12 +188,9 @@ impl Component for PasswordsPage {
                 self.search_text = value;
                 true
             },
-            Messages::SearchKeyPressed(e) => {
-                if e.key() == String::from("Escape") {
-                    self.search_text = String::from("");
-                    return true;
-                }
-                false
+            Messages::ClearSearchText => {
+                self.search_text = String::from("");
+                true
             },
             Messages::ImportClicked => {
                 if let Some(input) = self.upload_ref.cast::<HtmlInputElement>() {
@@ -264,32 +261,30 @@ impl PasswordsPage {
 
         html! {
             <>
-            <PageHeader title={"Password manager"} description={"Handle your passwords with ease."} />
-            <div class="animation-fade">
-            <header class="search-box">
-                <input 
-                    ref=self.search_ref.clone()
-                    value=self.search_text
-                    class="main-search-box" 
+                <PageHeader title={"Password manager"} description={"Handle your passwords with ease."}>
+                </PageHeader>
+
+                <InputBox 
+                    class="search-box"
+                    value=self.search_text.clone()
+                    focus=true
                     placeholder="Search for passwords"
-                    oninput=self.link.callback(|e: InputData| Messages::UpdateSearchText(e.value)) 
-                    onkeyup=self.link.callback(|e| Messages::SearchKeyPressed(e)) />
+                    value_changed=self.link.callback(|value| Messages::UpdateSearchText(value))
+                    aborted=self.link.callback(|_| Messages::ClearSearchText)>
+                    <ContextMenu open=self.context_menu_open>
+                        <img class="search-box-button animation-grow" src="icons/cog.svg" alt="" />
+                        <ContextMenuContent>
+                            <Button clicked=self.link.callback(|_| Messages::ChangeView(Views::NewCategory))>
+                                {"New category"}
+                            </Button>
+                            <Button clicked=self.link.callback(|_| Messages::ChangeView(Views::ImportExport))>
+                                {"Import/Export"}
+                            </Button>
+                        </ContextMenuContent>
+                    </ContextMenu>
+                </InputBox>
 
-                <ContextMenu open=self.context_menu_open>
-                    <img class="search-box-button animation-grow" src="icons/cog.svg" alt="" />
-                    <ContextMenuContent>
-                        <Button clicked=self.link.callback(|_| Messages::ChangeView(Views::NewCategory))>
-                            {"New category"}
-                        </Button>
-                        <Button clicked=self.link.callback(|_| Messages::ChangeView(Views::ImportExport))>
-                            {"Import/Export"}
-                        </Button>
-                    </ContextMenuContent>
-                </ContextMenu>
-            </header>
-
-            { for categories.iter().map(|category| self.render_category(category)) }
-            </div>
+                { for categories.iter().map(|category| self.render_category(category)) }
             </>
         }
     }

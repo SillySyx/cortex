@@ -73,7 +73,7 @@ impl MainPage {
                         { self.render_menu_button("icons/lists.svg", "Todo lists", Views::Todo) }
                     </div>
                 </aside>
-                <section class="main-content">
+                <section class="main-content animation-fade">
                 {
                     match self.view {
                         Views::Home => html! {
