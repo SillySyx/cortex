@@ -1,9 +1,17 @@
+:root {
+	--main-button-background: #555;
+	--main-button-hover-background: #666;
+	--main-button-active-background: #777;
+	--main-button-padding: .3rem;
+	--main-button-shadow: 3px 3px 2px rgba(0, 0, 0, .075);
+}
+
 .main-button {
 	box-sizing: border-box;
 	transition: all .2s ease-out;
-	box-shadow: 3px 3px 2px rgba(0, 0, 0, .075);
-	background-color: #555;
-	padding: .3rem;
+	box-shadow: var(--main-button-shadow);
+	background-color: var(--main-button-background);
+	padding: var(--main-button-padding);
 	border-radius: .2rem;
 	cursor: pointer;
 	display: grid;
@@ -12,11 +20,11 @@
 }
 
 .main-button:hover {
-	background-color: #666;
+	background-color: var(--main-button-hover-background);
 }
 
 .main-button.active, .main-button.active:hover {
-	background-color: #777;
+	background-color: var(--main-button-active-background);
 }
 
 .main-button.animation-grow:hover {

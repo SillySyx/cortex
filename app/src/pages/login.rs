@@ -4,15 +4,10 @@ use yew::{
 };
 
 use crate::services::LoginService;
-
-pub enum Views {
-    Login,
-    Loading,
-}
+use crate::components::InputBox;
 
 pub enum Messages {
-    KeyPressed(KeyboardEvent),
-    UpdatePassword(String)
+    Unlock(String),
 }
 
 #[derive(Clone, PartialEq, Properties)]
@@ -24,8 +19,7 @@ pub struct LoginPage {
     props: Props,
     link: ComponentLink<Self>,
     focus_ref: NodeRef,
-    view: Views,
-    password: String,
+    error: String,
 }
 
 impl Component for LoginPage {
@@ -37,31 +31,19 @@ impl Component for LoginPage {
             props,
             link,
             focus_ref: NodeRef::default(),
-            view: Views::Login,
-            password: String::new(),
+            error: String::new(),
         }
     }
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
-            Messages::KeyPressed(key) => {
-                if key.key() == String::from("Enter") {
-                    self.view = Views::Loading;
-
-                    match convert_password_to_key(self.password.clone()) {
-                        Some(key) => {
-                            LoginService::store_key(key.clone());
-                            self.props.unlock_app.emit(());
-                            return true;
-                        },
-                        None => {},
-                    };
+            Messages::Unlock(password) => {
+                if let Some(key) = convert_password_to_key(password) {
+                    LoginService::store_key(key.clone());
+                    self.props.unlock_app.emit(());
+                    return true;
                 }
                 false
-            },
-            Messages::UpdatePassword(value) => {
-                self.password = value;
-                true
             },
         }
     }
@@ -84,27 +66,30 @@ impl Component for LoginPage {
     fn view(&self) -> Html {
         html! {
             <div class="login-layout login-background animation-fade">
-            <img class="login-logo" src="icons/brain.svg" alt="" />
-            {
-                match self.view {
-                    Views::Login => html! {
-                        <input 
-                            ref=self.focus_ref.clone()
-                            class="login-box login-input" 
-                            type="password" 
-                            placeholder="Enter your password"
-                            oninput=self.link.callback(|e: InputData| Messages::UpdatePassword(e.value))
-                            onkeyup=self.link.callback(|e| Messages::KeyPressed(e)) />
-                    },
-                    Views::Loading => html! {
-                        <img class="login-box login-loader animation-spin" src="icons/loading.svg" alt="" />
-                    },
-                }
-            }
+                <div class="login-content">
+                    <img class="login-logo" src="icons/brain.svg" alt="" />
+                    
+                    <InputBox 
+                        class="login-input"
+                        focus=true
+                        password=true
+                        error=self.error.clone()
+                        placeholder="Enter your password"
+                        submitted=self.link.callback(|password| Messages::Unlock(password))>
+                    </InputBox>
+                </div>
             </div>
         }
     }
 }
+
+// <input 
+//                             ref=self.focus_ref.clone()
+//                             class="login-box login-input" 
+//                             type="password" 
+//                             placeholder="Enter your password"
+//                             oninput=self.link.callback(|e: InputData| Messages::UpdatePassword(e.value))
+//                             onkeyup=self.link.callback(|e| Messages::KeyPressed(e)) />
 
 fn convert_password_to_key(password: String) -> Option<String> {
     let key = match crypto::generate_key_from_seed(&password) {

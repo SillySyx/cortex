@@ -1,10 +1,15 @@
+:root {
+	--page-header-margin: 4rem;
+	--page-header-description-color: #aaa;
+}
+
 .page-header {
-	margin-bottom: 4rem;
+	margin-bottom: var(--page-header-margin);
 	user-select: none;
 }
 
-.page-header>p {
-	color: #aaa;
+.page-header-description {
+	color: var(--page-header-description-color);
 }
 
 .page-header-content {
@@ -12,7 +17,7 @@
 }
 
 @media (max-width: 56rem) {
-	.page-header {
-		margin-bottom: 2rem;
+	:root {
+		--page-header-margin: 2rem;
 	}
 }

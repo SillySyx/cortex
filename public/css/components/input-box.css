@@ -1,0 +1,46 @@
+:root {
+	--input-box-margin: 3rem;
+	--input-box-error-color: #D00;
+	--input-box-padding: 1rem;
+	--input-box-shadow: 3px 3px 2px rgba(0, 0, 0, .4);
+	--input-box-gap: 1rem;
+}
+
+.input-box {
+	margin-bottom: var(--input-box-margin);
+	width: 100%;
+}
+
+.input-box-lable {
+	color: #aaa;
+	display: block;
+	margin-left: var(--input-box-padding);
+	margin-bottom: .5rem;
+}
+
+.input-box-container {
+	display: flex;
+	gap: var(--input-box-gap);
+	align-items: center;
+}
+
+.input-box-container > input {
+	flex: auto;
+	font-family: 'Inter', Helvetica, Arial, sans-serif;
+	padding: var(--input-box-padding);
+	border: 0;
+	box-sizing: border-box;
+	border-radius: .5rem;
+	box-shadow: var(--input-box-shadow);
+}
+
+.input-box-container > input:focus {
+	outline: none;
+}
+
+.input-box-error {
+	color: var(--input-box-error-color);
+	display: block;
+	margin-left: var(--input-box-padding);
+	margin-top: .5rem;
+}

@@ -49,7 +49,7 @@ impl PageHeader {
 		}
 
 		html! {
-			<p>{ self.props.description }</p>
+			<p class="page-header-description">{ self.props.description }</p>
 		}
 	}
 
