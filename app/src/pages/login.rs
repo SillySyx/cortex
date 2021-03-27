@@ -47,8 +47,6 @@ impl Component for LoginPage {
                         },
                     };
 
-                    yew::services::ConsoleService::log(&format!("valid {:?}", valid));
-
                     if !valid {
                         self.error = String::from("Invalid password");
                         return true;
