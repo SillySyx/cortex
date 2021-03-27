@@ -10,19 +10,19 @@ pub enum Messages {
 
 #[derive(Clone, PartialEq, Properties)]
 pub struct Props {
-	#[prop_or(String::new())]
+	#[prop_or_default]
     pub value: String,
-	#[prop_or(false)]
+	#[prop_or_default]
     pub focus: bool,
-	#[prop_or(false)]
+	#[prop_or_default]
     pub password: bool,
-	#[prop_or("")]
-    pub class: &'static str,
-	#[prop_or("")]
-    pub placeholder: &'static str,
-	#[prop_or("")]
-    pub label: &'static str,
-	#[prop_or(String::new())]
+	#[prop_or_default]
+    pub class: String,
+	#[prop_or_default]
+    pub placeholder: String,
+	#[prop_or_default]
+    pub label: String,
+	#[prop_or_default]
     pub error: String,
 	#[prop_or_default]
     pub children: Children,
@@ -103,15 +103,15 @@ impl Component for InputBox {
         };
 
         html! {
-            <div class=("input-box", self.props.class)>
+            <div class=("input-box", &self.props.class)>
                 { self.render_label() }
 
                 <div class="input-box-container">
                     <input 
                         ref=self.node_ref.clone()
                         type=input_type 
-                        value=self.value
-                        placeholder=self.props.placeholder
+                        value=&self.value
+                        placeholder=&self.props.placeholder
                         oninput=self.link.callback(|e: InputData| Messages::ValueChanged(e.value))
                         onkeyup=self.link.callback(|e| Messages::KeyPressed(e)) />
                     
@@ -131,7 +131,7 @@ impl InputBox {
         }
 
         html! {
-            <label class="input-box-label">{ self.props.label }</label>
+            <label class="input-box-label">{ &self.props.label }</label>
         }
     }
 

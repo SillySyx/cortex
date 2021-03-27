@@ -1,7 +1,4 @@
-use yew::{
-    prelude::*, 
-    web_sys::HtmlInputElement
-};
+use yew::prelude::*;
 
 use crate::services::LoginService;
 use crate::components::InputBox;
@@ -18,7 +15,6 @@ pub struct Props {
 pub struct LoginPage {
     props: Props,
     link: ComponentLink<Self>,
-    focus_ref: NodeRef,
     error: String,
 }
 
@@ -30,7 +26,6 @@ impl Component for LoginPage {
         Self {
             props,
             link,
-            focus_ref: NodeRef::default(),
             error: String::new(),
         }
     }
@@ -50,17 +45,6 @@ impl Component for LoginPage {
 
     fn change(&mut self, _: Self::Properties) -> ShouldRender {
         false
-    }
-
-    fn rendered(&mut self, first_render: bool) {
-        if first_render {
-            if let Some(input) = self.focus_ref.cast::<HtmlInputElement>() {
-                match input.focus() {
-                    Ok(_) => {},
-                    Err(_) => {},
-                };
-            }
-        }
     }
 
     fn view(&self) -> Html {

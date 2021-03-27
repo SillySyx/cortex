@@ -4,9 +4,9 @@ pub enum Messages {}
 
 #[derive(Clone, PartialEq, Properties)]
 pub struct Props {
-    pub title: &'static str,
+    pub title: String,
 	#[prop_or_default]
-	pub description: &'static str,
+	pub description: String,
 	#[prop_or_default]
     pub children: Children,
 }
@@ -35,7 +35,7 @@ impl Component for PageHeader {
         html! {
             <div class="page-header">
 				{ self.render_children() }
-                <h1 class="page-header-title">{ self.props.title }</h1>
+                <h1 class="page-header-title">{ &self.props.title }</h1>
 				{ self.render_description() }
             </div>
         }
@@ -49,7 +49,7 @@ impl PageHeader {
 		}
 
 		html! {
-			<p class="page-header-description">{ self.props.description }</p>
+			<p class="page-header-description">{ &self.props.description }</p>
 		}
 	}
 

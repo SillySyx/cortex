@@ -1,5 +1,11 @@
+:root {
+	--mainpage-text-color: var(--text-color);
+	--mainpage-background: var(--background-color);
+	--mainpage-menu-background: #444;
+}
+
 .main-layout {
-	color: #eee;
+	color: var(--mainpage-text-color);
 	min-height: 100vh;
 	display: grid;
 	grid-template-columns: auto 1fr;
@@ -11,11 +17,11 @@
 	background-size: cover;
 	background-position: center;
 	background-attachment: fixed;
-	background-color: #333;
+	background-color: var(--mainpage-background);
 }
 
 .main-menu {
-	background-color: #444;
+	background-color: var(--mainpage-menu-background);
 	width: 2.6rem;
 	grid-area: menu;
 	padding: .3rem;

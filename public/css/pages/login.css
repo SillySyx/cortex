@@ -1,10 +1,15 @@
+:root {
+	--loginpage-text-color: var(--text-color);
+	--loginpage-background: var(--background-color);
+}
+
 .login-layout {
-	color: #eee;
+	color: var(--loginpage-text-color);
 	min-height: 100vh;
 }
 
 .login-background {
-	background-color: #191919;
+	background-color: var(--loginpage-background);
 	background-image: url("../../images/login.jpeg");
 	background-size: cover;
 	background-position: center;

@@ -1,6 +1,7 @@
 use yew::prelude::*;
 
 use super::{Button, PageHeader, InputBox, Error};
+use crate::services::ClipboardService;
 
 #[derive(PartialEq)]
 enum Mode {
@@ -12,6 +13,9 @@ pub enum Messages {
     UpdateName(String),
     UpdateDescription(String),
     UpdatePassword(String),
+
+    CopyDescription,
+    CopyPassword,
 
     AddClicked,
     BackClicked,
@@ -138,6 +142,14 @@ impl Component for PasswordEditor {
                 self.props.removed.emit(self.id.clone());
                 false
             },
+            Messages::CopyDescription => {
+                ClipboardService::copy_to_clipboard(self.description.clone());
+                false
+            },
+            Messages::CopyPassword => {
+                ClipboardService::copy_to_clipboard(self.password.clone());
+                false
+            },
         }
     }
 
@@ -149,6 +161,20 @@ impl Component for PasswordEditor {
         let title = match self.mode {
             Mode::New => "Add password",
             Mode::Edit => "Edit password",
+        };
+
+        let copy_desc = match self.mode {
+            Mode::New => html! {},
+            Mode::Edit => html! {
+                <img class="input-box-icon animation-grow" src="icons/copy.svg" alt="Copy description" onclick=self.link.callback(|_| Messages::CopyDescription) />
+            },
+        };
+
+        let copy_pass = match self.mode {
+            Mode::New => html! {},
+            Mode::Edit => html! {
+                <img class="input-box-icon animation-grow" src="icons/copy.svg" alt="Copy password" onclick=self.link.callback(|_| Messages::CopyPassword) />
+            },
         };
 
         html! {
@@ -169,7 +195,7 @@ impl Component for PasswordEditor {
                     placeholder={"Enter description"}
                     value=self.description.clone()
                     value_changed=self.link.callback(|value| Messages::UpdateDescription(value))>
-                    <img class="input-box-icon animation-grow" src="icons/copy.svg" alt="Copy description" />
+                    { copy_desc }
                 </InputBox>
 
                 <InputBox
@@ -179,7 +205,7 @@ impl Component for PasswordEditor {
                     value=self.password.clone()
                     error=self.password_error.clone()
                     value_changed=self.link.callback(|value| Messages::UpdatePassword(value))>
-                    <img class="input-box-icon animation-grow" src="icons/copy.svg" alt="Copy password" />
+                    { copy_pass }
                 </InputBox>
 
                 { self.render_buttons() }
