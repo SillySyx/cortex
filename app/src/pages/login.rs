@@ -33,7 +33,27 @@ impl Component for LoginPage {
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
             Messages::Unlock(password) => {
+                if password.is_empty() {
+                    self.error = String::from("No password entered");
+                    return true;
+                }
+
                 if let Some(key) = convert_password_to_key(password) {
+                    let valid = match LoginService::verify_key(&key) {
+                        Some(valid) => valid,
+                        None => {
+                            LoginService::store_verify_key(&key);
+                            true
+                        },
+                    };
+
+                    yew::services::ConsoleService::log(&format!("valid {:?}", valid));
+
+                    if !valid {
+                        self.error = String::from("Invalid password");
+                        return true;
+                    }
+
                     LoginService::store_key(key.clone());
                     self.props.unlock_app.emit(());
                     return true;
@@ -73,10 +93,8 @@ fn convert_password_to_key(password: String) -> Option<String> {
         Err(_) => return None,
     };
 
-    let json = match serde_json::value::to_value(key) {
-        Ok(json) => json,
-        Err(_) => return None,
-    };
-
-    Some(json.to_string())
+    match serde_json::to_string(&key) {
+        Ok(data) => Some(data),
+        Err(_) => None,
+    }
 }

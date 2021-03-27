@@ -199,7 +199,7 @@ impl Component for PasswordEditor {
                 </InputBox>
 
                 <InputBox
-                    password=true
+                    password={!self.props.new_mode}
                     label={"Password"}
                     placeholder={"Enter password"}
                     value=self.password.clone()

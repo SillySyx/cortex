@@ -214,5 +214,7 @@ fn decrypt_passwords(bytes: &[u8]) -> Option<Vec<Category>> {
         }
     }
 
+    // sort categories and passwords!
+
     Some(data)
 }

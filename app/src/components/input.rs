@@ -8,7 +8,7 @@ pub enum Messages {
     KeyPressed(KeyboardEvent),
 }
 
-#[derive(Clone, PartialEq, Properties)]
+#[derive(Clone, PartialEq, Properties, Debug)]
 pub struct Props {
 	#[prop_or_default]
     pub value: String,
@@ -38,8 +38,6 @@ pub struct InputBox {
     props: Props,
     link: ComponentLink<Self>,
     node_ref: NodeRef,
-    value: String,
-    error: String,
 }
 
 impl Component for InputBox {
@@ -47,27 +45,22 @@ impl Component for InputBox {
     type Properties = Props;
 
     fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
-        let value = props.value.clone();
-        let error = props.error.clone();
-
         Self {
             props,
             link,
             node_ref: NodeRef::default(),
-            value,
-            error,
         }
     }
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
             Messages::ValueChanged(value) => {
-                self.value = value.clone();
+                self.props.value = value.clone();
                 self.props.value_changed.emit(value.clone());
             },
             Messages::KeyPressed(event) => {
                 match event.key().as_str() {
-                    "Enter" => self.props.submitted.emit(self.value.clone()),
+                    "Enter" => self.props.submitted.emit(self.props.value.clone()),
                     "Escape" => self.props.aborted.emit(()),
                     _ => {},
                 };
@@ -77,15 +70,9 @@ impl Component for InputBox {
     }
 
     fn change(&mut self, props: Self::Properties) -> ShouldRender {
-        if self.value != props.value {
-            self.value = props.value;
-            return true;
-        }
-        if self.error != props.error {
-            self.error = props.error;
-            return true;
-        }
-        false
+        self.props.value = props.value;
+        self.props.error = props.error;
+        true
     }
 
     fn rendered(&mut self, first_render: bool) {
@@ -110,7 +97,7 @@ impl Component for InputBox {
                     <input 
                         ref=self.node_ref.clone()
                         type=input_type 
-                        value=&self.value
+                        value=&self.props.value
                         placeholder=&self.props.placeholder
                         oninput=self.link.callback(|e: InputData| Messages::ValueChanged(e.value))
                         onkeyup=self.link.callback(|e| Messages::KeyPressed(e)) />
@@ -136,13 +123,13 @@ impl InputBox {
     }
 
     fn render_error(&self) -> Html {
-        if self.error.is_empty() {
+        if self.props.error.is_empty() {
             return html! {};
         }
 
         html! {
             <div class="input-box-error">
-                {self.error.clone()}
+                { &self.props.error }
             </div>
         }
     }
