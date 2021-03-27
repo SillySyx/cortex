@@ -1,11 +1,16 @@
 :root {
 	--page-header-margin: 4rem;
-	--page-header-description-color: #aaa;
+	--page-header-title-color: var(--accent-color);
+	--page-header-description-color: var(--subtext-color);
 }
 
 .page-header {
 	margin-bottom: var(--page-header-margin);
 	user-select: none;
+}
+
+.page-header-title {
+	color: var(--page-header-title-color);
 }
 
 .page-header-description {

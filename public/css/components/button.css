@@ -3,7 +3,7 @@
 	--main-button-hover-background: #666;
 	--main-button-active-background: #777;
 	--main-button-padding: .3rem;
-	--main-button-shadow: 3px 3px 2px rgba(0, 0, 0, .075);
+	--main-button-shadow: 3px 3px 2px rgba(0, 0, 0, .1);
 }
 
 .main-button {
@@ -27,6 +27,16 @@
 	background-color: var(--main-button-active-background);
 }
 
+.main-button.disabled {
+	opacity: .4;
+	cursor: initial;
+}
+
 .main-button.animation-grow:hover {
 	transform: scale(1.1, 1.2);
+}
+
+.main-button.disabled:hover {
+	background-color: var(--main-button-background);
+	transform: none;
 }

@@ -21,7 +21,7 @@ pub struct Props {
 	#[prop_or("")]
     pub placeholder: &'static str,
 	#[prop_or("")]
-    pub lable: &'static str,
+    pub label: &'static str,
 	#[prop_or(String::new())]
     pub error: String,
 	#[prop_or_default]
@@ -39,6 +39,7 @@ pub struct InputBox {
     link: ComponentLink<Self>,
     node_ref: NodeRef,
     value: String,
+    error: String,
 }
 
 impl Component for InputBox {
@@ -47,12 +48,14 @@ impl Component for InputBox {
 
     fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
         let value = props.value.clone();
+        let error = props.error.clone();
 
         Self {
             props,
             link,
             node_ref: NodeRef::default(),
             value,
+            error,
         }
     }
 
@@ -74,12 +77,12 @@ impl Component for InputBox {
     }
 
     fn change(&mut self, props: Self::Properties) -> ShouldRender {
-        if self.props.value != props.value {
-            self.props.value = props.value;
+        if self.value != props.value {
+            self.value = props.value;
             return true;
         }
-        if self.props.error != props.error {
-            self.props.error = props.error;
+        if self.error != props.error {
+            self.error = props.error;
             return true;
         }
         false
@@ -101,13 +104,13 @@ impl Component for InputBox {
 
         html! {
             <div class=("input-box", self.props.class)>
-                { self.render_lable() }
+                { self.render_label() }
 
                 <div class="input-box-container">
                     <input 
                         ref=self.node_ref.clone()
                         type=input_type 
-                        value=self.props.value
+                        value=self.value
                         placeholder=self.props.placeholder
                         oninput=self.link.callback(|e: InputData| Messages::ValueChanged(e.value))
                         onkeyup=self.link.callback(|e| Messages::KeyPressed(e)) />
@@ -122,24 +125,24 @@ impl Component for InputBox {
 }
 
 impl InputBox {
-    fn render_lable(&self) -> Html {
-        if self.props.lable.is_empty() {
+    fn render_label(&self) -> Html {
+        if self.props.label.is_empty() {
             return html! {};
         }
 
         html! {
-            <lable class="input-box-lable">{ self.props.lable }</lable>
+            <label class="input-box-label">{ self.props.label }</label>
         }
     }
 
     fn render_error(&self) -> Html {
-        if self.props.error.is_empty() {
+        if self.error.is_empty() {
             return html! {};
         }
 
         html! {
             <div class="input-box-error">
-                {self.props.error.clone()}
+                {self.error.clone()}
             </div>
         }
     }

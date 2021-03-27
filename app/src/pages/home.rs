@@ -63,21 +63,21 @@ impl Component for HomePage {
 			<div class="home-page">
 				<img src="icons/home.svg" alt="Home" />
 				<div class="quick-links">
-					<div class="quick-link" onclick={self.link.callback(|_| Messages::ChangeView(MainPageViews::Passwords))}>
+					<div class="quick-link animation-grow" onclick={self.link.callback(|_| Messages::ChangeView(MainPageViews::Passwords))}>
 						<img src="icons/password.svg" alt="" />
 						<div>
 							<h3>{"Password manager"}</h3>
 							<p>{"Handle your passwords with ease."}</p>
 						</div>
 					</div>
-					<div class="quick-link" onclick={self.link.callback(|_| Messages::ChangeView(MainPageViews::Knowledgebase))}>
+					<div class="quick-link animation-grow" onclick={self.link.callback(|_| Messages::ChangeView(MainPageViews::Knowledgebase))}>
 						<img src="icons/knowledge.svg" alt="" />
 						<div>
 							<h3>{"Knowledgebase"}</h3>
 							<p>{"Save things you dont want to forget."}</p>
 						</div>
 					</div>
-					<div class="quick-link" onclick={self.link.callback(|_| Messages::ChangeView(MainPageViews::Todo))}>
+					<div class="quick-link animation-grow" onclick={self.link.callback(|_| Messages::ChangeView(MainPageViews::Todo))}>
 						<img src="icons/lists.svg" alt="" />
 						<div>
 							<h3>{"Todo lists"}</h3>

@@ -8,7 +8,11 @@ pub enum Messages {
 pub struct Props {
 	#[prop_or(false)]
     pub active: bool,
+	#[prop_or(false)]
+    pub disabled: bool,
+	#[prop_or_default]
     pub children: Children,
+	#[prop_or_default]
     pub clicked: Callback<()>,
 }
 
@@ -30,7 +34,13 @@ impl Component for Button {
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
-            Messages::Clicked => self.props.clicked.emit(()),
+            Messages::Clicked => {
+                if self.props.disabled {
+                    return false;
+                }
+
+                self.props.clicked.emit(());
+            },
         };
         true
     }
@@ -38,6 +48,10 @@ impl Component for Button {
     fn change(&mut self, props: Self::Properties) -> ShouldRender {
         if self.props.active != props.active {
             self.props.active = props.active;
+            return true;
+        }
+        if self.props.disabled != props.disabled {
+            self.props.disabled = props.disabled;
             return true;
         }
 
@@ -49,6 +63,10 @@ impl Component for Button {
             true => "active",
             false => "",
         };
+        let disabled = match self.props.disabled {
+            true => "disabled",
+            false => "",
+        };
 
         let clicked = self.link.callback(|e: MouseEvent| {
             e.stop_propagation();
@@ -56,7 +74,7 @@ impl Component for Button {
         });
 
         html! {
-            <div class=("main-button", "animation-grow", active) onclick=clicked>
+            <div class=("main-button", "animation-grow", active, disabled) onclick=clicked>
                 { self.props.children.clone() }
             </div>
         }

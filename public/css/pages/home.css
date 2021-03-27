@@ -26,6 +26,10 @@
 	background-color: #4C4C4C;
 }
 
+.quick-link.animation-grow:hover {
+	transform: scale(1.1, 1.1);
+}
+
 .quick-link p {
 	color: #aaa;
 }

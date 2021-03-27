@@ -1,9 +1,6 @@
-use yew::{
-    prelude::*, 
-    web_sys::HtmlInputElement,
-};
+use yew::prelude::*;
 
-use super::{Button, PageHeader};
+use super::{Button, PageHeader, InputBox};
 
 #[derive(PartialEq)]
 enum Mode {
@@ -24,26 +21,36 @@ pub enum Messages {
 
 #[derive(Clone, PartialEq, Properties)]
 pub struct Props {
+	#[prop_or_default]
     pub id: String,
+	#[prop_or_default]
     pub name: String,
+	#[prop_or_default]
     pub description: String,
+	#[prop_or_default]
     pub password: String,
+	#[prop_or(false)]
     pub new_mode: bool,
 
+	#[prop_or_default]
     pub added: Callback<(String, String, String)>,
+	#[prop_or_default]
     pub backed: Callback<()>,
+	#[prop_or_default]
     pub saved: Callback<(String, String, String, String)>,
+	#[prop_or_default]
     pub removed: Callback<String>,
 }
 
 pub struct PasswordEditor {
     props: Props,
     link: ComponentLink<Self>,
-    focus_ref: NodeRef,
     id: String,
     name: String,
+    name_error: String,
     description: String,
     password: String,
+    password_error: String,
     mode: Mode,
 }
 
@@ -65,11 +72,12 @@ impl Component for PasswordEditor {
         Self {
             props,
             link,
-            focus_ref: NodeRef::default(),
             id,
             name,
+            name_error: String::from(""),
             description,
             password,
+            password_error: String::from(""),
             mode,
         }
     }
@@ -78,6 +86,12 @@ impl Component for PasswordEditor {
         match msg {
             Messages::UpdateName(name) => {
                 self.name = name;
+
+                self.name_error = match self.name.is_empty() {
+                    true => String::from("No name entered"),
+                    false => String::from(""),
+                };
+
                 true
             },
             Messages::UpdateDescription(description) => {
@@ -86,6 +100,12 @@ impl Component for PasswordEditor {
             },
             Messages::UpdatePassword(password) => {
                 self.password = password;
+
+                self.password_error = match self.password.is_empty() {
+                    true => String::from("No password entered"),
+                    false => String::from(""),
+                };
+
                 true
             },
             Messages::AddClicked => {
@@ -125,14 +145,6 @@ impl Component for PasswordEditor {
         false
     }
 
-    fn rendered(&mut self, first_render: bool) {
-        if first_render {
-            if let Some(input) = self.focus_ref.cast::<HtmlInputElement>() {
-                let _ = input.focus();
-            }
-        }
-    }
-
     fn view(&self) -> Html {
         let title = match self.mode {
             Mode::New => "Add password",
@@ -143,26 +155,31 @@ impl Component for PasswordEditor {
             <div class="password-editor animation-fade">
                 <PageHeader title=title />
 
-                <lable>{"Name"}</lable>
-                <input
-                    ref=self.focus_ref.clone()
-                    value=self.name 
-                    placeholder="Enter name"
-                    oninput=self.link.callback(|e: InputData| Messages::UpdateName(e.value)) />
+                <InputBox
+                    focus=true
+                    label={"Name"}
+                    placeholder={"Enter name"}
+                    value=self.name.clone()
+                    error=self.name_error.clone()
+                    value_changed=self.link.callback(|value| Messages::UpdateName(value))>
+                </InputBox>
 
-                <lable>{"Description"}</lable>
-                <input
-                    value=self.description 
-                    placeholder="Enter description"
-                    oninput=self.link.callback(|e: InputData| Messages::UpdateDescription(e.value)) />
+                <InputBox
+                    label={"Description"}
+                    placeholder={"Enter description"}
+                    value=self.description.clone()
+                    value_changed=self.link.callback(|value| Messages::UpdateDescription(value))>
+                </InputBox>
 
-                <lable>{"Password"}</lable>
-                <input
-                    value=self.password 
-                    type="password"
-                    placeholder="Enter password"
-                    oninput=self.link.callback(|e: InputData| Messages::UpdatePassword(e.value)) />
-                    
+                <InputBox
+                    password=true
+                    label={"Password"}
+                    placeholder={"Enter password"}
+                    value=self.password.clone()
+                    error=self.password_error.clone()
+                    value_changed=self.link.callback(|value| Messages::UpdatePassword(value))>
+                </InputBox>
+
                 { self.render_buttons() }
             </div>
         }
@@ -171,13 +188,15 @@ impl Component for PasswordEditor {
 
 impl PasswordEditor {
     fn render_buttons(&self) -> Html {
+        let disabled = self.name.is_empty() || self.password.is_empty();
+
         if self.mode == Mode::New {
             return html! {
                 <div class="password-editor-buttons">
-                    <Button active=false clicked=self.link.callback(|_| Messages::AddClicked)>
+                    <Button disabled=disabled clicked=self.link.callback(|_| Messages::AddClicked)>
                         {"Add"}
                     </Button>
-                    <Button active=false clicked=self.link.callback(|_| Messages::BackClicked)>
+                    <Button clicked=self.link.callback(|_| Messages::BackClicked)>
                         {"Back"}
                     </Button>
                 </div>
@@ -187,17 +206,17 @@ impl PasswordEditor {
         html! {
             <>
             <div class="password-editor-buttons">
-                <Button active=false clicked=self.link.callback(|_| Messages::SaveClicked)>
+                <Button disabled=disabled clicked=self.link.callback(|_| Messages::SaveClicked)>
                     {"Save"}
                 </Button>
-                <Button active=false clicked=self.link.callback(|_| Messages::BackClicked)>
+                <Button clicked=self.link.callback(|_| Messages::BackClicked)>
                     {"Back"}
                 </Button>
             </div>
             <div class="password-editor-dangerzone">
                 <h1>{"Danger"}</h1>
                 <p>{"It's not possible to restore the password once it has been removed."}</p>
-                <Button active=false clicked=self.link.callback(|_| Messages::RemoveClicked)>
+                <Button clicked=self.link.callback(|_| Messages::RemoveClicked)>
                     {"Remove"}
                 </Button>
             </div>

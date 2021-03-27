@@ -334,15 +334,9 @@ impl PasswordsPage {
 
         html! {
             <PasswordEditor
-                id="".to_string()
-                name="".to_string()
-                description="".to_string()
-                password="".to_string()
                 new_mode=true
                 added=self.link.callback(move |(name, desc, pass)| Messages::AddPassword(category_id.clone(), name, desc, pass))
-                backed=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords))
-                saved=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords))
-                removed=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords)) />
+                backed=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords)) />
         }
     }
 
@@ -377,8 +371,6 @@ impl PasswordsPage {
                 name=name
                 description=desc
                 password=pass
-                new_mode=false
-                added=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords))
                 backed=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords))
                 saved=saved
                 removed=removed />
@@ -388,13 +380,9 @@ impl PasswordsPage {
     fn render_new_category(&self) -> Html {
         html! {
             <PasswordCategoryEditor
-                id="".to_string()
-                name="".to_string()
                 new_mode=true
                 added=self.link.callback(|name| Messages::AddCategory(name))
-                backed=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords))
-                saved=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords))
-                removed=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords)) />
+                backed=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords)) />
         }
     }
 
@@ -413,8 +401,6 @@ impl PasswordsPage {
             <PasswordCategoryEditor
                 id=id
                 name=name
-                new_mode=false
-                added=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords))
                 backed=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords))
                 saved=self.link.callback(|(id, name)| Messages::EditCategory(id, name))
                 removed=self.link.callback(|id| Messages::RemoveCategory(id)) />
@@ -436,17 +422,19 @@ impl PasswordsPage {
 
         html! {
             <div class="import-export animation-fade">
-                <h1>{"Import/Export"}</h1>
-                <p>{"Move passwords between devices by export and import, both devices needs the same master password."}</p>
+                <PageHeader 
+                    title={"Import/Export"} 
+                    description={"Move passwords between devices by export and import, both devices needs the same master password."}>
+                </PageHeader>
                 <div class="import-export-buttons">
                     <input ref=self.upload_ref.clone() type="file" onchange=file_uploaded />
-                    <Button active=false clicked=self.link.callback(|_| Messages::ImportClicked)>
+                    <Button clicked=self.link.callback(|_| Messages::ImportClicked)>
                         {"Import"}
                     </Button>
                     <a class="main-button animation-grow" href=href download="passwords.cortex">
                         {"Export"}
                     </a>
-                    <Button active=false clicked=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords))>
+                    <Button clicked=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords))>
                         {"Back"}
                     </Button>
                 </div>
@@ -459,7 +447,7 @@ impl PasswordsPage {
             <div class="animation-fade error-message">
                 <img class="error-icon" src="icons/error.svg" alt="" />
                 <h1 class="error-text">{message}</h1>
-                <Button active=false clicked=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords))>
+                <Button clicked=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords))>
                     {"Back"}
                 </Button>
             </div>
@@ -471,11 +459,11 @@ impl PasswordsPage {
             <div class="animation-fade error-message">
                 <img class="error-icon" src="icons/error.svg" alt="" />
                 <h1 class="error-text">{"Invalid password specified"}</h1>
-                <Button active=false clicked=self.link.callback(|_| Messages::Logout)>
+                <Button clicked=self.link.callback(|_| Messages::Logout)>
                     {"Reenter password"}
                 </Button>
                 <div class="password-editor-dangerzone">
-                    <Button active=false clicked=self.link.callback(|_| Messages::ResetData)>
+                    <Button clicked=self.link.callback(|_| Messages::ResetData)>
                         {"Reset application data"}
                     </Button>
                 </div>

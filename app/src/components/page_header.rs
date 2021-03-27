@@ -35,7 +35,7 @@ impl Component for PageHeader {
         html! {
             <div class="page-header">
 				{ self.render_children() }
-                <h1>{ self.props.title }</h1>
+                <h1 class="page-header-title">{ self.props.title }</h1>
 				{ self.render_description() }
             </div>
         }

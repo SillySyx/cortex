@@ -83,14 +83,6 @@ impl Component for LoginPage {
     }
 }
 
-// <input 
-//                             ref=self.focus_ref.clone()
-//                             class="login-box login-input" 
-//                             type="password" 
-//                             placeholder="Enter your password"
-//                             oninput=self.link.callback(|e: InputData| Messages::UpdatePassword(e.value))
-//                             onkeyup=self.link.callback(|e| Messages::KeyPressed(e)) />
-
 fn convert_password_to_key(password: String) -> Option<String> {
     let key = match crypto::generate_key_from_seed(&password) {
         Ok(data) => data.to_vec(),

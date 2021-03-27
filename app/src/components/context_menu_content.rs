@@ -5,6 +5,7 @@ pub enum Messages {
 
 #[derive(Clone, PartialEq, Properties)]
 pub struct Props {
+	#[prop_or_default]
     pub children: Children,
 }
 
