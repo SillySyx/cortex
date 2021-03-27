@@ -121,7 +121,7 @@ impl Component for PasswordsPage {
                     title: name,
                     passwords: vec![],
                 });
-                PasswordService::save_passwords(&self.passwords);
+                PasswordService::save_passwords(&mut self.passwords);
                 self.view = Views::ListPasswords;
                 true
             },
@@ -132,14 +132,14 @@ impl Component for PasswordsPage {
                     },
                     None => {},
                 };
-                PasswordService::save_passwords(&self.passwords);
+                PasswordService::save_passwords(&mut self.passwords);
                 self.view = Views::ListPasswords;
                 true
             },
             Messages::RemoveCategory(category_id) => {
                 if let Some(index) = self.passwords.iter().position(|c| c.id == category_id) {
                     self.passwords.remove(index);
-                    PasswordService::save_passwords(&self.passwords);
+                    PasswordService::save_passwords(&mut self.passwords);
                 }
                 self.view = Views::ListPasswords;
                 true
@@ -153,7 +153,7 @@ impl Component for PasswordsPage {
                         password,
                     });
                 }
-                PasswordService::save_passwords(&self.passwords);
+                PasswordService::save_passwords(&mut self.passwords);
                 self.view = Views::ListPasswords;
                 true
             }
@@ -172,7 +172,7 @@ impl Component for PasswordsPage {
                         password.description = desc;
                         password.password = pass;
 
-                        PasswordService::save_passwords(&self.passwords);
+                        PasswordService::save_passwords(&mut self.passwords);
                     }
                 }
                 self.view = Views::ListPasswords;
@@ -182,7 +182,7 @@ impl Component for PasswordsPage {
                 if let Some(category) = self.passwords.iter_mut().find(|c| c.id == category_id) {
                     if let Some(index) = category.passwords.iter().position(|p| p.id == password_id) {
                         category.passwords.remove(index);
-                        PasswordService::save_passwords(&self.passwords);
+                        PasswordService::save_passwords(&mut self.passwords);
                     }
                 }
                 self.view = Views::ListPasswords;
@@ -227,7 +227,7 @@ impl Component for PasswordsPage {
                 };
 
                 self.passwords = PasswordService::combine_passwords(&self.passwords, &mut passwords);
-                PasswordService::save_passwords(&self.passwords);
+                PasswordService::save_passwords(&mut self.passwords);
 
                 self.view = Views::ListPasswords;
                 true

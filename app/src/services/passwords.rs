@@ -12,7 +12,7 @@ pub fn generate_id() -> String {
     uuid::Uuid::new_v4().to_string()
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Category {
     #[serde(default)]
     pub id: String,
@@ -22,7 +22,7 @@ pub struct Category {
     pub passwords: Vec<Password>,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Password {
     #[serde(default)]
     pub id: String,
@@ -48,7 +48,9 @@ impl PasswordService {
         decrypt_passwords(&encrypted_passwords.bytes)
     }
 
-    pub fn save_passwords(passwords: &Vec<Category>) {
+    pub fn save_passwords(passwords: &mut Vec<Category>) {
+        sort_passwords(passwords);
+
         let encrypted_bytes = match encrypt_passwords(passwords) {
             Some(data) => data,
             None => return,
@@ -214,7 +216,15 @@ fn decrypt_passwords(bytes: &[u8]) -> Option<Vec<Category>> {
         }
     }
 
-    // sort categories and passwords!
+    sort_passwords(&mut data);
 
     Some(data)
+}
+
+fn sort_passwords(categories: &mut Vec<Category>) {
+    categories.sort_by(|a, b| a.title.to_lowercase().cmp(&b.title.to_lowercase()));
+    
+    for category in categories {
+        category.passwords.sort_by(|a, b| a.name.to_lowercase().cmp(&b.name.to_lowercase()));
+    }
 }
