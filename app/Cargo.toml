@@ -13,3 +13,4 @@ wasm-bindgen = "0.2.67"
 web-sys = { version = "0.3", features = ["Clipboard", "Navigator", "Location"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
+uuid = { version = "0.8", features = ["wasm-bindgen", "v4"] }

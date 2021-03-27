@@ -6,6 +6,11 @@
 	--text-color: #eee;
 	--subtext-color: #aaa;
 	--error-text: #D00;
+	--error-background: #700;
+	--error-background-hover: #A00;
+	--icon-size: 1.5rem;
+	--widget-background: rgba(100, 100, 100, .3);
+	--widget-background-hover: #4C4C4C;
 }
 
 * {

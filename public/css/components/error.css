@@ -1,0 +1,44 @@
+:root {
+	--errormessage-text-color: var(--error-text);
+	--errormessage-button-text: var(--text-color);
+	--errormessage-button-background: var(--error-background);
+	--errormessage-button-background-hover: var(--error-background-hover);
+}
+
+.error-message {
+	color: var(--errormessage-text-color);
+	margin-bottom: 4rem;
+}
+
+.error-message-icon {
+	max-width: 10rem;
+	display: block;
+	margin: auto;
+	margin-bottom: 4rem;
+}
+
+.error-message-title {
+	color: var(--errormessage-text-color);
+}
+
+.error-message-text {
+	margin-top: .5rem;
+}
+
+.error-message-content {
+	margin-top: 2rem;
+}
+
+.error-message-content .main-button {
+	padding: 1rem;
+	color: var(--errormessage-button-text);
+	margin-bottom: 1rem;
+}
+
+.error-message-content .error-button {
+	background-color: var(--errormessage-button-background);
+}
+
+.error-message-content .error-button:hover {
+	background-color: var(--errormessage-button-background-hover);
+}

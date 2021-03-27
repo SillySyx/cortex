@@ -5,6 +5,7 @@ mod password_editor;
 mod password_category_editor;
 mod page_header;
 mod input;
+mod error;
 
 pub use {
     button::Button,
@@ -14,4 +15,5 @@ pub use {
     password_category_editor::PasswordCategoryEditor,
     page_header::PageHeader,
     input::InputBox,
+    error::Error,
 };

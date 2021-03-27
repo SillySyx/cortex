@@ -6,10 +6,12 @@ pub enum Messages {
 
 #[derive(Clone, PartialEq, Properties)]
 pub struct Props {
-	#[prop_or(false)]
+	#[prop_or_default]
     pub active: bool,
-	#[prop_or(false)]
+	#[prop_or_default]
     pub disabled: bool,
+	#[prop_or_default]
+    pub class: String,
 	#[prop_or_default]
     pub children: Children,
 	#[prop_or_default]
@@ -74,7 +76,7 @@ impl Component for Button {
         });
 
         html! {
-            <div class=("main-button", "animation-grow", active, disabled) onclick=clicked>
+            <div class=("main-button", "animation-grow", &self.props.class, active, disabled) onclick=clicked>
                 { self.props.children.clone() }
             </div>
         }

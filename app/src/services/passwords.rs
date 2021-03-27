@@ -8,16 +8,29 @@ struct EncryptedPasswords {
     bytes: Vec<u8>,
 }
 
+pub fn generate_id() -> String {
+    uuid::Uuid::new_v4().to_string()
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Category {
+    #[serde(default)]
+    pub id: String,
+    #[serde(default)]
     pub title: String,
+    #[serde(default)]
     pub passwords: Vec<Password>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Password {
+    #[serde(default)]
+    pub id: String,
+    #[serde(default)]
     pub name: String,
+    #[serde(default)]
     pub description: String,
+    #[serde(default)]
     pub password: String,
 }
 
@@ -75,7 +88,7 @@ impl PasswordService {
 
         let combine_passwords = |category: &mut Category, new_category: &Category| {
             for new_password in new_category.passwords.clone() {
-                match category.passwords.iter_mut().find(|p| p.name == new_password.name) {
+                match category.passwords.iter_mut().find(|p| p.id == new_password.id) {
                     Some(password) => {
                         password.name = new_password.name;
                         password.description = new_password.description;
@@ -89,8 +102,9 @@ impl PasswordService {
         };
 
         for new_category in new_categories {
-            match categories.iter_mut().find(|c| c.title == new_category.title) {
+            match categories.iter_mut().find(|c| c.id == new_category.id) {
                 Some(category) => {
+                    category.title = new_category.title.clone();
                     combine_passwords(category, new_category);
                 },
                 None => {
@@ -183,10 +197,22 @@ fn decrypt_passwords(bytes: &[u8]) -> Option<Vec<Category>> {
         Err(_) => return None,
     };
 
-    let data: Vec<Category> = match serde_json::from_slice(&bytes) {
+    let mut data: Vec<Category> = match serde_json::from_slice(&bytes) {
         Ok(data) => data,
         Err(_) => return None,
     };
+
+    for category in data.iter_mut() {
+        if category.id.is_empty() {
+            category.id = generate_id();
+        }
+
+        for password in category.passwords.iter_mut() {
+            if password.id.is_empty() {
+                password.id = generate_id();
+            }
+        }
+    }
 
     Some(data)
 }

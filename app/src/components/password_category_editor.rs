@@ -1,6 +1,6 @@
 use yew::prelude::*;
 
-use super::{Button, PageHeader, InputBox};
+use super::{Button, PageHeader, InputBox, Error};
 
 #[derive(PartialEq)]
 enum Mode {
@@ -55,7 +55,7 @@ impl Component for PasswordCategoryEditor {
             false => Mode::Edit,
         };
 
-        let id = props.name.clone();
+        let id = props.id.clone();
         let name = props.name.clone();
 
         Self {
@@ -164,13 +164,11 @@ impl PasswordCategoryEditor {
                     {"Back"}
                 </Button>
             </div>
-            <div class="password-editor-dangerzone">
-                <h1>{"Danger"}</h1>
-                <p>{"Removing this category will also remove all of its passwords, it's not possible to restore any passwords once they have been removed."}</p>
-                <Button clicked=self.link.callback(|_| Messages::RemoveClicked)>
+            <Error title="Danger" text="Removing this category will also remove all of its passwords, it's not possible to restore any passwords once they have been removed.">
+                <Button class="error-button" clicked=self.link.callback(|_| Messages::RemoveClicked)>
                     {"Remove"}
                 </Button>
-            </div>
+            </Error>
             </>
         }
     }

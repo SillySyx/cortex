@@ -6,8 +6,8 @@ use yew::{
     services::reader::{File, FileData, ReaderService, ReaderTask},
 };
 
-use crate::components::{Button, ContextMenu, ContextMenuContent, PasswordEditor, PasswordCategoryEditor, PageHeader, InputBox};
-use crate::services::{Category, ClipboardService, LoginService, Password, PasswordService};
+use crate::components::{Button, ContextMenu, ContextMenuContent, PasswordEditor, PasswordCategoryEditor, PageHeader, InputBox, Error};
+use crate::services::{Category, ClipboardService, LoginService, Password, PasswordService, generate_id};
 
 pub enum Views {
     ListPasswords,
@@ -54,6 +54,7 @@ pub struct PasswordsPage {
     view: Views,
     selected_category_id: String,
     selected_password_id: String,
+    import_error: String,
 }
 
 impl Component for PasswordsPage {
@@ -83,6 +84,7 @@ impl Component for PasswordsPage {
             view,
             selected_category_id: String::new(),
             selected_password_id: String::new(),
+            import_error: String::new(),
         }
     }
 
@@ -115,6 +117,7 @@ impl Component for PasswordsPage {
             },
             Messages::AddCategory(name) => {
                 self.passwords.push(Category {
+                    id: generate_id(),
                     title: name,
                     passwords: vec![],
                 });
@@ -123,7 +126,7 @@ impl Component for PasswordsPage {
                 true
             },
             Messages::EditCategory(category_id, new_name) => {
-                match self.passwords.iter_mut().find(|c| c.title == category_id) {
+                match self.passwords.iter_mut().find(|c| c.id == category_id) {
                     Some(category) => {
                         category.title = new_name;
                     },
@@ -134,7 +137,7 @@ impl Component for PasswordsPage {
                 true
             },
             Messages::RemoveCategory(category_id) => {
-                if let Some(index) = self.passwords.iter().position(|c| c.title == category_id) {
+                if let Some(index) = self.passwords.iter().position(|c| c.id == category_id) {
                     self.passwords.remove(index);
                     PasswordService::save_passwords(&self.passwords);
                 }
@@ -142,8 +145,9 @@ impl Component for PasswordsPage {
                 true
             },
             Messages::AddPassword(category_id, name, description, password) => {
-                if let Some(category) = self.passwords.iter_mut().find(|c| c.title == category_id) {
+                if let Some(category) = self.passwords.iter_mut().find(|c| c.id == category_id) {
                     category.passwords.push(Password {
+                        id: generate_id(),
                         name,
                         description,
                         password,
@@ -154,16 +158,16 @@ impl Component for PasswordsPage {
                 true
             }
             Messages::CopyPassword(category_id, password_id) => {
-                if let Some(category) = self.passwords.iter().find(|c| c.title == category_id) {
-                    if let Some(password) = category.passwords.iter().find(|p| p.name == password_id) {
+                if let Some(category) = self.passwords.iter().find(|c| c.id == category_id) {
+                    if let Some(password) = category.passwords.iter().find(|p| p.id == password_id) {
                         ClipboardService::copy_to_clipboard(password.password.clone());
                     }
                 }
                 false
             },
             Messages::EditPassword(category_id, password_id, name, desc, pass) => {
-                if let Some(category) = self.passwords.iter_mut().find(|c| c.title == category_id) {
-                    if let Some(password) = category.passwords.iter_mut().find(|p| p.name == password_id) {
+                if let Some(category) = self.passwords.iter_mut().find(|c| c.id == category_id) {
+                    if let Some(password) = category.passwords.iter_mut().find(|p| p.id == password_id) {
                         password.name = name;
                         password.description = desc;
                         password.password = pass;
@@ -175,8 +179,8 @@ impl Component for PasswordsPage {
                 true
             },
             Messages::RemovePassword(category_id, password_id) => {
-                if let Some(category) = self.passwords.iter_mut().find(|c| c.title == category_id) {
-                    if let Some(index) = category.passwords.iter().position(|p| p.name == password_id) {
+                if let Some(category) = self.passwords.iter_mut().find(|c| c.id == category_id) {
+                    if let Some(index) = category.passwords.iter().position(|p| p.id == password_id) {
                         category.passwords.remove(index);
                         PasswordService::save_passwords(&self.passwords);
                     }
@@ -193,10 +197,11 @@ impl Component for PasswordsPage {
                 true
             },
             Messages::ImportClicked => {
+                self.import_error = String::from("");
                 if let Some(input) = self.upload_ref.cast::<HtmlInputElement>() {
                     let _ = input.click();
                 }
-                false
+                true
             },
             Messages::ImportFile(file) => {
                 let callback = self.link.callback(|data: FileData| Messages::ImportData(data.content));
@@ -208,16 +213,16 @@ impl Component for PasswordsPage {
                 let bytes: Vec<u8> = match serde_json::from_slice(&data) {
                     Ok(bytes) => bytes,
                     Err(_) => {
-                        // show import error?!?
-                        return false;
+                        self.import_error = String::from("Failed to read passwords file");
+                        return true;
                     },
                 };
 
                 let mut passwords = match PasswordService::import_bytes(bytes) {
                     Some(passwords) => passwords,
                     None => {
-                        // show import error?!?
-                        return false;
+                        self.import_error = String::from("Failed to decrypt passwords");
+                        return true;
                     },
                 };
 
@@ -284,16 +289,25 @@ impl PasswordsPage {
                     </ContextMenu>
                 </InputBox>
 
+                { match categories.is_empty() {
+                    false => html! {},
+                    true => html! {
+                        <div>
+                            <p>{"No passwords added"}</p>
+                        </div>
+                    },
+                }}
+
                 { for categories.iter().map(|category| self.render_category(category)) }
             </>
         }
     }
 
     fn render_category(&self, category: &Category) -> Html {
-        let category_id = category.title.clone();
+        let category_id = category.id.clone();
         let edit_category = self.link.callback(move |_| Messages::ChangeViewWithId(Views::EditCategory, Some(category_id.clone()), None));
 
-        let category_id = category.title.clone();
+        let category_id = category.id.clone();
         let new_password = self.link.callback(move |_| Messages::ChangeViewWithId(Views::NewPassword, Some(category_id.clone()), None));
 
         html! {
@@ -313,7 +327,7 @@ impl PasswordsPage {
                 </ContextMenu>
             </div>
             <div class="category-items animation-fade">
-                { for category.passwords.iter().map(|password| self.render_password(category.title.clone(), password)) }
+                { for category.passwords.iter().map(|password| self.render_password(category.id.clone(), password)) }
             </div>
             </>
         }
@@ -321,16 +335,16 @@ impl PasswordsPage {
 
     fn render_password(&self, category_id: String, password: &Password) -> Html {
         let category_id_clone = category_id.clone();
-        let password_id = password.name.clone();
+        let password_id = password.id.clone();
         let copy_password = self.link.callback(move |_| Messages::CopyPassword(category_id_clone.clone(), password_id.clone()));
 
         let category_id_clone = category_id.clone();
-        let password_id = password.name.clone();
+        let password_id = password.id.clone();
         let edit_password = self.link.callback(move |_| Messages::ChangeViewWithId(Views::EditPassword, Some(category_id_clone.clone()), Some(password_id.clone())));
 
         html! {
             <div class="password animation-fade">
-                <h3 class="password-title" onclick=edit_password.clone()>{&password.name}</h3>
+                <h4 class="password-title" onclick=edit_password.clone()>{&password.name}</h4>
                 <p class="password-description">{&password.description}</p>
                 <div class="password-icons">
                     <img class="password-icon animation-grow" src="icons/key.svg" alt="Copy password" onclick=copy_password />
@@ -354,12 +368,12 @@ impl PasswordsPage {
         let category_id = self.selected_category_id.clone();
         let password_id = self.selected_password_id.clone();
         
-        let category = match self.passwords.iter().find(|c| c.title == category_id) {
+        let category = match self.passwords.iter().find(|c| c.id == category_id) {
             Some(category) => category,
             None => return self.render_error("failed to find category"),
         };
 
-        let password = match category.passwords.iter().find(|p| p.name == password_id) {
+        let password = match category.passwords.iter().find(|p| p.id == password_id) {
             Some(password) => password,
             None => return self.render_error("failed to find password"),
         };
@@ -370,7 +384,7 @@ impl PasswordsPage {
         let category_id = self.selected_category_id.clone();
         let removed = self.link.callback(move |id| Messages::RemovePassword(category_id.clone(), id));
 
-        let id = password.name.clone();
+        let id = password.id.clone();
         let name = password.name.clone();
         let desc = password.description.clone();
         let pass = password.password.clone();
@@ -399,12 +413,12 @@ impl PasswordsPage {
     fn render_edit_category(&self) -> Html {
         let category_id = self.selected_category_id.clone();
 
-        let category = match self.passwords.iter().find(|c| c.title == category_id) {
+        let category = match self.passwords.iter().find(|c| c.id == category_id) {
             Some(category) => category,
             None => return self.render_error("failed to find category"),
         };
 
-        let id = category.title.clone();
+        let id = category.id.clone();
         let name = category.title.clone();
 
         html! {
@@ -436,6 +450,12 @@ impl PasswordsPage {
                     title={"Import/Export"} 
                     description={"Move passwords between devices by export and import, both devices needs the same master password."}>
                 </PageHeader>
+                { match self.import_error.is_empty() {
+                    true => html! {},
+                    false => html! {
+                        <Error text=self.import_error.clone() />
+                    },
+                }}
                 <div class="import-export-buttons">
                     <input ref=self.upload_ref.clone() type="file" onchange=file_uploaded />
                     <Button clicked=self.link.callback(|_| Messages::ImportClicked)>
@@ -454,29 +474,27 @@ impl PasswordsPage {
 
     fn render_error(&self, message: &'static str) -> Html {
         html! {
-            <div class="animation-fade error-message">
-                <img class="error-icon" src="icons/error.svg" alt="" />
-                <h1 class="error-text">{message}</h1>
-                <Button clicked=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords))>
-                    {"Back"}
-                </Button>
+            <div class="animation-fade">
+                <Error title=message icon="icons/error.svg">
+                    <Button clicked=self.link.callback(|_| Messages::ChangeView(Views::ListPasswords))>
+                        {"Back"}
+                    </Button>
+                </Error>
             </div>
         }
     }
 
     fn render_decrypt_error(&self) -> Html {
         html! {
-            <div class="animation-fade error-message">
-                <img class="error-icon" src="icons/error.svg" alt="" />
-                <h1 class="error-text">{"Invalid password specified"}</h1>
-                <Button clicked=self.link.callback(|_| Messages::Logout)>
-                    {"Reenter password"}
-                </Button>
-                <div class="password-editor-dangerzone">
-                    <Button clicked=self.link.callback(|_| Messages::ResetData)>
+            <div class="animation-fade">
+                <Error title="Invalid password specified" icon="icons/error.svg">
+                    <Button clicked=self.link.callback(|_| Messages::Logout)>
+                        {"Reenter password"}
+                    </Button>
+                    <Button class="error-button" clicked=self.link.callback(|_| Messages::ResetData)>
                         {"Reset application data"}
                     </Button>
-                </div>
+                </Error>
             </div>
         }
     }

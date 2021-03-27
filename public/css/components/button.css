@@ -1,17 +1,17 @@
 :root {
-	--main-button-background: #555;
-	--main-button-hover-background: #666;
-	--main-button-active-background: #777;
-	--main-button-padding: .3rem;
-	--main-button-shadow: 3px 3px 2px rgba(0, 0, 0, .1);
+	--mainbutton-background: #555;
+	--mainbutton-hover-background: #666;
+	--mainbutton-active-background: #777;
+	--mainbutton-padding: .3rem;
+	--mainbutton-shadow: 3px 3px 2px rgba(0, 0, 0, .1);
 }
 
 .main-button {
 	box-sizing: border-box;
 	transition: all .2s ease-out;
-	box-shadow: var(--main-button-shadow);
-	background-color: var(--main-button-background);
-	padding: var(--main-button-padding);
+	box-shadow: var(--mainbutton-shadow);
+	background-color: var(--mainbutton-background);
+	padding: var(--mainbutton-padding);
 	border-radius: .2rem;
 	cursor: pointer;
 	display: grid;
@@ -20,11 +20,11 @@
 }
 
 .main-button:hover {
-	background-color: var(--main-button-hover-background);
+	background-color: var(--mainbutton-hover-background);
 }
 
 .main-button.active, .main-button.active:hover {
-	background-color: var(--main-button-active-background);
+	background-color: var(--mainbutton-active-background);
 }
 
 .main-button.disabled {
@@ -37,6 +37,6 @@
 }
 
 .main-button.disabled:hover {
-	background-color: var(--main-button-background);
+	background-color: var(--mainbutton-background);
 	transform: none;
 }

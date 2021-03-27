@@ -1,7 +1,7 @@
 :root {
-	--context-menu-backdrop-background: rgba(0, 0, 0, .8);
-	--context-menu-gap: 1rem;
-	--context-menu-minwidth: 10rem;
+	--contextmenu-backdrop-background: rgba(0, 0, 0, .8);
+	--contextmenu-gap: 1rem;
+	--contextmenu-minwidth: 10rem;
 }
 
 .context-menu {
@@ -15,18 +15,18 @@
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background-color: var(--context-menu-backdrop-background);
+	background-color: var(--contextmenu-backdrop-background);
 }
 
 .context-menu-content {
 	z-index: 2;
 	display: flex;
 	flex-direction: column;
-	gap: var(--context-menu-gap);
+	gap: var(--contextmenu-gap);
 	position: absolute;
 	top: 0;
 	right: 0;
-	min-width: var(--context-menu-minwidth);
+	min-width: var(--contextmenu-minwidth);
 }
 
 .context-menu-backdrop, .context-menu-content {

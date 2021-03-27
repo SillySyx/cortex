@@ -1,11 +1,19 @@
+:root {
+	--homepage-menu-size: 22rem;
+	--homepage-image-size: 17rem;
+	--homepage-quicklink-background: var(--widget-background);
+	--homepage-quicklink-background-hover: var(--widget-background-hover);
+	--homepage-quicklink-text-color: var(--subtext-color);
+}
+
 .home-page {
 	display: grid;
-	grid-template-columns: 1fr 22rem;
+	grid-template-columns: 1fr var(--homepage-menu-size);
 }
 
 .home-page > img {
-	width: 17rem;
-	place-self: center;
+	width: var(--homepage-image-size);
+	align-self: center;
 }
 
 .quick-link {
@@ -14,7 +22,7 @@
 	grid-template-columns: 4rem 1fr;
 	gap: 2rem;
 	padding: 1rem;
-	background-color: rgba(158, 157, 157, 0.3);
+	background-color: var(--homepage-quicklink-background);
 	border-radius: .5rem;
 	margin-bottom: 3rem;
 	align-items: center;
@@ -23,7 +31,7 @@
 }
 
 .quick-link:hover {
-	background-color: #4C4C4C;
+	background-color: var(--homepage-quicklink-background-hover);
 }
 
 .quick-link.animation-grow:hover {
@@ -31,16 +39,19 @@
 }
 
 .quick-link p {
-	color: #aaa;
+	color: var(--homepage-quicklink-text-color);
 }
 
 @media (max-width: 56rem) {
+	:root {
+		--homepage-image-size: 12rem;
+	}
+
 	.home-page {
 		grid-template-columns: 1fr;
 	}
 
 	.home-page > img {
-		width: 12rem;
 		margin-bottom: 2rem;
 	}
 }

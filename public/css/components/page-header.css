@@ -1,20 +1,21 @@
 :root {
-	--page-header-margin: 4rem;
-	--page-header-title-color: var(--accent-color);
-	--page-header-description-color: var(--subtext-color);
+	--pageheader-margin: 4rem;
+	--pageheader-title-color: var(--accent-color);
+	--pageheader-description-color: var(--subtext-color);
+	--pageheader-icon-size: var(--icon-size);
 }
 
 .page-header {
-	margin-bottom: var(--page-header-margin);
+	margin-bottom: var(--pageheader-margin);
 	user-select: none;
 }
 
 .page-header-title {
-	color: var(--page-header-title-color);
+	color: var(--pageheader-title-color);
 }
 
 .page-header-description {
-	color: var(--page-header-description-color);
+	color: var(--pageheader-description-color);
 }
 
 .page-header-content {
@@ -22,14 +23,14 @@
 }
 
 .page-header-icon {
-	max-width: 1.5rem;
-	max-height: 1.5rem;
+	max-width: var(--pageheader-icon-size);
+	max-height: var(--pageheader-icon-size);
 	align-self: center;
 	cursor: pointer;
 }
 
 @media (max-width: 56rem) {
 	:root {
-		--page-header-margin: 2rem;
+		--pageheader-margin: 2rem;
 	}
 }
