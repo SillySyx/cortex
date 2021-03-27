@@ -169,6 +169,7 @@ impl Component for PasswordEditor {
                     placeholder={"Enter description"}
                     value=self.description.clone()
                     value_changed=self.link.callback(|value| Messages::UpdateDescription(value))>
+                    <img class="input-box-icon animation-grow" src="icons/copy.svg" alt="Copy description" />
                 </InputBox>
 
                 <InputBox
@@ -178,6 +179,7 @@ impl Component for PasswordEditor {
                     value=self.password.clone()
                     error=self.password_error.clone()
                     value_changed=self.link.callback(|value| Messages::UpdatePassword(value))>
+                    <img class="input-box-icon animation-grow" src="icons/copy.svg" alt="Copy password" />
                 </InputBox>
 
                 { self.render_buttons() }

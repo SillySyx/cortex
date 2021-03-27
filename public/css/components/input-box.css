@@ -40,6 +40,13 @@
 	outline: none;
 }
 
+.input-box-icon {
+	max-width: 1.5rem;
+	max-height: 1.5rem;
+	align-self: center;
+	cursor: pointer;
+}
+
 .input-box-error {
 	color: var(--input-box-error-color);
 	display: block;

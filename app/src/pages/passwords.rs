@@ -272,7 +272,7 @@ impl PasswordsPage {
                     value_changed=self.link.callback(|value| Messages::UpdateSearchText(value))
                     aborted=self.link.callback(|_| Messages::ClearSearchText)>
                     <ContextMenu open=self.context_menu_open>
-                        <img class="search-box-button animation-grow" src="icons/cog.svg" alt="" />
+                        <img class="input-box-icon animation-grow" src="icons/cog.svg" alt="" />
                         <ContextMenuContent>
                             <Button clicked=self.link.callback(|_| Messages::ChangeView(Views::NewCategory))>
                                 {"New category"}
@@ -297,14 +297,25 @@ impl PasswordsPage {
         let new_password = self.link.callback(move |_| Messages::ChangeViewWithId(Views::NewPassword, Some(category_id.clone()), None));
 
         html! {
-            <div class="animation-fade">
-                <img class="category-icon animation-grow" src="icons/edit.svg" alt="Edit category" onclick=edit_category />
-                <img class="category-icon animation-grow" src="icons/add.svg" alt="New password" onclick=new_password />
+            <>
+            <div class="category animation-fade">
                 <h2 class="category-title">{&category.title}</h2>
-                <div class="category">
-                    { for category.passwords.iter().map(|password| self.render_password(category.title.clone(), password)) }
-                </div>
+                <ContextMenu open=self.context_menu_open>
+                    <img class="category-icon animation-grow" src="icons/cog.svg" alt="" />
+                    <ContextMenuContent>
+                        <Button clicked=new_password>
+                            {"New password"}
+                        </Button>
+                        <Button clicked=edit_category>
+                            {"Edit category"}
+                        </Button>
+                    </ContextMenuContent>
+                </ContextMenu>
             </div>
+            <div class="category-items animation-fade">
+                { for category.passwords.iter().map(|password| self.render_password(category.title.clone(), password)) }
+            </div>
+            </>
         }
     }
 
@@ -323,7 +334,6 @@ impl PasswordsPage {
                 <p class="password-description">{&password.description}</p>
                 <div class="password-icons">
                     <img class="password-icon animation-grow" src="icons/key.svg" alt="Copy password" onclick=copy_password />
-                    <img class="password-icon animation-grow" src="icons/edit.svg" alt="Edit password" onclick=edit_password />
                 </div>
             </div>
         }

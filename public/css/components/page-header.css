@@ -21,6 +21,13 @@
 	float: right;
 }
 
+.page-header-icon {
+	max-width: 1.5rem;
+	max-height: 1.5rem;
+	align-self: center;
+	cursor: pointer;
+}
+
 @media (max-width: 56rem) {
 	:root {
 		--page-header-margin: 2rem;

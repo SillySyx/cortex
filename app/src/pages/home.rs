@@ -52,7 +52,7 @@ impl Component for HomePage {
 			<>
 			<PageHeader title={"Welcome"}>
 				<ContextMenu>
-					<img class="search-box-button animation-grow" src="icons/cog.svg" alt="" />
+					<img class="page-header-icon animation-grow" src="icons/cog.svg" alt="" />
 					<ContextMenuContent>
 						<Button clicked=self.link.callback(|_| Messages::Logout)>
 							{"Logout"}
