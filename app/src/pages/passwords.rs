@@ -6,7 +6,7 @@ use yew::{
     services::reader::{File, FileData, ReaderService, ReaderTask},
 };
 
-use crate::components::{Button, ContextMenu, ContextMenuContent, PasswordEditor, PasswordCategoryEditor, PageHeader, InputBox, Error};
+use crate::components::{Button, ContextMenu, ContextMenuContent, PasswordEditor, PasswordCategoryEditor, PageHeader, InputBox, Error, Svg};
 use crate::services::{Category, ClipboardService, LoginService, Password, PasswordService, generate_id};
 
 pub enum Views {
@@ -272,12 +272,11 @@ impl PasswordsPage {
                 <InputBox 
                     class="search-box"
                     value=self.search_text.clone()
-                    focus=true
                     placeholder="Search for passwords"
                     value_changed=self.link.callback(|value| Messages::UpdateSearchText(value))
                     aborted=self.link.callback(|_| Messages::ClearSearchText)>
                     <ContextMenu open=self.context_menu_open>
-                        <img class="input-box-icon animation-grow" src="icons/cog.svg" alt="" />
+                        <Svg class="input-box-icon animation-grow" src="icons/cog.svg" />
                         <ContextMenuContent>
                             <Button clicked=self.link.callback(|_| Messages::ChangeView(Views::NewCategory))>
                                 {"New category"}
@@ -315,7 +314,7 @@ impl PasswordsPage {
             <div class="category animation-fade">
                 <h2 class="category-title">{&category.title}</h2>
                 <ContextMenu open=self.context_menu_open>
-                    <img class="category-icon animation-grow" src="icons/cog.svg" alt="" />
+                    <Svg class="category-icon animation-grow" src="icons/cog.svg" />
                     <ContextMenuContent>
                         <Button clicked=new_password>
                             {"New password"}
@@ -347,7 +346,7 @@ impl PasswordsPage {
                 <h4 class="password-title" onclick=edit_password.clone()>{&password.name}</h4>
                 <p class="password-description">{&password.description}</p>
                 <div class="password-icons">
-                    <img class="password-icon animation-grow" src="icons/key.svg" alt="Copy password" onclick=copy_password />
+                    <Svg class="password-icon animation-grow" src="icons/key.svg" clicked=copy_password />
                 </div>
             </div>
         }

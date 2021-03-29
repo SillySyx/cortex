@@ -1,8 +1,8 @@
 use yew::prelude::*;
 
-use crate::components::{PageHeader, ContextMenu, ContextMenuContent, Button};
+use crate::components::{PageHeader, ContextMenu, ContextMenuContent, Button, Svg};
 use crate::services::LoginService;
-use super::{MainPageViews};
+use super::MainPageViews;
 
 pub enum Messages {
 	Logout,
@@ -52,7 +52,7 @@ impl Component for HomePage {
 			<>
 			<PageHeader title={"Welcome"}>
 				<ContextMenu>
-					<img class="page-header-icon animation-grow" src="icons/cog.svg" alt="" />
+					<Svg class="page-header-icon animation-grow" src="icons/cog.svg" />
 					<ContextMenuContent>
 						<Button clicked=self.link.callback(|_| Messages::Logout)>
 							{"Logout"}
@@ -61,27 +61,20 @@ impl Component for HomePage {
 				</ContextMenu>
 			</PageHeader>
 			<div class="home-page">
-				<img src="icons/home.svg" alt="Home" />
+				<Svg class="home-page-icon" src="icons/home.svg" />
 				<div class="quick-links">
 					<div class="quick-link animation-grow" onclick={self.link.callback(|_| Messages::ChangeView(MainPageViews::Passwords))}>
-						<img src="icons/password.svg" alt="" />
+						<Svg class="quick-link-icon" src="icons/password.svg" />
 						<div>
 							<h3>{"Password manager"}</h3>
-							<p>{"Handle your passwords with ease."}</p>
+							<p class="quick-link-text">{"Save things so that you can forget them!"}</p>
 						</div>
 					</div>
 					<div class="quick-link animation-grow" onclick={self.link.callback(|_| Messages::ChangeView(MainPageViews::Knowledgebase))}>
-						<img src="icons/knowledge.svg" alt="" />
+						<Svg class="quick-link-icon" src="icons/knowledge.svg" />
 						<div>
 							<h3>{"Knowledgebase"}</h3>
-							<p>{"Save things you dont want to forget."}</p>
-						</div>
-					</div>
-					<div class="quick-link animation-grow" onclick={self.link.callback(|_| Messages::ChangeView(MainPageViews::Todo))}>
-						<img src="icons/lists.svg" alt="" />
-						<div>
-							<h3>{"Todo lists"}</h3>
-							<p>{"Useful if you have a silly brain."}</p>
+							<p class="quick-link-text">{"Useful if you have a silly brain."}</p>
 						</div>
 					</div>
 				</div>

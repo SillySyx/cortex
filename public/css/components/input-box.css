@@ -47,8 +47,8 @@
 }
 
 .input-box-icon {
-	max-width: var(--inputbox-icon-size);
-	max-height: var(--inputbox-icon-size);
+	width: var(--inputbox-icon-size);
+	height: var(--inputbox-icon-size);
 	align-self: center;
 	cursor: pointer;
 }

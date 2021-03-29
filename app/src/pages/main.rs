@@ -1,7 +1,7 @@
 use yew::prelude::*;
 
-use crate::components::Button;
-use super::{PasswordsPage, KnowledgebasePage, HomePage, TodoPage, LoginPage};
+use crate::components::{Button, Svg};
+use super::{PasswordsPage, KnowledgebasePage, HomePage, LoginPage};
 use crate::services::LoginService;
 
 #[derive(PartialEq, Clone)]
@@ -9,7 +9,6 @@ pub enum Views {
     Home,
     Passwords,
     Knowledgebase,
-    Todo,
 }
 
 pub enum Messages {
@@ -66,11 +65,10 @@ impl MainPage {
             <div class="main-layout main-background animation-fade">
                 <aside class="main-menu">
                     <div class="menu-items">
-                        <img class="main-menu-logo" src="icons/brain.svg" alt="Homepage" onclick=self.link.callback(|_| Messages::ChangeView(Views::Home)) />
+                        <Svg class="main-menu-logo" src="icons/brain.svg" clicked=self.link.callback(|_| Messages::ChangeView(Views::Home)) />
 
-                        { self.render_menu_button("icons/password.svg", "Password manager", Views::Passwords) }
-                        { self.render_menu_button("icons/knowledge.svg", "Knowledgebase", Views::Knowledgebase) }
-                        { self.render_menu_button("icons/lists.svg", "Todo lists", Views::Todo) }
+                        { self.render_menu_button("icons/password.svg", Views::Passwords) }
+                        { self.render_menu_button("icons/knowledge.svg", Views::Knowledgebase) }
                     </div>
                 </aside>
                 <section class="main-content animation-fade">
@@ -85,9 +83,6 @@ impl MainPage {
                         Views::Knowledgebase => html! {
                             <KnowledgebasePage />
                         },
-                        Views::Todo => html! {
-                            <TodoPage />
-                        },
                     }
                 }
                 </section>
@@ -95,13 +90,12 @@ impl MainPage {
         }
     }
 
-    fn render_menu_button(&self, icon: &'static str, name: &'static str, view: Views) -> Html {
+    fn render_menu_button(&self, icon: &'static str, view: Views) -> Html {
         let button_active = self.view == view;
 
-        // let view = view.clone();
         html! {
             <Button active=button_active clicked=self.link.callback(move |_| Messages::ChangeView(view.clone()))>
-                <img src=icon alt=name />
+                <Svg class="main-button-icon" src=icon />
             </Button>
         }
     }

@@ -41,8 +41,12 @@
 }
 
 .main-menu-logo {
-	height: unset;
+	height: 3rem;
 	cursor: pointer;
+}
+
+.main-button-icon {
+	height: 2rem;
 }
 
 .main-content {

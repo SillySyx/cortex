@@ -11,8 +11,10 @@
 	grid-template-columns: 1fr var(--homepage-menu-size);
 }
 
-.home-page > img {
+.home-page-icon {
+	color: var(--accent-color);
 	width: var(--homepage-image-size);
+	height: var(--homepage-image-size);
 	align-self: center;
 }
 
@@ -38,8 +40,13 @@
 	transform: scale(1.1, 1.1);
 }
 
-.quick-link p {
+.quick-link-text {
 	color: var(--homepage-quicklink-text-color);
+	font-size: .9rem;
+}
+
+.quick-link-icon {
+	height: 3rem;
 }
 
 @media (max-width: 56rem) {
@@ -51,7 +58,12 @@
 		grid-template-columns: 1fr;
 	}
 
-	.home-page > img {
-		margin-bottom: 2rem;
+	.home-page-icon {
+		margin: auto;
+		margin-bottom: 4rem;
+	}
+
+	.quick-link.animation-grow:hover {
+		transform: scale(1.05, 1.1);
 	}
 }

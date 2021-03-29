@@ -1,7 +1,7 @@
 use yew::prelude::*;
 
 use crate::services::LoginService;
-use crate::components::InputBox;
+use crate::components::{InputBox, Svg};
 
 pub enum Messages {
     Unlock(String),
@@ -69,11 +69,9 @@ impl Component for LoginPage {
         html! {
             <div class="login-layout login-background animation-fade">
                 <div class="login-content">
-                    <img class="login-logo" src="icons/brain.svg" alt="" />
-                    
+                    <Svg class="login-logo" src="icons/brain.svg" />
                     <InputBox 
                         class="login-input"
-                        focus=true
                         password=true
                         error=self.error.clone()
                         placeholder="Enter your password"

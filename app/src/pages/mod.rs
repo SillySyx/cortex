@@ -3,7 +3,6 @@ mod knowledgebase;
 mod login;
 mod main;
 mod passwords;
-mod todo;
 
 pub use {
     home::HomePage,
@@ -11,5 +10,4 @@ pub use {
     login::LoginPage,
     main::{MainPage, Views as MainPageViews},
     passwords::PasswordsPage,
-    todo::TodoPage,
 };

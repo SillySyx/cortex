@@ -3,6 +3,17 @@
 	--loginpage-background: var(--background-color);
 }
 
+@media (prefers-color-scheme: light) {
+	:root {
+		--loginpage-background-image: url("../../images/login-light.jpeg");
+	}
+}
+@media (prefers-color-scheme: dark) {
+	:root {
+		--loginpage-background-image: url("../../images/login-dark.jpeg");
+	}
+}
+
 .login-layout {
 	color: var(--loginpage-text-color);
 	min-height: 100vh;
@@ -10,7 +21,7 @@
 
 .login-background {
 	background-color: var(--loginpage-background);
-	background-image: url("../../images/login.jpeg");
+	background-image: var(--loginpage-background-image);
 	background-size: cover;
 	background-position: center;
 }

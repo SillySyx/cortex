@@ -123,7 +123,6 @@ impl Component for PasswordCategoryEditor {
                             description={"Categories are used to group similar passwords together so that it's easier to overview."} />
 
                 <InputBox
-                    focus=true
                     label={"Name"}
                     placeholder={"Enter name"}
                     value=self.name.clone()

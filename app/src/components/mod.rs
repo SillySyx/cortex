@@ -6,6 +6,7 @@ mod password_category_editor;
 mod page_header;
 mod input;
 mod error;
+mod svg;
 
 pub use {
     button::Button,
@@ -16,4 +17,5 @@ pub use {
     page_header::PageHeader,
     input::InputBox,
     error::Error,
+    svg::Svg,
 };
