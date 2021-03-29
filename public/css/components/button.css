@@ -1,9 +1,22 @@
 :root {
-	--mainbutton-background: #555;
-	--mainbutton-hover-background: #666;
-	--mainbutton-active-background: #777;
-	--mainbutton-padding: .3rem;
-	--mainbutton-shadow: 3px 3px 2px rgba(0, 0, 0, .1);
+	--mainbutton-padding: .7rem;
+}
+
+@media (prefers-color-scheme: light) {
+	:root {
+		--mainbutton-background: #ddd;
+		--mainbutton-hover-background: #ccc;
+		--mainbutton-active-background: #bbb;
+		--mainbutton-shadow: 3px 3px 2px rgba(0, 0, 0, .3);
+	}
+}
+@media (prefers-color-scheme: dark) {
+	:root {
+		--mainbutton-background: #555;
+		--mainbutton-hover-background: #666;
+		--mainbutton-active-background: #777;
+		--mainbutton-shadow: 3px 3px 2px rgba(0, 0, 0, .1);
+	}
 }
 
 .main-button {

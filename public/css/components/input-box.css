@@ -3,11 +3,21 @@
 	--inputbox-label-color: var(--subtext-color);
 	--inputbox-error-color: var(--error-text);
 	--inputbox-padding: 1rem;
-	--inputbox-shadow: 3px 3px 2px rgba(0, 0, 0, .4);
 	--inputbox-gap: 1rem;
 	--inputbox-icon-size: var(--icon-size);
 	--inputbox-background: rgba(255, 255, 255, 0.8);
 	--inputbox-background-focus: #fff;
+}
+
+@media (prefers-color-scheme: light) {
+	:root {
+		--inputbox-shadow: 3px 3px 2px rgba(0, 0, 0, .2);
+	}
+}
+@media (prefers-color-scheme: dark) {
+	:root {
+		--inputbox-shadow: 3px 3px 2px rgba(0, 0, 0, .4);
+	}
 }
 
 .input-box {
