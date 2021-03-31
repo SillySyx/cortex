@@ -166,14 +166,14 @@ impl Component for PasswordEditor {
         let copy_desc = match self.mode {
             Mode::New => html! {},
             Mode::Edit => html! {
-                <Svg class="input-box-icon animation-grow" src="icons/copy.svg" clicked=self.link.callback(|_| Messages::CopyDescription) />
+                <Svg class="input-box-icon animation-grow animation-highlight" src="icons/copy.svg" clicked=self.link.callback(|_| Messages::CopyDescription) />
             },
         };
 
         let copy_pass = match self.mode {
             Mode::New => html! {},
             Mode::Edit => html! {
-                <Svg class="input-box-icon animation-grow" src="icons/copy.svg" clicked=self.link.callback(|_| Messages::CopyPassword) />
+                <Svg class="input-box-icon animation-grow animation-highlight" src="icons/copy.svg" clicked=self.link.callback(|_| Messages::CopyPassword) />
             },
         };
 

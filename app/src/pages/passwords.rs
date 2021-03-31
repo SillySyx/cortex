@@ -31,6 +31,7 @@ pub enum Messages {
 
     AddPassword(String, String, String, String),
     CopyPassword(String, String),
+    CopyDescription(String, String),
     EditPassword(String, String, String, String, String),
     RemovePassword(String, String),
 
@@ -156,11 +157,19 @@ impl Component for PasswordsPage {
                 PasswordService::save_passwords(&mut self.passwords);
                 self.view = Views::ListPasswords;
                 true
-            }
+            },
             Messages::CopyPassword(category_id, password_id) => {
                 if let Some(category) = self.passwords.iter().find(|c| c.id == category_id) {
                     if let Some(password) = category.passwords.iter().find(|p| p.id == password_id) {
                         ClipboardService::copy_to_clipboard(password.password.clone());
+                    }
+                }
+                false
+            },
+            Messages::CopyDescription(category_id, password_id) => {
+                if let Some(category) = self.passwords.iter().find(|c| c.id == category_id) {
+                    if let Some(password) = category.passwords.iter().find(|p| p.id == password_id) {
+                        ClipboardService::copy_to_clipboard(password.description.clone());
                     }
                 }
                 false
@@ -339,14 +348,24 @@ impl PasswordsPage {
 
         let category_id_clone = category_id.clone();
         let password_id = password.id.clone();
+        let copy_desc = self.link.callback(move |_| Messages::CopyDescription(category_id_clone.clone(), password_id.clone()));
+
+        let category_id_clone = category_id.clone();
+        let password_id = password.id.clone();
         let edit_password = self.link.callback(move |_| Messages::ChangeViewWithId(Views::EditPassword, Some(category_id_clone.clone()), Some(password_id.clone())));
 
         html! {
             <div class="password animation-fade">
-                <h4 class="password-title" onclick=edit_password.clone()>{&password.name}</h4>
-                <p class="password-description">{&password.description}</p>
-                <div class="password-icons">
-                    <Svg class="password-icon animation-grow" src="icons/key.svg" clicked=copy_password />
+                <div>
+                    <h3 class="password-title">
+                        <span onclick=edit_password>{&password.name}</span>
+                    </h3>
+                    <p class="password-description animation-highlight">
+                        <span onclick=copy_desc>{&password.description}</span>
+                    </p>
+                </div>
+                <div>
+                    <Svg class="password-icon animation-grow animation-highlight" src="icons/key.svg" clicked=copy_password />
                 </div>
             </div>
         }

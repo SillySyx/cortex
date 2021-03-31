@@ -57,7 +57,7 @@
 	cursor: pointer;
 }
 
-.main-button {
+.main-menu .main-button {
 	padding: .3rem;
 }
 
@@ -76,5 +76,11 @@
 @media (max-width: 56rem) {
 	.main-content {
 		width: calc(100% - 2rem);
+	}
+}
+
+@media (prefers-color-scheme: light) {
+	.main-menu .main-button {
+		box-shadow: none;
 	}
 }
