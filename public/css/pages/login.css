@@ -1,16 +1,13 @@
 :root {
 	--loginpage-text-color: var(--text-color);
 	--loginpage-background: var(--background-color);
+	--loginpage-background-image: url("../../images/login-dark.jpeg");
 }
 
 @media (prefers-color-scheme: light) {
 	:root {
 		--loginpage-background-image: url("../../images/login-light.jpeg");
-	}
-}
-@media (prefers-color-scheme: dark) {
-	:root {
-		--loginpage-background-image: url("../../images/login-dark.jpeg");
+		--loginpage-text-color: #eee;
 	}
 }
 

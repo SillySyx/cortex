@@ -5,6 +5,9 @@
 	--pageheader-icon-size: var(--icon-size);
 }
 
+@media (prefers-color-scheme: light) {
+}
+
 .page-header {
 	margin-bottom: var(--pageheader-margin);
 	user-select: none;

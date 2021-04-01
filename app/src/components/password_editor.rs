@@ -1,4 +1,7 @@
+use std::time::Duration;
+
 use yew::prelude::*;
+use yew::services::{TimeoutService, Task};
 
 use super::{Button, PageHeader, InputBox, Error, Svg};
 use crate::services::ClipboardService;
@@ -56,6 +59,7 @@ pub struct PasswordEditor {
     password: String,
     password_error: String,
     mode: Mode,
+    timeout_task: Option<Box<dyn Task>>,
 }
 
 impl Component for PasswordEditor {
@@ -83,6 +87,7 @@ impl Component for PasswordEditor {
             password,
             password_error: String::from(""),
             mode,
+            timeout_task: None,
         }
     }
 
@@ -148,6 +153,12 @@ impl Component for PasswordEditor {
             },
             Messages::CopyPassword => {
                 ClipboardService::copy_to_clipboard(self.password.clone());
+
+                let task = TimeoutService::spawn(Duration::from_secs(5), Callback::from(|_| {
+                    ClipboardService::copy_to_clipboard("".to_string());
+                }));
+                self.timeout_task = Some(Box::new(task));
+
                 false
             },
         }

@@ -1,18 +1,14 @@
 :root {
 	--mainpage-text-color: var(--text-color);
 	--mainpage-background: var(--background-color);
+	--mainpage-menu-background: #424242;
+	--mainpage-background-image: url("../../images/pattern.png");
 }
 
 @media (prefers-color-scheme: light) {
 	:root {
 		--mainpage-menu-background: white;
 		--mainpage-background-image: none;
-	}
-}
-@media (prefers-color-scheme: dark) {
-	:root {
-		--mainpage-menu-background: #424242;
-		--mainpage-background-image: url("../../images/pattern.png");
 	}
 }
 

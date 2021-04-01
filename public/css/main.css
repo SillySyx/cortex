@@ -1,5 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500&display=swap');
 
+:root {
+	--background-color: #222;
+	--accent-color: #ffa743;
+	--text-color: #eee;
+	--subtext-color: #aaa;
+	--error-text: #D00;
+	--error-background: #700;
+	--error-background-hover: #A00;
+	--icon-size: 1.5rem;
+	--widget-background: rgba(100, 100, 100, .3);
+	--widget-background-hover: #4C4C4C;
+}
+
 @media (prefers-color-scheme: light) {
 	:root {
 		--background-color: #eee;
@@ -12,20 +25,6 @@
 		--icon-size: 1.5rem;
 		--widget-background: #ddd;
 		--widget-background-hover: #ccc;
-	}
-}
-@media (prefers-color-scheme: dark) {
-	:root {
-		--background-color: #222;
-		--accent-color: #ffa743;
-		--text-color: #eee;
-		--subtext-color: #aaa;
-		--error-text: #D00;
-		--error-background: #700;
-		--error-background-hover: #A00;
-		--icon-size: 1.5rem;
-		--widget-background: rgba(100, 100, 100, .3);
-		--widget-background-hover: #4C4C4C;
 	}
 }
 

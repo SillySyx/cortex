@@ -6,6 +6,9 @@
 	--homepage-quicklink-text-color: var(--subtext-color);
 }
 
+@media (prefers-color-scheme: light) {
+}
+
 .home-page {
 	display: grid;
 	grid-template-columns: 1fr var(--homepage-menu-size);
@@ -16,6 +19,10 @@
 	width: var(--homepage-image-size);
 	height: var(--homepage-image-size);
 	align-self: center;
+}
+
+.page-header-icon {
+	transition: all .4s;
 }
 
 .quick-link {

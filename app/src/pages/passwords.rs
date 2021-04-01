@@ -1,9 +1,13 @@
-use std::vec;
+use std::time::Duration;
 
 use yew::{
     prelude::*, 
     web_sys::HtmlInputElement,
-    services::reader::{File, FileData, ReaderService, ReaderTask},
+    services::{
+        TimeoutService,
+        Task,
+        reader::{File, FileData, ReaderService, ReaderTask},
+    },
 };
 
 use crate::components::{Button, ContextMenu, ContextMenuContent, PasswordEditor, PasswordCategoryEditor, PageHeader, InputBox, Error, Svg};
@@ -56,6 +60,7 @@ pub struct PasswordsPage {
     selected_category_id: String,
     selected_password_id: String,
     import_error: String,
+    timeout_task: Option<Box<dyn Task>>,
 }
 
 impl Component for PasswordsPage {
@@ -86,6 +91,7 @@ impl Component for PasswordsPage {
             selected_category_id: String::new(),
             selected_password_id: String::new(),
             import_error: String::new(),
+            timeout_task: None,
         }
     }
 
@@ -162,6 +168,11 @@ impl Component for PasswordsPage {
                 if let Some(category) = self.passwords.iter().find(|c| c.id == category_id) {
                     if let Some(password) = category.passwords.iter().find(|p| p.id == password_id) {
                         ClipboardService::copy_to_clipboard(password.password.clone());
+
+                        let task = TimeoutService::spawn(Duration::from_secs(5), Callback::from(|_| {
+                            ClipboardService::copy_to_clipboard("".to_string());
+                        }));
+                        self.timeout_task = Some(Box::new(task));
                     }
                 }
                 false
@@ -285,7 +296,7 @@ impl PasswordsPage {
                     value_changed=self.link.callback(|value| Messages::UpdateSearchText(value))
                     aborted=self.link.callback(|_| Messages::ClearSearchText)>
                     <ContextMenu open=self.context_menu_open>
-                        <Svg class="input-box-icon animation-grow" src="icons/cog.svg" />
+                        <Svg class="input-box-icon animation-twist-grow" src="icons/cog.svg" />
                         <ContextMenuContent>
                             <Button clicked=self.link.callback(|_| Messages::ChangeView(Views::NewCategory))>
                                 {"New category"}
@@ -323,7 +334,7 @@ impl PasswordsPage {
             <div class="category animation-fade">
                 <h2 class="category-title">{&category.title}</h2>
                 <ContextMenu open=self.context_menu_open>
-                    <Svg class="category-icon animation-grow" src="icons/cog.svg" />
+                    <Svg class="category-icon animation-twist-grow" src="icons/cog.svg" />
                     <ContextMenuContent>
                         <Button clicked=new_password>
                             {"New password"}

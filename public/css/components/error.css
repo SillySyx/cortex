@@ -5,6 +5,12 @@
 	--errormessage-button-background-hover: var(--error-background-hover);
 }
 
+@media (prefers-color-scheme: light) {
+	:root {
+		--errormessage-button-text: #eee;
+	}
+}
+
 .error-message {
 	color: var(--errormessage-text-color);
 	margin-bottom: 4rem;
