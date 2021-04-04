@@ -71,7 +71,7 @@ impl MainPage {
                         { self.render_menu_button("icons/knowledge.svg", Views::Knowledgebase) }
                     </div>
                 </aside>
-                <section class="main-content animation-fade">
+                <section class="main-content">
                 {
                     match self.view {
                         Views::Home => html! {

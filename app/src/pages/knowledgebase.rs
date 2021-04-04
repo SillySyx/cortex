@@ -27,12 +27,12 @@ impl Component for KnowledgebasePage {
 
     fn view(&self) -> Html {
         html! {
-            <>
-            <PageHeader title={"Knowledgebase"}
-                        description={"Save things you dont want to forget."}>
-            </PageHeader>
-            <p>{"Not yet implemented"}</p>
-            </>
+            <div class="animation-fade">
+                <PageHeader title={"Knowledgebase"}
+                            description={"Save things you dont want to forget."}>
+                </PageHeader>
+                <p>{"Not yet implemented"}</p>
+            </div>
         }
     }
 }

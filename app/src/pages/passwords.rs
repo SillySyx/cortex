@@ -285,7 +285,7 @@ impl PasswordsPage {
         let categories = filter_categories(&self.passwords, self.search_text.clone());
 
         html! {
-            <>
+            <div class="animation-fade">
                 <PageHeader title={"Password manager"} description={"Handle your passwords with ease."}>
                 </PageHeader>
 
@@ -318,7 +318,7 @@ impl PasswordsPage {
                 }}
 
                 { for categories.iter().map(|category| self.render_category(category)) }
-            </>
+            </div>
         }
     }
 

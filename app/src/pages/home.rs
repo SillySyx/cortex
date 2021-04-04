@@ -49,37 +49,37 @@ impl Component for HomePage {
 
 	fn view(&self) -> Html {
 		html! {
-			<>
-			<PageHeader title={"Welcome"}>
-				<ContextMenu>
-					<Svg class="page-header-icon animation-twist-grow" src="icons/cog.svg" />
-					<ContextMenuContent>
-						<Button clicked=self.link.callback(|_| Messages::Logout)>
-							{"Logout"}
-						</Button>
-					</ContextMenuContent>
-				</ContextMenu>
-			</PageHeader>
-			<div class="home-page">
-				<Svg class="home-page-icon" src="icons/home.svg" />
-				<div class="quick-links">
-					<div class="quick-link animation-grow" onclick={self.link.callback(|_| Messages::ChangeView(MainPageViews::Passwords))}>
-						<Svg class="quick-link-icon" src="icons/password.svg" />
-						<div>
-							<h3>{"Password manager"}</h3>
-							<p class="quick-link-text">{"Save things so that you can forget them!"}</p>
+			<div class="animation-fade">
+				<PageHeader title={"Welcome"}>
+					<ContextMenu>
+						<Svg class="page-header-icon animation-twist-grow" src="icons/cog.svg" />
+						<ContextMenuContent>
+							<Button clicked=self.link.callback(|_| Messages::Logout)>
+								{"Logout"}
+							</Button>
+						</ContextMenuContent>
+					</ContextMenu>
+				</PageHeader>
+				<div class="home-page">
+					<Svg class="home-page-icon" src="icons/home.svg" />
+					<div class="quick-links">
+						<div class="quick-link animation-grow" onclick={self.link.callback(|_| Messages::ChangeView(MainPageViews::Passwords))}>
+							<Svg class="quick-link-icon" src="icons/password.svg" />
+							<div>
+								<h3>{"Password manager"}</h3>
+								<p class="quick-link-text">{"Save things so that you can forget them!"}</p>
+							</div>
 						</div>
-					</div>
-					<div class="quick-link animation-grow" onclick={self.link.callback(|_| Messages::ChangeView(MainPageViews::Knowledgebase))}>
-						<Svg class="quick-link-icon" src="icons/knowledge.svg" />
-						<div>
-							<h3>{"Knowledgebase"}</h3>
-							<p class="quick-link-text">{"Useful if you have a silly brain."}</p>
+						<div class="quick-link animation-grow" onclick={self.link.callback(|_| Messages::ChangeView(MainPageViews::Knowledgebase))}>
+							<Svg class="quick-link-icon" src="icons/knowledge.svg" />
+							<div>
+								<h3>{"Knowledgebase"}</h3>
+								<p class="quick-link-text">{"Useful if you have a silly brain."}</p>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			</>
 		}
 	}
 }
