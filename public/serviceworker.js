@@ -15,9 +15,11 @@ async function cache_request(request) {
 }
 
 self.addEventListener("fetch", event => {
-    if (event.request.method !== "GET") {
+    if (event.request.method !== "GET")
         return;
-    }
+
+    if (event.request.url.indexOf(":8080") > -1)
+        return;
 
     return event.respondWith(cache_request(event.request));
 });

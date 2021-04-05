@@ -1,12 +1,12 @@
 mod home;
-mod knowledgebase;
+mod knowledge;
 mod login;
 mod main;
 mod passwords;
 
 pub use {
     home::HomePage,
-    knowledgebase::KnowledgebasePage,
+    knowledge::KnowledgePage,
     login::LoginPage,
     main::{MainPage, Views as MainPageViews},
     passwords::PasswordsPage,

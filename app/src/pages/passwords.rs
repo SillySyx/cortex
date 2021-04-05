@@ -287,6 +287,17 @@ impl PasswordsPage {
         html! {
             <div class="animation-fade">
                 <PageHeader title={"Password manager"} description={"Handle your passwords with ease."}>
+                    <ContextMenu open=self.context_menu_open>
+                        <Svg class="input-box-icon animation-twist-grow" src="icons/cog.svg" />
+                        <ContextMenuContent>
+                            <Button clicked=self.link.callback(|_| Messages::ChangeView(Views::NewCategory))>
+                                {"Add category"}
+                            </Button>
+                            <Button clicked=self.link.callback(|_| Messages::ChangeView(Views::ImportExport))>
+                                {"Import/Export"}
+                            </Button>
+                        </ContextMenuContent>
+                    </ContextMenu>
                 </PageHeader>
 
                 <InputBox 
@@ -295,24 +306,15 @@ impl PasswordsPage {
                     placeholder="Search for passwords"
                     value_changed=self.link.callback(|value| Messages::UpdateSearchText(value))
                     aborted=self.link.callback(|_| Messages::ClearSearchText)>
-                    <ContextMenu open=self.context_menu_open>
-                        <Svg class="input-box-icon animation-twist-grow" src="icons/cog.svg" />
-                        <ContextMenuContent>
-                            <Button clicked=self.link.callback(|_| Messages::ChangeView(Views::NewCategory))>
-                                {"New category"}
-                            </Button>
-                            <Button clicked=self.link.callback(|_| Messages::ChangeView(Views::ImportExport))>
-                                {"Import/Export"}
-                            </Button>
-                        </ContextMenuContent>
-                    </ContextMenu>
                 </InputBox>
 
                 { match categories.is_empty() {
                     false => html! {},
                     true => html! {
-                        <div>
-                            <p>{"No passwords added"}</p>
+                        <div class="passwords-empty">
+                            <div class="link-button animation-highlight" onclick=self.link.callback(|_| Messages::ChangeView(Views::NewCategory))>
+                                {"Add category"}
+                            </div>
                         </div>
                     },
                 }}
@@ -329,6 +331,9 @@ impl PasswordsPage {
         let category_id = category.id.clone();
         let new_password = self.link.callback(move |_| Messages::ChangeViewWithId(Views::NewPassword, Some(category_id.clone()), None));
 
+        let category_id = category.id.clone();
+        let new_password2 = self.link.callback(move |_| Messages::ChangeViewWithId(Views::NewPassword, Some(category_id.clone()), None));
+
         html! {
             <>
             <div class="category animation-fade">
@@ -336,7 +341,7 @@ impl PasswordsPage {
                 <ContextMenu open=self.context_menu_open>
                     <Svg class="category-icon animation-twist-grow" src="icons/cog.svg" />
                     <ContextMenuContent>
-                        <Button clicked=new_password>
+                        <Button clicked=new_password.clone()>
                             {"New password"}
                         </Button>
                         <Button clicked=edit_category>
@@ -345,6 +350,18 @@ impl PasswordsPage {
                     </ContextMenuContent>
                 </ContextMenu>
             </div>
+
+            { match category.passwords.is_empty() {
+                false => html! {},
+                true => html! {
+                    <div class="passwords-empty">
+                        <div class="link-button animation-highlight" onclick=new_password2>
+                            {"Add password"}
+                        </div>
+                    </div>
+                },
+            }}
+
             <div class="category-items animation-fade">
                 { for category.passwords.iter().map(|password| self.render_password(category.id.clone(), password)) }
             </div>

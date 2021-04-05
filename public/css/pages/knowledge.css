@@ -1,0 +1,30 @@
+:root {
+	--knowledge-background: var(--widget-background);
+	--knowledge-background-hover: var(--widget-background-hover);
+}
+
+.knowledge-content {
+    margin-bottom: 4rem;
+}
+
+.knowledge-children {
+    display: flex;
+	flex-flow: row wrap;
+	justify-content: space-between;
+	gap: 1rem;
+}
+
+.knowledge-child {
+	transition: all .2s ease-out;
+	box-sizing: border-box;
+	width: calc(50% - .5rem);
+	padding: 1rem;
+	background-color: var(--knowledge-background);
+	border-radius: .5rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.knowledge-child:hover {
+	background-color: var(--knowledge-background-hover);
+}

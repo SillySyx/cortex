@@ -1,14 +1,14 @@
 use yew::prelude::*;
 
 use crate::components::{Button, Svg};
-use super::{PasswordsPage, KnowledgebasePage, HomePage, LoginPage};
+use super::{PasswordsPage, KnowledgePage, HomePage, LoginPage};
 use crate::services::LoginService;
 
 #[derive(PartialEq, Clone)]
 pub enum Views {
     Home,
     Passwords,
-    Knowledgebase,
+    Knowledge,
 }
 
 pub enum Messages {
@@ -68,7 +68,7 @@ impl MainPage {
                         <Svg class="main-menu-logo" src="icons/brain.svg" clicked=self.link.callback(|_| Messages::ChangeView(Views::Home)) />
 
                         { self.render_menu_button("icons/password.svg", Views::Passwords) }
-                        { self.render_menu_button("icons/knowledge.svg", Views::Knowledgebase) }
+                        { self.render_menu_button("icons/knowledge.svg", Views::Knowledge) }
                     </div>
                 </aside>
                 <section class="main-content">
@@ -80,8 +80,8 @@ impl MainPage {
                         Views::Passwords => html! {
                             <PasswordsPage />
                         },
-                        Views::Knowledgebase => html! {
-                            <KnowledgebasePage />
+                        Views::Knowledge => html! {
+                            <KnowledgePage />
                         },
                     }
                 }

@@ -70,10 +70,10 @@ impl Component for HomePage {
 								<p class="quick-link-text">{"Save things so that you can forget them!"}</p>
 							</div>
 						</div>
-						<div class="quick-link animation-grow" onclick={self.link.callback(|_| Messages::ChangeView(MainPageViews::Knowledgebase))}>
+						<div class="quick-link animation-grow" onclick={self.link.callback(|_| Messages::ChangeView(MainPageViews::Knowledge))}>
 							<Svg class="quick-link-icon" src="icons/knowledge.svg" />
 							<div>
-								<h3>{"Knowledgebase"}</h3>
+								<h3>{"Knowledge"}</h3>
 								<p class="quick-link-text">{"Useful if you have a silly brain."}</p>
 							</div>
 						</div>

@@ -49,3 +49,11 @@
 	background-color: var(--mainbutton-background);
 	transform: none;
 }
+
+.link-button {
+	cursor: pointer;
+}
+
+.link-button:hover {
+	text-decoration: underline;
+}

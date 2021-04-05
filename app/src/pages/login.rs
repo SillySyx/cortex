@@ -72,6 +72,7 @@ impl Component for LoginPage {
                     <Svg class="login-logo" src="icons/brain.svg" />
                     <InputBox 
                         class="login-input"
+                        focus=true
                         password=true
                         error=self.error.clone()
                         placeholder="Enter your password"
