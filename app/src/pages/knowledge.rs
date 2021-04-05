@@ -82,6 +82,7 @@ impl Component for KnowledgePage {
                         <Svg class="input-box-icon animation-twist-grow" src="icons/cog.svg" />
                         <ContextMenuContent>
                             <button>{"Edit knowledge"}</button>
+                            <button>{"Add sub knowledge"}</button>
                         </ContextMenuContent>
                     </ContextMenu>
                 </PageHeader>
@@ -120,7 +121,7 @@ impl KnowledgePage {
     
         html! {
             <div class="knowledge-children">
-            { for knowledge.children.iter().map(move |child| self.render_child(child)) }
+                { for knowledge.children.iter().map(move |child| self.render_child(child)) }
             </div>
         }
     }

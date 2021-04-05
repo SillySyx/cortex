@@ -125,6 +125,7 @@ impl Component for PasswordCategoryEditor {
                 <InputBox
                     label={"Name"}
                     placeholder={"Enter name"}
+                    focus=self.props.new_mode
                     value=self.name.clone()
                     error=self.error.clone()
                     value_changed=self.link.callback(|value| Messages::UpdateName(value))>
