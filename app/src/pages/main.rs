@@ -72,19 +72,17 @@ impl MainPage {
                     </div>
                 </aside>
                 <section class="main-content">
-                {
-                    match self.view {
-                        Views::Home => html! {
-                            <HomePage change_view={self.link.callback(|view: Views| Messages::ChangeView(view))} />
-                        },
-                        Views::Passwords => html! {
-                            <PasswordsPage />
-                        },
-                        Views::Knowledge => html! {
-                            <KnowledgePage />
-                        },
-                    }
-                }
+                { match self.view {
+                    Views::Home => html! {
+                        <HomePage change_view=self.link.callback(|view: Views| Messages::ChangeView(view)) />
+                    },
+                    Views::Passwords => html! {
+                        <PasswordsPage />
+                    },
+                    Views::Knowledge => html! {
+                        <KnowledgePage />
+                    },
+                }}
                 </section>
             </div>
         }
