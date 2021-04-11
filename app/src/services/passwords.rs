@@ -1,15 +1,11 @@
 use yew::services::{StorageService, storage::Area};
 use serde::{Serialize, Deserialize};
 
-use super::LoginService;
+use super::{LoginService, generate_id};
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 struct EncryptedPasswords {
     bytes: Vec<u8>,
-}
-
-pub fn generate_id() -> String {
-    uuid::Uuid::new_v4().to_string()
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Eq, Ord, PartialEq, PartialOrd)]

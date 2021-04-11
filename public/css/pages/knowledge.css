@@ -3,28 +3,38 @@
 	--knowledge-background-hover: var(--widget-background-hover);
 }
 
-.knowledge-content {
-    margin-bottom: 4rem;
+.knowledge-layout {
+	display: grid;
+	grid-template-columns: 10rem 1fr;
+	gap: 2rem;
 }
 
-.knowledge-children {
-    display: flex;
-	flex-flow: row wrap;
-	justify-content: space-between;
-	gap: 1rem;
+.knowledge-layout .knowledge-menu {
+	position: sticky;
+	top: 5rem;
 }
 
-.knowledge-child {
-	transition: all .2s ease-out;
-	box-sizing: border-box;
-	width: calc(50% - .5rem);
-	padding: 1rem;
-	background-color: var(--knowledge-background);
-	border-radius: .5rem;
-    cursor: pointer;
-    user-select: none;
+.knowledge-layout .knowledge-menuitem {
+	cursor: pointer;
 }
 
-.knowledge-child:hover {
-	background-color: var(--knowledge-background-hover);
+.knowledge-layout .knowledge-content {
+	color: var(--subtext-color);
+}
+.knowledge-layout .knowledge-content .markdown .knowledge-icon {
+	color: var(--accent-color);
+}
+
+.knowledge-layout .knowledge-content .markdown h1 {
+	color: var(--text-color);
+	border-bottom: 1px solid #ccc;
+	margin-bottom: .5rem;
+}
+
+.knowledge-layout .knowledge-content .markdown p {
+	margin-bottom: 1rem;
+}
+
+.knowledge-layout .knowledge-content .markdown ul {
+	margin-bottom: 1rem;
 }
