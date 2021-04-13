@@ -74,7 +74,7 @@ impl Component for AddCategoryView {
         let disabled = self.name.is_empty();
 
         html! {
-            <div class="password-editor animation-fade">
+            <div class="animation-fade">
                 <PageHeader title="New category" 
                             description="Categories are used to group similar passwords together so that it's easier to overview." />
 
@@ -82,13 +82,13 @@ impl Component for AddCategoryView {
                     label="Name"
                     placeholder="Enter name"
                     focus=true
+                    mandatory=true
                     value=self.name.clone()
                     error=self.name_error.clone()
                     value_changed=self.link.callback(|value| Messages::UpdateName(value))>
                 </InputBox>
 
-                
-                <div class="password-editor-buttons">
+                <div class="button-grid">
                     <Button disabled=disabled clicked=self.link.callback(|_| Messages::AddClicked)>
                         {"Add"}
                     </Button>

@@ -171,7 +171,7 @@ impl ListView {
                     <Svg class="category-icon animation-twist-grow" src="icons/cog.svg" />
                     <ContextMenuContent>
                         <Button clicked=new_password.clone()>
-                            {"New password"}
+                            {"Add password"}
                         </Button>
                         <Button clicked=edit_category>
                             {"Edit category"}

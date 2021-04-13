@@ -2,7 +2,8 @@ mod button;
 mod context_menu;
 mod context_menu_content;
 mod page_header;
-mod input;
+mod inputbox;
+mod textbox;
 mod error;
 mod svg;
 
@@ -11,7 +12,8 @@ pub use {
     context_menu::ContextMenu,
     context_menu_content::ContextMenuContent,
     page_header::PageHeader,
-    input::InputBox,
+    inputbox::InputBox,
+    textbox::TextBox,
     error::Error,
     svg::Svg,
 };

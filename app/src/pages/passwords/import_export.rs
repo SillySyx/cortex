@@ -117,7 +117,7 @@ impl Component for ImportExportView {
                     },
                 }}
                 
-                <div class="import-export-buttons">
+                <div class="button-grid import-export-buttons">
                     <input ref=self.upload_ref.clone() type="file" onchange=file_uploaded />
                     <Button clicked=self.link.callback(|_| Messages::ImportClicked)>
                         {"Import"}

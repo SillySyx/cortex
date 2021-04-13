@@ -11,6 +11,7 @@ pub enum Messages {
 #[derive(Clone, PartialEq, Properties)]
 pub struct Props {
     pub change_view: Callback<(String, Option<String>)>,
+    pub id: String,
 }
 
 pub struct ListView {
@@ -24,10 +25,12 @@ impl Component for ListView {
     type Properties = Props;
 
     fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
+        let selected_knowledge = props.id.clone();
+
         Self {
             props,
             link,
-            selected_knowledge: "root".into(),
+            selected_knowledge,
         }
     }
 

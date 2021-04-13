@@ -15,7 +15,7 @@ pub struct Props {
 	#[prop_or_default]
     pub focus: bool,
 	#[prop_or_default]
-    pub password: bool,
+    pub mandatory: bool,
 	#[prop_or_default]
     pub class: String,
 	#[prop_or_default]
@@ -25,8 +25,6 @@ pub struct Props {
 	#[prop_or_default]
     pub error: String,
 	#[prop_or_default]
-    pub children: Children,
-	#[prop_or_default]
     pub value_changed: Callback<String>,
 	#[prop_or_default]
     pub submitted: Callback<String>,
@@ -34,13 +32,13 @@ pub struct Props {
     pub aborted: Callback<()>,
 }
 
-pub struct InputBox {
+pub struct TextBox {
     props: Props,
     link: ComponentLink<Self>,
     node_ref: NodeRef,
 }
 
-impl Component for InputBox {
+impl Component for TextBox {
     type Message = Messages;
     type Properties = Props;
 
@@ -84,25 +82,18 @@ impl Component for InputBox {
     }
 
     fn view(&self) -> Html {
-        let input_type = match self.props.password {
-            true => "password",
-            false => "text",
-        };
-
         html! {
             <div class=("input-box", &self.props.class)>
                 { self.render_label() }
 
                 <div class="input-box-container">
-                    <input 
+                    <textarea 
                         ref=self.node_ref.clone()
-                        type=input_type 
                         value=&self.props.value
                         placeholder=&self.props.placeholder
                         oninput=self.link.callback(|e: InputData| Messages::ValueChanged(e.value))
-                        onkeyup=self.link.callback(|e| Messages::KeyPressed(e)) />
-                    
-                    { self.props.children.clone() }
+                        onkeyup=self.link.callback(|e| Messages::KeyPressed(e))>
+                    </textarea>
                 </div>
 
                 { self.render_error() }
@@ -111,14 +102,24 @@ impl Component for InputBox {
     }
 }
 
-impl InputBox {
+impl TextBox {
     fn render_label(&self) -> Html {
         if self.props.label.is_empty() {
             return html! {};
         }
 
+        let show_error_indicator = (self.props.mandatory && self.props.value.is_empty()) || !self.props.error.is_empty();
+
         html! {
-            <label class="input-box-label">{ &self.props.label }</label>
+            <div class="input-box-label">
+                <label>{ &self.props.label }</label>
+                { match show_error_indicator {
+                    false => html! {},
+                    true => html! {
+                        <span class="input-box-error-indicator">{"*"}</span>
+                    },
+                }}
+            </div>
         }
     }
 

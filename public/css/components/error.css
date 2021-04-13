@@ -1,8 +1,10 @@
 :root {
 	--errormessage-text-color: var(--error-text);
+	--errormessage-text-glow: var(--error-glow);
 	--errormessage-button-text: var(--text-color);
 	--errormessage-button-background: var(--error-background);
 	--errormessage-button-background-hover: var(--error-background-hover);
+	--errormessage-button-background-glow: var(--error-glow);
 }
 
 @media (prefers-color-scheme: light) {
@@ -12,7 +14,6 @@
 }
 
 .error-message {
-	color: var(--errormessage-text-color);
 	margin-bottom: 4rem;
 }
 
@@ -25,6 +26,7 @@
 
 .error-message-title {
 	color: var(--errormessage-text-color);
+	filter: var(--errormessage-text-glow);
 }
 
 .error-message-text {
@@ -47,4 +49,5 @@
 
 .error-message-content .error-button:hover {
 	background-color: var(--errormessage-button-background-hover);
+	filter: var(--errormessage-button-background-glow);
 }

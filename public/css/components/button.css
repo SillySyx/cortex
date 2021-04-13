@@ -2,6 +2,7 @@
 	--mainbutton-padding: .7rem;
 	--mainbutton-background: #555;
 	--mainbutton-hover-background: #666;
+	--mainbutton-hover-glow: drop-shadow(0 0 .5rem #666666B0);
 	--mainbutton-active-background: #777;
 	--mainbutton-shadow: 3px 3px 2px rgba(0, 0, 0, .1);
 }
@@ -10,6 +11,7 @@
 	:root {
 		--mainbutton-background: #ddd;
 		--mainbutton-hover-background: #ccc;
+		--mainbutton-hover-glow: drop-shadow(0 0 .5rem #ccccccB0);
 		--mainbutton-active-background: #bbb;
 		--mainbutton-shadow: 3px 3px 2px rgba(0, 0, 0, .3);
 	}
@@ -30,6 +32,7 @@
 
 .main-button:hover {
 	background-color: var(--mainbutton-hover-background);
+	filter: var(--mainbutton-hover-glow);
 }
 
 .main-button.active, .main-button.active:hover {
@@ -48,6 +51,7 @@
 .main-button.disabled:hover {
 	background-color: var(--mainbutton-background);
 	transform: none;
+	filter: none;
 }
 
 .link-button {
@@ -56,4 +60,15 @@
 
 .link-button:hover {
 	text-decoration: underline;
+}
+
+.button-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 3rem;
+	margin-bottom: 3rem;
+}
+
+.button-grid .main-button {
+	padding: 1rem;
 }

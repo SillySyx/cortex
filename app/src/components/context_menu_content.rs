@@ -27,8 +27,9 @@ impl Component for ContextMenuContent {
         false
     }
 
-    fn change(&mut self, _: Self::Properties) -> ShouldRender {
-        false
+    fn change(&mut self, props: Self::Properties) -> ShouldRender {
+        self.props.children = props.children;
+        true
     }
 
     fn view(&self) -> Html {

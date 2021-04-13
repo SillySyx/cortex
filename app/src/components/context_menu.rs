@@ -43,10 +43,8 @@ impl Component for ContextMenu {
     }
 
     fn change(&mut self, props: Self::Properties) -> ShouldRender {
-        if self.props.open != props.open {
-            self.props.open = props.open;
-            return true;
-        }
+        self.props.open = props.open;
+        self.props.children = props.children;
         false
     }
 

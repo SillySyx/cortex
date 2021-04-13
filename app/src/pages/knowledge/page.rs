@@ -43,15 +43,20 @@ impl Component for KnowledgePage {
     }
 
     fn view(&self) -> Html {
+        let id = match self.id.clone() {
+            Some(value) => value,
+            None => "root".into(),
+        };
+
         match self.view.as_str() {
             "edit" => html! {
-                <EditView change_view=self.link.callback(|(view, id)| Messages::ChangeView(view, id)) />
+                <EditView id=id change_view=self.link.callback(|(view, id)| Messages::ChangeView(view, id)) />
             },
             "add" => html! {
-                <AddView change_view=self.link.callback(|(view, id)| Messages::ChangeView(view, id)) />
+                <AddView id=id change_view=self.link.callback(|(view, id)| Messages::ChangeView(view, id)) />
             },
             _ => html! {
-                <ListView change_view=self.link.callback(|(view, id)| Messages::ChangeView(view, id)) />
+                <ListView id=id change_view=self.link.callback(|(view, id)| Messages::ChangeView(view, id)) />
             },
         }
     }

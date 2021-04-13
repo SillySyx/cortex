@@ -105,13 +105,14 @@ impl Component for AddPasswordView {
         let disabled = self.name.is_empty() || self.password.is_empty();
 
         html! {
-            <div class="password-editor animation-fade">
+            <div class="animation-fade">
                 <PageHeader title="Add password" />
 
                 <InputBox
                     label="Name"
                     placeholder="Enter name"
                     focus=true
+                    mandatory=true
                     value=self.name.clone()
                     error=self.name_error.clone()
                     value_changed=self.link.callback(|value| Messages::UpdateName(value))>
@@ -127,12 +128,13 @@ impl Component for AddPasswordView {
                 <InputBox
                     label="Password"
                     placeholder="Enter password"
+                    mandatory=true
                     value=self.password.clone()
                     error=self.password_error.clone()
                     value_changed=self.link.callback(|value| Messages::UpdatePassword(value))>
                 </InputBox>
 
-                <div class="password-editor-buttons">
+                <div class="button-grid">
                     <Button disabled=disabled clicked=self.link.callback(|_| Messages::AddClicked)>
                         {"Add"}
                     </Button>

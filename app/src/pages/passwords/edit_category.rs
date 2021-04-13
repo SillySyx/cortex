@@ -95,19 +95,20 @@ impl Component for EditCategoryView {
         let disabled = self.name.is_empty();
 
         html! {
-            <div class="password-editor animation-fade">
+            <div class="animation-fade">
                 <PageHeader title="Edit category" 
                             description="Categories are used to group similar passwords together so that it's easier to overview." />
 
                 <InputBox
                     label="Name"
                     placeholder="Enter name"
+                    mandatory=true
                     value=self.name.clone()
                     error=self.name_error.clone()
                     value_changed=self.link.callback(|value| Messages::UpdateName(value))>
                 </InputBox>
                 
-                <div class="password-editor-buttons">
+                <div class="button-grid">
                     <Button disabled=disabled clicked=self.link.callback(|_| Messages::SaveClicked)>
                         {"Save"}
                     </Button>

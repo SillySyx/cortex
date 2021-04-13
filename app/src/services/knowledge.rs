@@ -10,6 +10,17 @@ pub struct Knowledge {
     pub description: String,
 }
 
+impl Knowledge {
+    pub fn default() -> Self {
+        Self {
+            description: "".into(),
+            id: "".into(),
+            name: "".into(),
+            path: "".into(),
+        }
+    }
+}
+
 #[derive(Debug, Clone)]
 pub enum KnowledgeDataType {
     Markdown,
@@ -19,6 +30,15 @@ pub enum KnowledgeDataType {
 pub struct KnowledgeData {
     pub data_type: KnowledgeDataType,
     pub data: Vec<u8>,
+}
+
+impl KnowledgeData {
+    pub fn default() -> Self {
+        Self {
+            data: vec![],
+            data_type: KnowledgeDataType::Markdown,
+        }
+    }
 }
 
 pub struct KnowledgeService {

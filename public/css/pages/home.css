@@ -3,6 +3,7 @@
 	--homepage-image-size: 17rem;
 	--homepage-quicklink-background: var(--widget-background);
 	--homepage-quicklink-background-hover: var(--widget-background-hover);
+	--homepage-quicklink-background-glow: var(--widget-background-glow);
 	--homepage-quicklink-text-color: var(--subtext-color);
 }
 
@@ -41,6 +42,7 @@
 
 .quick-link:hover {
 	background-color: var(--homepage-quicklink-background-hover);
+	filter: var(--homepage-quicklink-background-glow);
 }
 
 .quick-link.animation-grow:hover {

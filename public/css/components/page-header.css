@@ -1,6 +1,7 @@
 :root {
 	--pageheader-margin: 4rem;
 	--pageheader-title-color: var(--accent-color);
+	--pageheader-title-glow: var(--accent-glow);
 	--pageheader-description-color: var(--subtext-color);
 	--pageheader-icon-size: var(--icon-size);
 }
@@ -14,7 +15,9 @@
 }
 
 .page-header-title {
+	display: inline-block;
 	color: var(--pageheader-title-color);
+	filter: var(--pageheader-title-glow);
 }
 
 .page-header-description {
