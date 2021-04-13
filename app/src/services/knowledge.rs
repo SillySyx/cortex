@@ -78,6 +78,12 @@ impl KnowledgeService {
                 data: b"<svg class=\"knowledge-icon\"><use href=\"icons/list_knowledge.svg#src\"></svg>".to_vec(),
             });
         }
+        if id == "root" {
+            return Ok(KnowledgeData {
+                data_type: KnowledgeDataType::Markdown,
+                data: b"<svg class=\"knowledge-icon\"><use href=\"icons/list_knowledge.svg#src\"></svg>".to_vec(),
+            });
+        }
 
         Ok(KnowledgeData {
             data_type: KnowledgeDataType::Markdown,
@@ -101,6 +107,10 @@ impl KnowledgeService {
 pub fn parse_markdown_to_html(markdown: &str) -> String {
     let mut options = pulldown_cmark::Options::empty();
     options.insert(pulldown_cmark::Options::ENABLE_STRIKETHROUGH);
+    options.insert(pulldown_cmark::Options::ENABLE_TABLES);
+    options.insert(pulldown_cmark::Options::ENABLE_TASKLISTS);
+    options.insert(pulldown_cmark::Options::ENABLE_FOOTNOTES);
+    options.insert(pulldown_cmark::Options::ENABLE_SMART_PUNCTUATION);
 
     let parser = pulldown_cmark::Parser::new_ext(&markdown, options);
 

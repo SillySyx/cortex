@@ -1,6 +1,6 @@
 use yew::prelude::*;
 
-use crate::components::{ContextMenu, ContextMenuContent, PageHeader, Svg};
+use crate::components::{ContextMenu, ContextMenuContent, PageHeader, Svg, Button};
 use crate::services::{KnowledgeService, KnowledgeDataType, parse_markdown_to_html};
 
 pub enum Messages {
@@ -56,9 +56,6 @@ impl Component for ListView {
 
         let add_clicked = self.link.callback(|_| Messages::ChangeView("add".into(), None));
 
-        let id = knowledge.id.clone();
-        let edit_clicked = self.link.callback(move |_| Messages::ChangeView("edit".into(), Some(id.clone())));
-
         html! {
             <div class="knowledge animation-fade">
                 <PageHeader title=&knowledge.name
@@ -66,8 +63,10 @@ impl Component for ListView {
                     <ContextMenu>
                         <Svg class="input-box-icon animation-twist-grow" src="icons/cog.svg" />
                         <ContextMenuContent>
-                            <button onclick=edit_clicked>{"Edit knowledge"}</button>
-                            <button onclick=add_clicked>{"Add sub knowledge"}</button>
+                            <Button clicked=add_clicked>
+                                {"Add knowledge"}
+                            </Button>
+                            { self.render_edit_button() }
                         </ContextMenuContent>
                     </ContextMenu>
                 </PageHeader>
@@ -98,6 +97,21 @@ impl ListView {
                     }
                 }) }
             </div>
+        }
+    }
+
+    fn render_edit_button(&self) -> Html {
+        if self.selected_knowledge == "root" {
+            return html! {};
+        }
+
+        let id = self.selected_knowledge.clone();
+        let edit_clicked = self.link.callback(move |_| Messages::ChangeView("edit".into(), Some(id.clone())));
+
+        html! {
+            <Button clicked=edit_clicked>
+                {"Edit knowledge"}
+            </Button>
         }
     }
 }
@@ -132,7 +146,7 @@ fn render_markdown(data: Vec<u8>) -> Html {
 
     let markdown = match std::str::from_utf8(&data) {
         Ok(data) => data,
-        Err(_) => return html!{},
+        Err(_) => return html! {},
     };
 
     let html = parse_markdown_to_html(markdown);
