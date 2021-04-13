@@ -55,6 +55,7 @@ img, svg {
 
 input {
 	width: 100%;
+	color: inherit;
 }
 
 a {

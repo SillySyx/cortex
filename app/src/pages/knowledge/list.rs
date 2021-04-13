@@ -47,7 +47,11 @@ impl Component for ListView {
         }
     }
 
-    fn change(&mut self, _: Self::Properties) -> ShouldRender {
+    fn change(&mut self, props: Self::Properties) -> ShouldRender {
+        if self.props.id != props.id {
+            self.props.id = props.id;
+            return true;
+        }
         false
     }
 

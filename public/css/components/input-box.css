@@ -5,6 +5,7 @@
 	--inputbox-padding: 1rem;
 	--inputbox-gap: 1rem;
 	--inputbox-icon-size: var(--icon-size);
+	--inputbox-text: #222;
 	--inputbox-background: rgba(255, 255, 255, 0.8);
 	--inputbox-background-focus: #fff;
 	--inputbox-shadow: 3px 3px 2px rgba(0, 0, 0, .4);
@@ -53,6 +54,7 @@
 	border-radius: .5rem;
 	box-shadow: var(--inputbox-shadow);
 	background-color: var(--inputbox-background);
+	color: var(--inputbox-text);
 }
 
 .input-box-container > textarea {
