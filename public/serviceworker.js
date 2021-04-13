@@ -1,4 +1,4 @@
-const version = '0.1';
+const version = '0.2';
 
 async function cache_request(request) {
     const cached = await caches.match(request);
