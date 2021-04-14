@@ -1,4 +1,7 @@
 const version = '0.2';
+const ignoreFiles = [
+    "serviceworker.js",
+];
 
 async function cache_request(request) {
     const cached = await caches.match(request);
@@ -15,10 +18,13 @@ async function cache_request(request) {
 }
 
 self.addEventListener("fetch", event => {
-    if (event.request.method !== "GET")
+    if (self.location.hostname === "localhost" || self.location.hostname === "127.0.0.1")
+        return;
+        
+    if (ignoreFiles.some(file => event.request.url.endsWith(file)))
         return;
 
-    if (event.request.url.indexOf(":8080") > -1)
+    if (event.request.method !== "GET")
         return;
 
     return event.respondWith(cache_request(event.request));
