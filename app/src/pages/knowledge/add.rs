@@ -1,6 +1,6 @@
 use yew::prelude::*;
 
-use crate::components::{PageHeader, InputBox, TextBox, Button};
+use crate::components::{PageHeader, InputBox, TextBox, Button, Error};
 use crate::services::{KnowledgeService, KnowledgeDataType};
 
 pub enum Messages {
@@ -117,6 +117,19 @@ impl Component for AddView {
     }
 
     fn view(&self) -> Html {
+        if !self.error.is_empty() {
+            return html! {
+                <>
+                    <Error text=&self.error />
+                    <div class="button-grid">
+                        <Button clicked=self.link.callback(|_| Messages::BackClicked)>
+                            {"Back"}
+                        </Button>
+                    </div>
+                </>
+            };
+        }
+
         let disabled = self.name.is_empty() || self.path.is_empty();
 
         html! {
