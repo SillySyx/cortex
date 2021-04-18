@@ -159,7 +159,7 @@ fn render_markdown(data: Vec<u8>) -> Html {
     let html = parse_markdown_to_html(markdown);
 
     div.set_inner_html(&html);
-    div.set_attribute("class", "markdown").unwrap();
+    div.set_attribute("class", "markdown animation-fade").unwrap();
 
     Html::VRef(div.into())
 }

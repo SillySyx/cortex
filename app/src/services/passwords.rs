@@ -1,14 +1,10 @@
 use std::error::Error;
 
-use yew::services::{StorageService, storage::Area};
 use serde::{Serialize, Deserialize};
 
-use super::{LoginService, generate_id};
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-struct EncryptedPasswords {
-    bytes: Vec<u8>,
-}
+use super::generate_id;
+use super::store::{EncryptedData, load_encrypted_data_from_storage, remove_encrypted_data_from_storage, save_encrypted_data_to_storage};
+use super::cryptography::CryptographyService;
 
 #[derive(Serialize, Deserialize, Debug, Clone, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Category {
@@ -37,9 +33,7 @@ pub struct PasswordService {
 
 impl PasswordService {
     pub fn list_categories() -> Result<Vec<Category>, Box<dyn Error>> {
-        let mut categories = load_categories()?;
-
-        categories.sort_by_key(|category| category.title.to_lowercase());
+        let categories = load_categories()?;
 
         Ok(categories)
     }
@@ -98,13 +92,15 @@ impl PasswordService {
     }
 
     pub fn export_categories() -> Result<Vec<u8>, Box<dyn Error>> {
-        let encrypted_bytes = load_encrypted_passwords_from_storage()?;
+        let encrypted_bytes = load_encrypted_data_from_storage("passwords")?;
 
         Ok(encrypted_bytes.bytes)
     }
 
     pub fn import_categories(bytes: &[u8]) -> Result<(), Box<dyn Error>> {
-        let imported_passwords = decrypt_passwords(bytes)?;
+        let mut imported_passwords = decrypt_passwords(bytes)?;
+        sort_passwords(&mut imported_passwords);
+
         let stored_passwords = load_categories()?;
 
         let mut merged_passwords = combine_passwords(&stored_passwords, &imported_passwords);
@@ -189,50 +185,22 @@ impl PasswordService {
     }
 
     pub fn reset_data() {
-        let mut storage = match StorageService::new(Area::Local) {
-            Ok(store) => store,
-            Err(_) => return,
-        };
-
-        storage.remove("passwords");
+        let _ = remove_encrypted_data_from_storage("passwords");
     }
-}
-
-fn load_encrypted_passwords_from_storage() -> Result<EncryptedPasswords, Box<dyn Error>> {
-    let store = StorageService::new(Area::Local)?;
-
-    let data = match store.restore("passwords") {
-        Ok(data) => data,
-        Err(_) => String::new(),
-    };
-    
-    if data.is_empty() {
-        return Ok(EncryptedPasswords { bytes: vec![] });
-    }
-
-    let encrypted_passwords: EncryptedPasswords = serde_json::from_str(&data)?;
-
-    Ok(encrypted_passwords)
-}
-
-fn save_encrypted_passwords_to_storage(encrypted_passwords: &EncryptedPasswords) -> Result<(), Box<dyn Error>> {
-    let data = serde_json::to_string(encrypted_passwords)?;
-
-    let mut store = StorageService::new(Area::Local)?;
-
-    store.store("passwords", Ok(data));
-
-    Ok(())
 }
 
 fn load_categories() -> Result<Vec<Category>, Box<dyn Error>> {
-    let encrypted_passwords = load_encrypted_passwords_from_storage()?;
+    let encrypted_passwords = load_encrypted_data_from_storage("passwords")?;
 
     if encrypted_passwords.bytes.is_empty() {
         return Ok(vec![]);
     }
 
-    decrypt_passwords(&encrypted_passwords.bytes)
+    let mut passwords  = decrypt_passwords(&encrypted_passwords.bytes)?;
+
+    sort_passwords(&mut passwords);
+
+    Ok(passwords)
 }
 
 fn save_categories(categories: &mut Vec<Category>) -> Result<(), Box<dyn Error>> {
@@ -240,55 +208,23 @@ fn save_categories(categories: &mut Vec<Category>) -> Result<(), Box<dyn Error>>
 
     let encrypted_bytes = encrypt_passwords(categories)?;
 
-    let encrypted_passwords = EncryptedPasswords { 
+    let encrypted_passwords = EncryptedData { 
         bytes: encrypted_bytes,
     };
 
-    save_encrypted_passwords_to_storage(&encrypted_passwords)
-}
-
-fn load_key_from_storage() -> Result<[u8; 32], Box<dyn Error>> {
-    let key = match LoginService::key_present_in_storage() {
-        Some(value) => value,
-        None => return Err(Box::from("Failed to load key")),
-    };
-
-    let data: [u8; 32] = serde_json::from_str(&key)?;
-
-    Ok(data)
+    save_encrypted_data_to_storage("passwords", &encrypted_passwords)
 }
 
 fn encrypt_passwords(passwords: &Vec<Category>) -> Result<Vec<u8>, Box<dyn Error>> {
     let bytes = serde_json::to_vec(passwords)?;
 
-    let key = load_key_from_storage()?;
-    let iv = crypto::generate_iv_from_seed("silly goose")?;
-
-    crypto::encrypt(&bytes, &key, &iv)
+    CryptographyService::encrypt_data(&bytes)
 }
 
 fn decrypt_passwords(bytes: &[u8]) -> Result<Vec<Category>, Box<dyn Error>> {
-    let key = load_key_from_storage()?;
+    let bytes = CryptographyService::decrypt_data(bytes)?;
 
-    let iv = crypto::generate_iv_from_seed("silly goose")?;
-
-    let bytes = crypto::decrypt(bytes, &key, &iv)?;
-
-    let mut data: Vec<Category> = serde_json::from_slice(&bytes)?;
-
-    for category in data.iter_mut() {
-        if category.id.is_empty() {
-            category.id = generate_id();
-        }
-
-        for password in category.passwords.iter_mut() {
-            if password.id.is_empty() {
-                password.id = generate_id();
-            }
-        }
-    }
-
-    sort_passwords(&mut data);
+    let data: Vec<Category> = serde_json::from_slice(&bytes)?;
 
     Ok(data)
 }
