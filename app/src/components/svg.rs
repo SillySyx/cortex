@@ -38,8 +38,10 @@ impl Component for Svg {
         }
     }
 
-    fn change(&mut self, _: Self::Properties) -> ShouldRender {
-        false
+    fn change(&mut self, props: Self::Properties) -> ShouldRender {
+        self.props.src = props.src;
+        self.props.class = props.class;
+        true
     }
 
     fn view(&self) -> Html {

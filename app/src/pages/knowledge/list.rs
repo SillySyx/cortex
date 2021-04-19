@@ -3,6 +3,8 @@ use yew::prelude::*;
 use crate::components::{ContextMenu, ContextMenuContent, PageHeader, Svg, Button};
 use crate::services::{KnowledgeService, KnowledgeDataType, parse_markdown_to_html};
 
+use super::category::{Category, KnowledgeCategory};
+
 pub enum Messages {
     SelectKnowledge(String),
     ChangeView(String, Option<String>),
@@ -49,7 +51,8 @@ impl Component for ListView {
 
     fn change(&mut self, props: Self::Properties) -> ShouldRender {
         if self.props.id != props.id {
-            self.props.id = props.id;
+            self.props.id = props.id.clone();
+            self.selected_knowledge = props.id.clone();
             return true;
         }
         false
@@ -88,18 +91,50 @@ impl Component for ListView {
 
 impl ListView {
     fn render_menu(&self) -> Html {
-        let list = match KnowledgeService::list_knowledge() {
-            Ok(data) => data,
+        let knowledge = match KnowledgeService::list_knowledge() {
+            Ok(value) => value,
             Err(_) => return html! {},
         };
 
+        let mut root = KnowledgeCategory::new("".into());
+        let mut categories: Vec<KnowledgeCategory> = vec![];
+        for item in knowledge {
+            if let Some(found) = categories.iter_mut().find(|child| child.name == item.category) {
+                found.knowledge.push(item.clone());
+                continue;
+            }
+
+            if item.category.is_empty() {
+                root.knowledge.push(item);
+                continue;
+            }
+
+            let mut entry = KnowledgeCategory::new(item.category.clone());
+            entry.knowledge.push(item);
+            categories.push(entry);
+        }
+
         html! {
             <div class="knowledge-menu">
-                { for list.iter().map(|item| {
-                    let id = item.id.clone();
+                { for categories.iter().map(|category| {
                     html! {
-                        <div class="knowledge-menuitem" onclick=self.link.callback(move |_| Messages::SelectKnowledge(id.clone()))>
-                            {&item.name}
+                        <Category name=&category.name>
+                        { for category.knowledge.iter().map(|child| {
+                            let id = child.id.clone();
+                            html! {
+                                <div class="knowledge-subitem" onclick=self.link.callback(move |_| Messages::SelectKnowledge(id.clone()))>
+                                    {&child.name}
+                                </div>
+                            }
+                        }) }
+                        </Category>
+                    }
+                }) }
+                { for root.knowledge.iter().map(|child| {
+                    let id = child.id.clone();
+                    html! {
+                        <div class="knowledge-rootitem" onclick=self.link.callback(move |_| Messages::SelectKnowledge(id.clone()))>
+                            {&child.name}
                         </div>
                     }
                 }) }

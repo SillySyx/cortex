@@ -6,7 +6,7 @@ use crate::services::{KnowledgeService, KnowledgeDataType};
 pub enum Messages {
     UpdateName(String),
     UpdateDescription(String),
-    UpdatePath(String),
+    UpdateCategory(String),
     UpdateContent(String),
 
     AddClicked,
@@ -26,8 +26,7 @@ pub struct AddView {
     error: String,
     name: String,
     name_error: String,
-    path: String,
-    path_error: String,
+    category: String,
     description: String,
     content: String,
 }
@@ -47,8 +46,7 @@ impl Component for AddView {
             name: String::new(),
             name_error: String::new(),
             description: String::new(),
-            path: String::new(),
-            path_error: String::new(),
+            category: String::new(),
             content: String::new(),
         }
     }
@@ -69,14 +67,8 @@ impl Component for AddView {
                 self.description = value;
                 true
             },
-            Messages::UpdatePath(value) => {
-                self.path = value;
-
-                self.path_error = match self.path.is_empty() {
-                    true => String::from("No path entered"),
-                    false => String::from(""),
-                };
-
+            Messages::UpdateCategory(value) => {
+                self.category = value;
                 true
             },
             Messages::UpdateContent(value) => {
@@ -84,7 +76,7 @@ impl Component for AddView {
                 true
             },
             Messages::AddClicked => {
-                let knowledge = match KnowledgeService::create_knowledge(self.path.clone(), self.name.clone(), self.description.clone()) {
+                let knowledge = match KnowledgeService::create_knowledge(self.category.clone(), self.name.clone(), self.description.clone()) {
                     Ok(value) => value,
                     Err(_) => {
                         self.error = String::from("Failed to create knowledge");
@@ -130,7 +122,7 @@ impl Component for AddView {
             };
         }
 
-        let disabled = self.name.is_empty() || self.path.is_empty();
+        let disabled = self.name.is_empty();
 
         html! {
             <div class="animation-fade">
@@ -156,12 +148,10 @@ impl Component for AddView {
                 </InputBox>
 
                 <InputBox
-                    label="Path"
-                    placeholder="Enter path"
-                    mandatory=true
-                    value=self.path.clone()
-                    error=self.path_error.clone()
-                    value_changed=self.link.callback(|value| Messages::UpdatePath(value))>
+                    label="Category"
+                    placeholder="Enter category"
+                    value=self.category.clone()
+                    value_changed=self.link.callback(|value| Messages::UpdateCategory(value))>
                 </InputBox>
 
                 <TextBox

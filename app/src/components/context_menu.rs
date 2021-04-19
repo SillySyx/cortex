@@ -45,7 +45,7 @@ impl Component for ContextMenu {
     fn change(&mut self, props: Self::Properties) -> ShouldRender {
         self.props.open = props.open;
         self.props.children = props.children;
-        false
+        true
     }
 
     fn view(&self) -> Html {

@@ -48,16 +48,12 @@ impl Component for Button {
     }
 
     fn change(&mut self, props: Self::Properties) -> ShouldRender {
-        if self.props.active != props.active {
-            self.props.active = props.active;
-            return true;
-        }
-        if self.props.disabled != props.disabled {
-            self.props.disabled = props.disabled;
-            return true;
-        }
-
-        false
+        self.props.active = props.active;
+        self.props.children = props.children;
+        self.props.class = props.class;
+        self.props.clicked = props.clicked;
+        self.props.disabled = props.disabled;
+        true
     }
 
     fn view(&self) -> Html {

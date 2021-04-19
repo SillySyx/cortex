@@ -6,7 +6,7 @@ use crate::services::{KnowledgeService, Knowledge, KnowledgeData, KnowledgeDataT
 pub enum Messages {
     UpdateName(String),
     UpdateDescription(String),
-    UpdatePath(String),
+    UpdateCategory(String),
     UpdateContent(String),
 
     SaveClicked,
@@ -26,8 +26,7 @@ pub struct EditView {
     error: String,
     name: String,
     name_error: String,
-    path: String,
-    path_error: String,
+    category: String,
     description: String,
     content_type: KnowledgeDataType,
     content: String,
@@ -71,8 +70,7 @@ impl Component for EditView {
             name: knowledge.name.clone(),
             name_error: String::new(),
             description: knowledge.description.clone(),
-            path: knowledge.path.clone(),
-            path_error: String::new(),
+            category: knowledge.category.clone(),
             content_type: knowledge_data.data_type,
             content,
         }
@@ -94,14 +92,8 @@ impl Component for EditView {
                 self.description = value;
                 true
             },
-            Messages::UpdatePath(value) => {
-                self.path = value;
-
-                self.path_error = match self.path.is_empty() {
-                    true => String::from("No path entered"),
-                    false => String::from(""),
-                };
-
+            Messages::UpdateCategory(value) => {
+                self.category = value;
                 true
             },
             Messages::UpdateContent(value) => {
@@ -109,7 +101,7 @@ impl Component for EditView {
                 true
             },
             Messages::SaveClicked => {
-                match KnowledgeService::update_knowledge(&self.props.id, Some(self.path.clone()), Some(self.name.clone()), Some(self.description.clone())) {
+                match KnowledgeService::update_knowledge(&self.props.id, Some(self.category.clone()), Some(self.name.clone()), Some(self.description.clone())) {
                     Ok(_) => {},
                     Err(_) => {
                         self.error = String::from("Failed to update knowledge");
@@ -151,7 +143,7 @@ impl Component for EditView {
                     },
                 };
 
-                self.props.change_view.emit((String::from("list"), Some(self.props.id.clone())));
+                self.props.change_view.emit((String::from("list"), Some("root".into())));
                 false
             },
         }
@@ -175,7 +167,7 @@ impl Component for EditView {
             };
         }
 
-        let disabled = self.name.is_empty() || self.path.is_empty();
+        let disabled = self.name.is_empty();
 
         html! {
             <div class="animation-fade">
@@ -201,12 +193,10 @@ impl Component for EditView {
                 </InputBox>
 
                 <InputBox
-                    label="Path"
-                    placeholder="Enter path"
-                    mandatory=true
-                    value=self.path.clone()
-                    error=self.path_error.clone()
-                    value_changed=self.link.callback(|value| Messages::UpdatePath(value))>
+                    label="Category"
+                    placeholder="Enter category"
+                    value=self.category.clone()
+                    value_changed=self.link.callback(|value| Messages::UpdateCategory(value))>
                 </InputBox>
 
                 <TextBox

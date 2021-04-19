@@ -9,7 +9,7 @@ use super::cryptography::CryptographyService;
 #[derive(Serialize, Deserialize, Debug, Clone, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Knowledge {
     pub id: String,
-    pub path: String,
+    pub category: String,
     pub name: String,
     pub description: String,
 }
@@ -20,7 +20,7 @@ impl Knowledge {
             description: "Useful if you have a silly brain.".into(),
             id: "root".into(),
             name: "Knowledge".into(),
-            path: "".into(),
+            category: "".into(),
         }
     }
 }
@@ -78,12 +78,12 @@ impl KnowledgeService {
         }
     }
 
-    pub fn create_knowledge(path: String, name: String, description: String) -> Result<Knowledge, Box<dyn Error>> {
+    pub fn create_knowledge(category: String, name: String, description: String) -> Result<Knowledge, Box<dyn Error>> {
         let mut list = Self::list_knowledge()?;
 
         let knowledge = Knowledge {
             id: generate_id(),
-            path,
+            category,
             name,
             description,
         };
@@ -95,7 +95,7 @@ impl KnowledgeService {
         Ok(knowledge)
     }
 
-    pub fn update_knowledge(id: &str, path: Option<String>, name: Option<String>, description: Option<String>) -> Result<(), Box<dyn Error>> {
+    pub fn update_knowledge(id: &str, category: Option<String>, name: Option<String>, description: Option<String>) -> Result<(), Box<dyn Error>> {
         let mut list = Self::list_knowledge()?;
 
         let knowledge = match list.iter_mut().find(|knowledge| knowledge.id == id) {
@@ -103,8 +103,8 @@ impl KnowledgeService {
             None => return Err(Box::from("Failed to find knowledge")),
         };
 
-        if let Some(path) = path {
-            knowledge.path = path;
+        if let Some(category) = category {
+            knowledge.category = category;
         }
 
         if let Some(name) = name {
@@ -179,7 +179,8 @@ impl KnowledgeService {
     }
 
     pub fn remove_knowledge_data(id: &str) -> Result<(), Box<dyn Error>> {
-        remove_encrypted_data_from_storage(id)
+        let id = format_knowledge_data_id(id);
+        remove_encrypted_data_from_storage(&id)
     }
 }
 
