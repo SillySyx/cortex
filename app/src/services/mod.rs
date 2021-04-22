@@ -11,7 +11,7 @@ pub fn generate_id() -> String {
 
 pub use {
     login::LoginService,
-    passwords::{PasswordService, Password, Category},
+    passwords::{PasswordService, Password, Category, generate_passphrase},
     clipboard::ClipboardService,
     knowledge::{Knowledge, KnowledgeData, KnowledgeDataType, KnowledgeService, parse_markdown_to_html},
 };

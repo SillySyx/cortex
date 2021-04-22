@@ -1,7 +1,7 @@
 use yew::prelude::*;
 
-use crate::components::{Button, PageHeader, InputBox};
-use crate::services::PasswordService;
+use crate::components::{Button, PageHeader, InputBox, Svg};
+use crate::services::{PasswordService, generate_passphrase};
 
 use super::page::Views;
 
@@ -9,6 +9,8 @@ pub enum Messages {
     UpdateName(String),
     UpdateDescription(String),
     UpdatePassword(String),
+
+    GeneratePassphrase,
 
     AddClicked,
     BackClicked,
@@ -76,6 +78,10 @@ impl Component for AddPasswordView {
 
                 true
             },
+            Messages::GeneratePassphrase => {
+                self.password = generate_passphrase();
+                true
+            },
             Messages::AddClicked => {
                 if self.name.is_empty() {
                     return false;
@@ -132,6 +138,7 @@ impl Component for AddPasswordView {
                     value=self.password.clone()
                     error=self.password_error.clone()
                     value_changed=self.link.callback(|value| Messages::UpdatePassword(value))>
+                    <Svg class="input-box-icon animation-grow animation-highlight" src="icons/generate.svg" clicked=self.link.callback(|_| Messages::GeneratePassphrase) />
                 </InputBox>
 
                 <div class="button-grid">
