@@ -30,6 +30,7 @@ pub struct EditPasswordView {
     props: Props,
     link: ComponentLink<Self>,
     password_id: String,
+    error: String,
     name: String,
     name_error: String,
     description: String,
@@ -43,10 +44,12 @@ impl Component for EditPasswordView {
     type Properties = Props;
 
     fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
+        let mut error = String::new();
+
         let password = match PasswordService::load_password(&props.password_id) {
             Ok(value) => value,
             Err(_) => {
-                props.change_view.emit((Views::DecryptError, None));
+                error = String::from("Failed to load password");
                 Password {
                     description: "".into(),
                     name: "".into(),
@@ -62,6 +65,7 @@ impl Component for EditPasswordView {
             props,
             link,
             password_id,
+            error,
             name: password.name.clone(),
             name_error: String::from(""),
             description: password.description.clone(),
@@ -143,6 +147,19 @@ impl Component for EditPasswordView {
     }
 
     fn view(&self) -> Html {
+        if !self.error.is_empty() {
+            return html! {
+                <>
+                    <Error text=&self.error />
+                    <div class="button-grid">
+                        <Button clicked=self.link.callback(|_| Messages::BackClicked)>
+                            {"Back"}
+                        </Button>
+                    </div>
+                </>
+            };
+        }
+        
         let disabled = self.name.is_empty() || self.password.is_empty();
 
         html! {

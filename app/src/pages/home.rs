@@ -54,6 +54,9 @@ impl Component for HomePage {
 					<ContextMenu>
 						<Svg class="page-header-icon animation-twist-grow" src="icons/cog.svg" />
 						<ContextMenuContent>
+							<Button clicked=self.link.callback(|_| Messages::ChangeView(MainPageViews::SyncData))>
+								{"Sync data"}
+							</Button>
 							<Button clicked=self.link.callback(|_| Messages::Logout)>
 								{"Logout"}
 							</Button>

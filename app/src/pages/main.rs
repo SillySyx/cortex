@@ -1,7 +1,7 @@
 use yew::prelude::*;
 
 use crate::components::{Button, Svg};
-use super::{PasswordsPage, KnowledgePage, HomePage, LoginPage};
+use super::{PasswordsPage, KnowledgePage, HomePage, LoginPage, SyncDataPage};
 use crate::services::LoginService;
 
 #[derive(PartialEq, Clone)]
@@ -9,6 +9,7 @@ pub enum Views {
     Home,
     Passwords,
     Knowledge,
+    SyncData,
 }
 
 pub enum Messages {
@@ -81,6 +82,9 @@ impl MainPage {
                     },
                     Views::Knowledge => html! {
                         <KnowledgePage />
+                    },
+                    Views::SyncData => html! {
+                        <SyncDataPage />
                     },
                 }}
                 </section>

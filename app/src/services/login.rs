@@ -1,5 +1,7 @@
 use yew::services::{StorageService, storage::Area};
 
+use crate::services::store::remove_encrypted_data_from_storage;
+
 pub struct LoginService {
 }
 
@@ -116,5 +118,9 @@ impl LoginService {
         };
 
         storage.store("verification", Ok(data));
+    }
+
+    pub fn reset_data() {
+        let _ = remove_encrypted_data_from_storage("verification");
     }
 }

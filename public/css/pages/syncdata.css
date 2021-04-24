@@ -1,0 +1,30 @@
+@keyframes pulse-glow {
+    to {
+        filter: drop-shadow(0 0 .3rem #00000000);
+    }
+}
+
+.sync-data-page .connection-status {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 4rem;
+    align-items: center;
+}
+
+.sync-data-page .connection-status .connection-status-icon {
+    animation: pulse-glow 2s infinite;
+    background-color: #999;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+}
+
+.sync-data-page .connection-status .connection-status-icon.connected {
+    background-color: #282;
+    filter: drop-shadow(0 0 .3rem #282);
+}
+
+.sync-data-page .connection-status .connection-status-icon.not-connected {
+    background-color: var(--errormessage-text-color);
+    filter: drop-shadow(0 0 .3rem #D00);
+}

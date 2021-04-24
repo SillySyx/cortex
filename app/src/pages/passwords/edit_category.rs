@@ -22,6 +22,7 @@ pub struct EditCategoryView {
     props: Props,
     link: ComponentLink<Self>,
     category_id: String,
+    error: String,
     name: String,
     name_error: String,
 }
@@ -31,10 +32,12 @@ impl Component for EditCategoryView {
     type Properties = Props;
 
     fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
+        let mut error = String::new();
+
         let name = match PasswordService::load_category(&props.category_id) {
             Ok(value) => value.title,
             Err(_) => {
-                props.change_view.emit((Views::DecryptError, None));
+                error = String::from("Failed to load category");
                 String::from("")
             },
         };
@@ -45,6 +48,7 @@ impl Component for EditCategoryView {
             props,
             link,
             category_id,
+            error,
             name,
             name_error: String::new(),
         }
@@ -92,6 +96,19 @@ impl Component for EditCategoryView {
     }
 
     fn view(&self) -> Html {
+        if !self.error.is_empty() {
+            return html! {
+                <>
+                    <Error text=&self.error />
+                    <div class="button-grid">
+                        <Button clicked=self.link.callback(|_| Messages::BackClicked)>
+                            {"Back"}
+                        </Button>
+                    </div>
+                </>
+            };
+        }
+
         let disabled = self.name.is_empty();
 
         html! {

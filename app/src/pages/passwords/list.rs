@@ -4,7 +4,7 @@ use yew::services::{TimeoutService, Task};
 
 use std::time::Duration;
 
-use crate::components::{Button, ContextMenu, ContextMenuContent, PageHeader, InputBox, Svg};
+use crate::components::{Button, ContextMenu, ContextMenuContent, PageHeader, InputBox, Svg, Error};
 use crate::services::{PasswordService, Password, Category, ClipboardService};
 
 use super::page::Views;
@@ -27,6 +27,7 @@ pub struct Props {
 pub struct ListView {
     props: Props,
     link: ComponentLink<Self>,
+    error: String,
     search_ref: NodeRef,
     search_text: String,
     context_menu_open: bool,
@@ -39,10 +40,12 @@ impl Component for ListView {
     type Properties = Props;
 
     fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
+        let mut error = String::new();
+
         let categories = match PasswordService::list_categories() {
             Ok(value) => value,
             Err(_) => {
-                props.change_view.emit((Views::DecryptError, None));
+                error = String::from("Failed to load passwords");
                 vec![]
             },
         };
@@ -50,6 +53,7 @@ impl Component for ListView {
         Self {
             props,
             link,
+            error,
             search_ref: NodeRef::default(),
             search_text: String::new(),
             context_menu_open: false,
@@ -106,6 +110,17 @@ impl Component for ListView {
     }
 
     fn view(&self) -> Html {
+        if !self.error.is_empty() {
+            return html! {
+                <>
+                    <PageHeader title={"Password manager"} description={"Handle your passwords with ease."}>
+                    </PageHeader>
+
+                    <Error title="Error" text=&self.error />
+                </>
+            };
+        }
+
         let categories = filter_categories(&self.categories, self.search_text.clone());
 
         let add_clicked = self.link.callback(|_| Messages::ChangeView(Views::NewCategory, None));

@@ -1,8 +1,5 @@
 use yew::prelude::*;
 
-use crate::components::{Button, Error};
-use crate::services::{LoginService, PasswordService};
-
 use super::list::ListView;
 use super::add_category::AddCategoryView;
 use super::add_password::AddPasswordView;
@@ -17,13 +14,10 @@ pub enum Views {
     NewCategory,
     EditCategory,
     ImportExport,
-    DecryptError,
 }
 
 pub enum Messages {
     ChangeView(Views, Option<String>),
-    Logout,
-    ResetData,
 }
 
 pub struct PasswordsPage {
@@ -54,15 +48,6 @@ impl Component for PasswordsPage {
                 };
                 true
             },
-            Messages::Logout => {
-                LoginService::logout();
-                false
-            },
-            Messages::ResetData => {
-                PasswordService::reset_data();
-                LoginService::logout();
-                false
-            },
         }
     }
 
@@ -90,24 +75,6 @@ impl Component for PasswordsPage {
             Views::ImportExport => html! {
                 <ImportExportView change_view=self.link.callback(|(view, id)| Messages::ChangeView(view, id)) />
             },
-            Views::DecryptError => self.render_decrypt_error(),
-        }
-    }
-}
-
-impl PasswordsPage {
-    fn render_decrypt_error(&self) -> Html {
-        html! {
-            <div class="animation-fade">
-                <Error title="Invalid password specified" icon="icons/error.svg">
-                    <Button clicked=self.link.callback(|_| Messages::Logout)>
-                        {"Reenter password"}
-                    </Button>
-                    <Button class="error-button" clicked=self.link.callback(|_| Messages::ResetData)>
-                        {"Reset application data"}
-                    </Button>
-                </Error>
-            </div>
         }
     }
 }

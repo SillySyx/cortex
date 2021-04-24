@@ -182,6 +182,10 @@ impl KnowledgeService {
         let id = format_knowledge_data_id(id);
         remove_encrypted_data_from_storage(&id)
     }
+
+    pub fn reset_data() {
+        let _ = remove_encrypted_data_from_storage("knowledge");
+    }
 }
 
 pub fn parse_markdown_to_html(markdown: &str) -> String {

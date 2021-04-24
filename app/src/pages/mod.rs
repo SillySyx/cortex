@@ -3,6 +3,7 @@ mod knowledge;
 mod login;
 mod main;
 mod passwords;
+mod sync_data;
 
 pub use {
     home::HomePage,
@@ -10,4 +11,5 @@ pub use {
     login::LoginPage,
     main::{MainPage, Views as MainPageViews},
     passwords::PasswordsPage,
+    sync_data::SyncDataPage,
 };
