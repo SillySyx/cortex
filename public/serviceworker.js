@@ -8,7 +8,7 @@ self.addEventListener("fetch", event => {
     if (event.request.method !== "GET")
         return;
 
-    if (self.location.hostname === "localhost")
+    if (self.location.hostname === "localhost" || self.location.hostname === "127.0.0.1")
         return;
 
     event.respondWith((async () => {
