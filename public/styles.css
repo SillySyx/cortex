@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500&display=swap');
+
+:root {
+	--background-color: #222;
+	--accent-color: #ffa743;
+	--accent-glow: drop-shadow(0 0 .5rem #ffa743B0);
+	--text-color: #eee;
+	--subtext-color: #aaa;
+	--error-text: #D00;
+	--error-glow: drop-shadow(0 0 .5rem #DD0000B0);
+	--error-background: #700;
+	--error-background-hover: #A00;
+	--icon-size: 1.5rem;
+	--widget-background: rgba(14, 5, 5, 0.3);
+	--widget-background-hover: #4C4C4C;
+	--widget-background-glow: drop-shadow(0 0 .5rem #4C4C4CB0);
+}
+
+@media (prefers-color-scheme: light) {
+	:root {
+		--background-color: #eee;
+		--accent-color: #ff6584;
+		--accent-glow: drop-shadow(0 0 .5rem #ff6584B0);
+		--text-color: #222;
+		--subtext-color: #444;
+		--error-text: #D00;
+		--error-glow: drop-shadow(0 0 .5rem #DD0000B0);
+		--error-background: #700;
+		--error-background-hover: #A00;
+		--icon-size: 1.5rem;
+		--widget-background: #ddd;
+		--widget-background-hover: #ccc;
+		--widget-background-glow: drop-shadow(0 0 .5rem #CCCCCCB0);;
+	}
+}
+
+* {
+	font-family: 'Inter', Helvetica, Arial, sans-serif;
+	margin: 0;
+	font-weight: 300;
+	font-size: 1rem;
+}
+
+body {
+	background-color: var(--background-color);
+    color: var(--text-color);
+}
