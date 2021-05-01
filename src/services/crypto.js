@@ -1,71 +1,58 @@
-export async function generateKey() {
+export async function generateKeyFromSeed(seed) {
     if (!crypto.subtle)
         return [false, null];
 
     try {
-        const algorithm = {
-            name: "AES-GCM",
-            length: 256,
-        };
-        const extractable = true;
-        const keyUsages = ["encrypt", "decrypt"];
+        const encoded = new TextEncoder().encode(seed);
+        const hashed = await crypto.subtle.digest("SHA-256", encoded);
 
-        const key = await crypto.subtle.generateKey(algorithm, extractable, keyUsages);
-
-        return [true, key];
-    }
-    catch(error) {
-        console.error(error);
-        return [false, null];
-    }
-}
-
-function generateIvFromSeed(seed) {
-    return crypto.getRandomValues(new Uint8Array([1,2,3,4,5,6,7,8,9,10,11,12]));
-}
-
-function encodeData(data) {
-    const encoder = new TextEncoder();
-    return encoder.encode(data);
-}
-
-function decodeData(data) {
-    const decoder = new TextDecoder();
-    return decoder.decode(data);
-}
-
-export async function encrypt(key, data) {
-    if (!crypto.subtle)
-        return [false, null];
-
-    try {
-        const iv = generateIvFromSeed("silly goose");
-        const algorithm = {
-            name: "AES-GCM",
-            iv: iv,
-        };
-        const encodedData = encodeData(data);
-        const arrayBuffer = await crypto.subtle.encrypt(algorithm, key, encodedData);
-
-        return [true, arrayBuffer];
+        return [true, new Uint8Array(hashed)];
     }
     catch {
         return [false, null];
     }
 }
 
-export async function decrypt(key, data) {
+export async function encrypt(key, data) {
     if (!crypto.subtle)
-        return [false, null];
+        return [false, null, null];
 
     try {
-        const iv = generateIvFromSeed("silly goose");
+        const iv = crypto.getRandomValues(new Uint8Array(12));
+
         const algorithm = {
             name: "AES-GCM",
             iv: iv,
         };
-        const arrayBuffer = await crypto.subtle.decrypt(algorithm, key, data);
-        const decodedData = decodeData(arrayBuffer);
+
+        const cryptoKey = await crypto.subtle.importKey("raw", key, algorithm, false, ["encrypt"]);
+
+        const encodedData = new TextEncoder().encode(data);
+
+        const encryptedData = await crypto.subtle.encrypt(algorithm, cryptoKey, encodedData);
+
+        return [true, iv, new Uint8Array(encryptedData)];
+    }
+    catch {
+        return [false, null, null];
+    }
+}
+
+export async function decrypt(key, iv, encryptedData) {
+    if (!crypto.subtle)
+        return [false, null];
+
+    try {
+        const algorithm = {
+            name: "AES-GCM",
+            iv: iv,
+        };
+
+        const cryptoKey = await crypto.subtle.importKey("raw", key, algorithm, false, ["decrypt"]);
+
+        const decryptedData = await crypto.subtle.decrypt(algorithm, cryptoKey, encryptedData);
+
+        const decodedData = new TextDecoder().decode(decryptedData);
 
         return [true, decodedData];
     }
@@ -74,38 +61,60 @@ export async function decrypt(key, data) {
     }
 }
 
-export async function loadKey() {
-    if (!crypto.subtle)
-        return false;
-
-    try {
-        const key = sessionStorage.getItem("key");
-        if (!key) {
-            return [false, null];
-        }
-
-        const rawKey = JSON.parse(key);
-        const cryptoKey = await crypto.subtle.importKey("jwk", rawKey, "AES-GCM", false, ["encrypt", "decrypt"]);
-
-        return [true, cryptoKey];
-    }
-    catch {
+export function loadKey() {
+    const key = sessionStorage.getItem("key");
+    if (!key) {
         return [false, null];
-    }    
+    }
+
+    const parsedKey = JSON.parse(key);
+
+    return [true, new Uint8Array(parsedKey)];
 }
 
-export async function storeKey(key) {
-    if (!crypto.subtle)
+export function storeKey(key) {
+    if (!key) {
         return false;
+    }
 
-    try {
-        const keyBuffer = await crypto.subtle.exportKey("jwk", key);
-        
-        sessionStorage.setItem("key", JSON.stringify(keyBuffer));
+    const parsedKey = JSON.stringify([...key]);
+
+    sessionStorage.setItem("key", parsedKey);
+
+    return true;
+}
+
+export async function verifyKey(key) {
+    const verification = localStorage.getItem("verification");
+    if (!verification) {
+        const [encrypted, iv, data] = await encrypt(key, "valid");
+        if (!encrypted) {
+            return false;
+        }
+
+        const entry = createEncryptedDataEntry(iv, data);
+        localStorage.setItem("verification", entry);
 
         return true;
     }
-    catch {
+
+    const [iv, bytes] = parseEncryptedDataEntry(verification);
+    const [decrypted, data] = await decrypt(key, iv, bytes);
+    if (!decrypted) {
         return false;
     }
+
+    return data === "valid";
+}
+
+export function createEncryptedDataEntry(iv, data) {
+    return JSON.stringify({
+        iv: [...iv],
+        bytes: [...data]
+    });
+}
+
+export function parseEncryptedDataEntry(entry) {
+    const { iv, bytes } = JSON.parse(entry);
+    return [new Uint8Array(iv), new Uint8Array(bytes)];
 }

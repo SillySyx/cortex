@@ -1,13 +1,11 @@
 import { StrictMode } from 'react';
 import { render } from 'react-dom';
 
-import './index.css';
-
-import { App } from './app';
+import { MainPage } from './pages/main/mainPage';
 
 render(
 	<StrictMode>
-		<App />
+		<MainPage />
 	</StrictMode>,
 	document.getElementById('root')
 );

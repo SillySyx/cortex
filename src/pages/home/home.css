@@ -1,0 +1,76 @@
+:root {
+	--homepage-menu-size: 22rem;
+	--homepage-image-size: 17rem;
+	--homepage-quicklink-background: var(--widget-background);
+	--homepage-quicklink-background-hover: var(--widget-background-hover);
+	--homepage-quicklink-background-glow: var(--widget-background-glow);
+	--homepage-quicklink-text-color: var(--subtext-color);
+}
+
+@media (prefers-color-scheme: light) {
+}
+
+.home-page .home-page-content {
+	display: grid;
+	grid-template-columns: 1fr var(--homepage-menu-size);
+}
+
+.home-page .home-page-icon {
+	color: var(--accent-color);
+	width: var(--homepage-image-size);
+	height: var(--homepage-image-size);
+	align-self: center;
+}
+
+.home-page .page-header-icon {
+	transition: all .4s;
+}
+
+.home-page .quick-link {
+	transition: all .2s ease-out;
+	display: grid;
+	grid-template-columns: 4rem 1fr;
+	gap: 2rem;
+	padding: 1rem;
+	background-color: var(--homepage-quicklink-background);
+	border-radius: .5rem;
+	margin-bottom: 3rem;
+	align-items: center;
+	cursor: pointer;
+	user-select: none;
+}
+
+.home-page .quick-link h3 {
+	font-size: 1.25rem;
+	font-weight: 500;
+}
+
+.home-page .quick-link:hover {
+	background-color: var(--homepage-quicklink-background-hover);
+	filter: var(--homepage-quicklink-background-glow);
+}
+
+.home-page .quick-link-text {
+	color: var(--homepage-quicklink-text-color);
+	font-size: .9rem;
+}
+
+.home-page .quick-link-icon {
+	height: 3rem;
+	place-self: center;
+}
+
+@media (max-width: 56rem) {
+	:root {
+		--homepage-image-size: 12rem;
+	}
+
+	.home-page .home-page-content {
+		grid-template-columns: 1fr;
+	}
+
+	.home-page .home-page-icon {
+		margin: auto;
+		margin-bottom: 4rem;
+	}
+}

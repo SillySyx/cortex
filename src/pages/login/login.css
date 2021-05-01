@@ -1,0 +1,27 @@
+.login-layout {
+	color: var(--text-color);
+	min-height: 100vh;
+}
+
+.login-content > * {
+	animation: fade-in .5s;
+}
+
+.login-content {
+	min-height: 100vh;
+	margin: auto;
+	box-sizing: border-box;
+	display: grid;
+	grid-template-rows: 1.5fr 1fr;
+	place-items: center;
+	max-width: 30rem;
+	padding: 2rem;
+}
+
+.login-logo {
+	filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, .5));
+}
+
+.login-input {
+	margin-bottom: 0;
+}

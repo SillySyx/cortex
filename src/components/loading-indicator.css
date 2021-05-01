@@ -1,0 +1,8 @@
+:root {
+	--loading-indicator-size: 8rem;
+}
+
+.loading-indicator {
+	width: var(--loading-indicator-size);
+	height: var(--loading-indicator-size);
+}
