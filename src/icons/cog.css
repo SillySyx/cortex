@@ -1,4 +1,7 @@
 .cog-icon {
+    cursor: pointer;
+    width: var(--icon-size);
+    height: var(--icon-size);
     transition: all .4s ease;
 }
 

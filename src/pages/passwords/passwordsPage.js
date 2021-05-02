@@ -5,6 +5,7 @@ import { AddCategoryView } from './addCategoryView';
 import { EditCategoryView } from './editCategoryView';
 import { AddPasswordView } from './addPasswordView';
 import { EditPasswordView } from './editPasswordView';
+import { SyncView } from './syncView';
 
 import './passwords.css';
 
@@ -14,6 +15,7 @@ export class PasswordsPage extends Component {
 
 		this.state = {
 			view: "list",
+			id: "",
 		};
 	}
 
@@ -26,9 +28,12 @@ export class PasswordsPage extends Component {
 
 	render() {
 		return (
-			<>
+			<div className="main-layout">
+			{ this.state.view === "sync" &&
+				<SyncView changeView={(view, id) => this.changeView(view, id)} />
+			}
 			{ this.state.view === "list" &&
-				<ListView changeView={(view, id) => this.changeView(view, id)} />
+				<ListView changeView={(view, id) => this.changeView(view, id)} logout={() => this.props.logout()} />
 			}
 			{ this.state.view === "add_category" &&
 				<AddCategoryView changeView={(view, id) => this.changeView(view, id)} />
@@ -42,7 +47,7 @@ export class PasswordsPage extends Component {
 			{ this.state.view === "edit_password" &&
 				<EditPasswordView changeView={(view, id) => this.changeView(view, id)} passwordId={this.state.id} />
 			}
-			</>
+			</div>
 		);
 	}
 }

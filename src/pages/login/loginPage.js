@@ -58,7 +58,7 @@ export class LoginPage extends Component {
             loading: false,
         });
 
-        this.props.changeView("home");
+        this.props.login();
     }
 
     render() {

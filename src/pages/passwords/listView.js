@@ -66,6 +66,11 @@ export class ListView extends Component {
 		writeToClipboard(password.password);
 	}
 
+	logout() {
+		sessionStorage.removeItem("key");
+		this.props.logout();
+	}
+
 	render() {
 		if (this.state.error) {
 			return (
@@ -101,6 +106,8 @@ export class ListView extends Component {
 						<Cog class="page-header-icon" />
 						<ContextMenuContent>
 							<Button clicked={() => this.changeView("add_category")}>Add category</Button>
+							<Button clicked={() => this.changeView("sync")}>Sync data</Button>
+							<Button clicked={() => this.logout()}>Logout</Button>
 						</ContextMenuContent>
 					</ContextMenu>
 				</PageHeader>
