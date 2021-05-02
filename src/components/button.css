@@ -52,10 +52,16 @@
 
 .link-button {
 	cursor: pointer;
+	transition: color .5s;
 }
 
 .link-button:hover {
 	text-decoration: underline;
+}
+
+.link-button:active {
+	color: var(--accent-color);
+	transition: color 0s;
 }
 
 .button-grid {

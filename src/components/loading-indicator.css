@@ -3,6 +3,8 @@
 }
 
 .loading-indicator {
+	display: block;
+	margin: auto;
 	width: var(--loading-indicator-size);
 	height: var(--loading-indicator-size);
 }

@@ -35,7 +35,7 @@ export class InputBox extends Component {
                 {this.props.label &&
                     <div className="input-box-label">
                         <label>{this.props.label}</label>
-                        {this.props.showErrorIndicator && !this.props.value &&
+                        {this.props.mandatory && !this.props.value &&
                             <span className="input-box-error-indicator">*</span>
                         }
                     </div>
@@ -70,7 +70,7 @@ export class TextBox extends InputBox {
                 {this.props.label &&
                     <div className="input-box-label">
                         <label>{this.props.label}</label>
-                        {this.props.showErrorIndicator && !this.props.value &&
+                        {this.props.mandatory && !this.props.value &&
                             <span className="input-box-error-indicator">*</span>
                         }
                     </div>

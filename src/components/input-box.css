@@ -71,6 +71,12 @@
 	height: var(--inputbox-icon-size);
 	align-self: center;
 	cursor: pointer;
+	transition: color .5s;
+}
+
+.input-box-icon:active {
+	color: var(--accent-color);
+	transition: color 0s;
 }
 
 .input-box-error {
