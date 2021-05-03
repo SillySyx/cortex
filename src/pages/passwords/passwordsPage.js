@@ -30,7 +30,7 @@ export class PasswordsPage extends Component {
 		return (
 			<div className="main-layout">
 			{ this.state.view === "sync" &&
-				<SyncView changeView={(view, id) => this.changeView(view, id)} />
+				<SyncView changeView={(view, id) => this.changeView(view, id)} logout={() => this.props.logout()} />
 			}
 			{ this.state.view === "list" &&
 				<ListView changeView={(view, id) => this.changeView(view, id)} logout={() => this.props.logout()} />

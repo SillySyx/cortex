@@ -7,8 +7,15 @@ import { Error } from '../../components/error';
 import './sync.css';
 
 export class SyncView extends Component {
-	resetData() {
+	changeView(view, id) {
+		this.props.changeView(view, id);
+	}
 
+	resetData() {
+		sessionStorage.removeItem("key");
+		localStorage.removeItem("verification");
+		localStorage.removeItem("passwords");
+		this.props.logout();
 	}
 
 	render() {
@@ -21,9 +28,16 @@ export class SyncView extends Component {
 
 				{/* { self.render_connection_status() } */}
 
-                <Error title="Danger" text="Resetting the data of this device will remove all passwords and knowledge.">
+				<div className="button-grid">
+					<div></div>
+					<Button class="error-button" clicked={() => this.changeView("list")}>
+						Back
+					</Button>
+				</div>
+
+                <Error title="Reset data" text="It is not possible to restore any data once the device has been reset.">
                     <Button class="error-button" clicked={() => this.resetData()}>
-                        Reset data
+                        Reset device data
                     </Button>
                 </Error>
 			</div>
