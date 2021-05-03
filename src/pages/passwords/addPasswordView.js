@@ -9,6 +9,7 @@ import { Error } from '../../components/error';
 import { Generate } from '../../icons/generate';
 
 import { PasswordService } from '../../services/passwords';
+import { generatePassphrase } from '../../services/passphrase';
 
 export class AddPasswordView extends Component {
 	constructor(props) {
@@ -55,8 +56,9 @@ export class AddPasswordView extends Component {
 	}
 
 	generatePassphrase() {
+		const passphrase = generatePassphrase();
 		this.setState({
-			password: "huh?",
+			password: passphrase,
 		});
 	}
 
