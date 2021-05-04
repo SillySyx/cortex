@@ -75,16 +75,16 @@ export class SyncView extends Component {
 	renderConnectionStatus() {
 		if (this.state.connected) {
 			return (
-				<div class="connection-status">
-					<div class="connection-status-icon connected"></div>
+				<div className="connection-status">
+					<div className="connection-status-icon connected"></div>
 					<span>Connected</span>
 				</div>
 			);
 		}
 		
 		return (
-			<div class="connection-status">
-				<div class="connection-status-icon not-connected"></div>
+			<div className="connection-status">
+				<div className="connection-status-icon not-connected"></div>
 				<span>Not connected</span>
 			</div>
 		);
