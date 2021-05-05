@@ -1,6 +1,6 @@
 export class WebRtcService {
     constructor(id) {
-        this.socket = new WebSocket("wss://webrtc.norwayeast.azurecontainer.io");
+        this.socket = new WebSocket("wss://webrtc-signal.azurewebsites.net");
         this.rtc = new RTCPeerConnection();
 
         this.connected = () => {};
