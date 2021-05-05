@@ -24,6 +24,7 @@ export class PasswordService {
 
         passwords.push({
             id: uuidv4(),
+            timestamp: Date.now(),
             title: title,
             passwords: [],
         });
@@ -41,6 +42,7 @@ export class PasswordService {
             return false;
             
         category.title = title;
+        category.timestamp = Date.now();
 
         return await storePasswords(passwords);
     }
@@ -95,6 +97,7 @@ export class PasswordService {
 
         category.passwords.push({
             id: uuidv4(),
+            timestamp: Date.now(),
             name: name,
             description: description,
             password: password,
@@ -119,6 +122,7 @@ export class PasswordService {
         _password.name = name;
         _password.description = description;
         _password.password = password;
+        _password.timestamp = Date.now();
         
         return await storePasswords(passwords);
     }
@@ -135,6 +139,42 @@ export class PasswordService {
         category.passwords = category.passwords.filter(password => password.id !== passwordId)
 
         return await storePasswords(passwords);
+    }
+
+    async mergePasswords(newPasswords) {
+		let [loaded, passwords] = await loadPasswords();
+        if (!loaded)
+            return;
+
+        for (const newCategory of newPasswords) {
+            const category = passwords.find(c => c.id === newCategory.id);
+            if (!category) {
+                passwords.push(newCategory);
+                continue;
+            }
+
+            if (newCategory.timestamp > category.timestamp) {
+                category.title = newCategory.title;
+                category.timestamp = newCategory.timestamp;
+            }
+
+            for (const newPassword of newCategory.passwords) {
+                const password = category.passwords.find(p => p.id === newPassword.id);
+                if (!password) {
+                    category.passwords.push(newPassword);
+                    continue;
+                }
+
+                if (newPassword.timestamp > password.timestamp) {
+                    password.name = newPassword.name;
+                    password.description = newPassword.description;
+                    password.password = newPassword.password;
+                    password.timestamp = newPassword.timestamp;
+                }
+            }
+        }
+
+        storePasswords(passwords);
     }
 }
 

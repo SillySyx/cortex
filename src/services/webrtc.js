@@ -11,6 +11,10 @@ export class WebRtcService {
         this.setupWebRtc();
     }
 
+    closeConnection() {
+        this.rtc.close();
+    }
+
     setupWebSocket(id) {
         this.socket.onmessage = event => {
             const message = JSON.parse(event.data);
@@ -102,5 +106,12 @@ export class WebRtcService {
 
     async acceptAnswer(answer) {
         await this.rtc.setRemoteDescription(answer);
+    }
+
+    async sendMessage(data) {
+        if (!this.rtc.channel)
+            return;
+
+        this.rtc.channel.send(data);
     }
 }
