@@ -14,7 +14,7 @@
 	--widget-background: rgba(100, 100, 100, 0.3);
 	--widget-background-hover: #4C4C4C;
 	--widget-background-glow: drop-shadow(0 0 .5rem #4C4C4CB0);
-	--loginpage-background-image: url("/images/login-dark.jpeg");
+	--loginpage-background-image: url("images/login-dark.jpeg");
 }
 
 @media (prefers-color-scheme: light) {
@@ -32,7 +32,7 @@
 		--widget-background: #ddd;
 		--widget-background-hover: #ccc;
 		--widget-background-glow: drop-shadow(0 0 .5rem #CCCCCCB0);;
-		--loginpage-background-image: url("/images/login-light.jpeg");
+		--loginpage-background-image: url("images/login-light.jpeg");
 	}
 }
 
