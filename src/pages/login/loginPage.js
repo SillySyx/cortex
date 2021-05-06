@@ -79,6 +79,8 @@ export class LoginPage extends Component {
                             submitted={() => this.login()}>
                         </InputBox>
                     </LoadingIndicator>
+
+                    <p>{process.env.REACT_APP_VERSION}</p>
                 </div>
             </div>
         );

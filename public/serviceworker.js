@@ -1,4 +1,4 @@
-const cacheName = "0.6";
+const cacheName = "0.8";
 
 self.addEventListener("install", event => {
     self.skipWaiting();

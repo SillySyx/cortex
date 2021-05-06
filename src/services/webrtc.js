@@ -3,20 +3,15 @@ export class WebRtcService {
         this.socket = new WebSocket("wss://webrtc-signal.azurewebsites.net");
 
         const configuration = {
-            // iceServers: [
-            //     { urls: "stun.bahnhof.net:3478" },
-            //     { urls: "stun.l.google.com:19302" },
-            //     { urls: "stun1.l.google.com:19302" },
-            //     { urls: "stun2.l.google.com:19302" },
-            //     { urls: "stun3.l.google.com:19302" },
-            //     { urls: "stun4.l.google.com:19302" },
-            // ],
+            iceServers: [
+                { urls: ["stun:stun.l.google.com:19302"] },
+            ],
         };
         this.rtc = new RTCPeerConnection(configuration);
 
-        this.connected = () => {};
-        this.disconnected = () => {};
-        this.message = msg => {};
+        this.connected = () => { };
+        this.disconnected = () => { };
+        this.message = msg => { };
 
         this.setupWebSocket(id);
         this.setupWebRtc();
@@ -111,7 +106,7 @@ export class WebRtcService {
                 }, 100);
             }
         };
-        
+
         const answer = await this.rtc.createAnswer();
         await this.rtc.setLocalDescription(answer);
     }

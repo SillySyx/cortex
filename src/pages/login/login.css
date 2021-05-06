@@ -12,7 +12,7 @@
 	margin: auto;
 	box-sizing: border-box;
 	display: grid;
-	grid-template-rows: 1.5fr 1fr;
+	grid-template-rows: 1.5fr 1fr auto;
 	place-items: center;
 	max-width: 30rem;
 	padding: 2rem;
