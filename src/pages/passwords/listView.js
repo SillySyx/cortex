@@ -91,7 +91,7 @@ export class ListView extends Component {
 		let filteredPasswords = JSON.parse(JSON.stringify(this.state.passwords));
 		if (this.state.searchText) {
 			for (const category of filteredPasswords) {
-				category.passwords = [...category.passwords].filter(password => password.name.indexOf(this.state.searchText) > -1);
+				category.passwords = [...category.passwords].filter(password => password.name.toLowerCase().indexOf(this.state.searchText.toLowerCase()) > -1);
 			}
 
 			filteredPasswords = filteredPasswords.filter(category => category.passwords.length);			
@@ -126,6 +126,11 @@ export class ListView extends Component {
 							<LinkButton clicked={() => this.changeView("add_category")}>
 								Add category
 							</LinkButton>
+						</div>
+					}
+					{this.state.searchText && filteredPasswords.length === 0 &&
+						<div className="passwords-empty">
+							<p>No matches found</p>
 						</div>
 					}
 
