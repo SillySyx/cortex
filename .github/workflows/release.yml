@@ -1,0 +1,28 @@
+name: Build and deploy app
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Update version
+      uses: Amadevus/pwsh-script@v2.0.1
+      with:
+        script: |
+          $Version = $github.ref;
+          if ($Version.StartsWith("refs/tags/")) {
+            $Version = $Version.SubString(10)
+          }
+          
+          Write-Host $Version
+          
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '15.x'
