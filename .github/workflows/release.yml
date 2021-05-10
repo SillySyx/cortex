@@ -20,8 +20,22 @@ jobs:
           if ($Version.StartsWith("refs/tags/")) {
             $Version = $Version.SubString(10)
           }
+
+          if (!$Version) {
+            exit
+          }
           
-          Write-Host $Version
+          function UpdateVersion {
+            param($path)
+
+            $content = Get-Content -Path $path -Raw
+            $content = $content.Replace("#APP_VERSION#", $Version)
+
+            Set-Content -Path $path -Value $content
+          }
+
+          UpdateVersion -path ./.env
+          UpdateVersion -path ./public/serviceworker.js
           
     - uses: actions/setup-node@v2
       with:

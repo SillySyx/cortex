@@ -1,4 +1,4 @@
-const cacheName = "0.8";
+const cacheName = "#APP_VERSION#";
 
 self.addEventListener("install", event => {
     self.skipWaiting();
