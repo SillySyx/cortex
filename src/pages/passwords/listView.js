@@ -17,6 +17,7 @@ export class ListView extends Component {
 	constructor(props) {
 		super(props);
 		this.passwordService = new PasswordService();
+		this.globalHotKeys = this.handleGlobalHotkey.bind(this);
 
 		this.state = {
 			loading: true,
@@ -27,6 +28,8 @@ export class ListView extends Component {
 	}
 
 	async componentDidMount() {
+		document.addEventListener("keyup", this.globalHotKeys);
+
 		this.setState({
 			error: "",
 			loading: true,
@@ -44,6 +47,24 @@ export class ListView extends Component {
 			passwords: passwords,
 			loading: false,
 		});
+	}
+
+	componentWillUnmount() {
+		document.removeEventListener("keyup", this.globalHotKeys);
+	}
+
+	handleGlobalHotkey(event) {
+		if (event.key === "q" && event.ctrlKey) {
+			const element = document.querySelector(".search-box input");
+			if (element) {
+				element.focus();
+			}
+		}
+		if (event.key === "Escape") {
+			this.setState({
+				searchText: "",
+			});
+		}
 	}
 
 	changeView(view, id) {
@@ -114,7 +135,7 @@ export class ListView extends Component {
 
 				<InputBox
 					class="search-box"
-					placeholder="Search for passwords"
+					placeholder="Search for passwords (Ctrl + Q)"
 					value={this.state.searchText}
 					valueChanged={value => this.setState({ searchText: value })}
 					aborted={() => this.setState({ searchText: "" })}>
