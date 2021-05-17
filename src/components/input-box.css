@@ -46,7 +46,6 @@
 
 .input-box-container > input, .input-box-container > textarea {
 	transition: all .2s ease-out;
-	outline: .2rem solid transparent;
 	flex: auto;
 	font-family: 'Inter', Helvetica, Arial, sans-serif;
 	padding: var(--inputbox-padding);
@@ -63,7 +62,7 @@
 }
 
 .input-box-container > input:focus, .input-box-container > textarea:focus {
-	outline: .2rem solid var(--accent-color);
+	outline: none;
 	background-color: var(--inputbox-background-focus);
 }
 
