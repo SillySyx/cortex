@@ -112,7 +112,7 @@ export class ListView extends Component {
 		let filteredPasswords = JSON.parse(JSON.stringify(this.state.passwords));
 		if (this.state.searchText) {
 			for (const category of filteredPasswords) {
-				category.passwords = [...category.passwords].filter(password => password.name.toLowerCase().indexOf(this.state.searchText.toLowerCase()) > -1);
+				category.passwords = [...category.passwords].filter(password => fuzzySearch(password.name, this.state.searchText));
 			}
 
 			filteredPasswords = filteredPasswords.filter(category => category.passwords.length);			
@@ -211,4 +211,14 @@ export class ListView extends Component {
 			</div>
 		);
 	}
+}
+
+function fuzzySearch(source, value) {
+	if (source === value) {
+		return true;
+	}
+
+	const pattern = [...value.toLowerCase()].map(c => `${c}.*`).join("");
+
+	return new RegExp(pattern, "i").test(source.toLowerCase());
 }
