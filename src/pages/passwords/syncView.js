@@ -3,6 +3,7 @@ import { Component } from 'react';
 
 import { PageHeader } from '../../components/page-header';
 import { Button } from '../../components/button';
+import { CheckBox } from '../../components/checkbox';
 import { Error } from '../../components/error';
 
 import { WebRtcService } from '../../services/webrtc';
@@ -18,6 +19,7 @@ export class SyncView extends Component {
 
 		this.state = {
 			state: "not-connected",
+			confirmReset: false,
 		};
 	}
 
@@ -121,7 +123,13 @@ export class SyncView extends Component {
 				</div>
 
                 <Error title="Reset data" text="It is not possible to restore any data once the device has been reset.">
-                    <Button class="error-button" clicked={() => this.resetData()}>
+					<CheckBox 
+						label="Confirm that I want to reset this device data"
+						checked={this.state.confirmReset} 
+						toggled={value => this.setState({confirmReset: value})}>
+					</CheckBox>
+
+                    <Button class="error-button" clicked={() => this.resetData()} disabled={!this.state.confirmReset}>
                         Reset device data
                     </Button>
                 </Error>

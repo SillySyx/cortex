@@ -3,6 +3,7 @@ import { Component } from 'react';
 import { PageHeader } from '../../components/page-header';
 import { LoadingIndicator } from '../../components/loading-indicator';
 import { Button } from '../../components/button';
+import { CheckBox } from '../../components/checkbox';
 import { InputBox } from '../../components/input-box';
 import { Error } from '../../components/error';
 
@@ -18,6 +19,7 @@ export class EditCategoryView extends Component {
 			error: "",
 			title: "",
 			titleError: "",
+			confirmReset: false,
 		};
 	}
 
@@ -139,7 +141,13 @@ export class EditCategoryView extends Component {
 					<Error 
 						title="Danger" 
 						text="Removing this category will also remove all of its passwords, it's not possible to restore any passwords once they have been removed.">
-						<Button class="error-button" clicked={() => this.removeCategory()}>
+						<CheckBox 
+							label="Confirm that I want to remove this category"
+							checked={this.state.confirmRemove} 
+							toggled={value => this.setState({confirmRemove: value})}>
+						</CheckBox>
+
+						<Button class="error-button" clicked={() => this.removeCategory()} disabled={!this.state.confirmRemove}>
 							Remove
 						</Button>
 					</Error>

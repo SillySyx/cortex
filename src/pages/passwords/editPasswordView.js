@@ -3,6 +3,7 @@ import { Component } from 'react';
 import { PageHeader } from '../../components/page-header';
 import { LoadingIndicator } from '../../components/loading-indicator';
 import { Button } from '../../components/button';
+import { CheckBox } from '../../components/checkbox';
 import { InputBox } from '../../components/input-box';
 import { Error } from '../../components/error';
 
@@ -24,6 +25,7 @@ export class EditPasswordView extends Component {
 			description: "",
 			password: "",
 			passwordError: "",
+			confirmReset: false,
 		};
 	}
 
@@ -184,7 +186,13 @@ export class EditPasswordView extends Component {
 					<Error 
 						title="Danger" 
 						text="It's not possible to restore the password once it has been removed.">
-						<Button class="error-button" clicked={() => this.removePassword()}>
+						<CheckBox 
+							label="Confirm that I want to remove this password"
+							checked={this.state.confirmRemove} 
+							toggled={value => this.setState({confirmRemove: value})}>
+						</CheckBox>
+
+						<Button class="error-button" clicked={() => this.removePassword()} disabled={!this.state.confirmRemove}>
 							Remove
 						</Button>
 					</Error>

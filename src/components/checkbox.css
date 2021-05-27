@@ -1,0 +1,45 @@
+:root {
+    --switch-width: 2.5rem;
+    --switch-height: 1rem;
+    --switch-size: 1.5rem;
+	--switch-shadow: 3px 3px 2px rgba(0, 0, 0, .3);
+}
+
+.check-box {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.check-box .switch-container {
+    position: relative;
+    width: var(--switch-width);
+    height: var(--switch-height);
+    border-radius: calc(var(--switch-width) / 2);
+    padding: .1rem;
+    background: var(--widget-background);
+    cursor: pointer;
+}
+
+.check-box .switch {
+    position: absolute;
+    top: -.25rem;
+    left: -.25rem;
+    width: var(--switch-size);
+    height: var(--switch-size);
+    border-radius: 50%;
+    background: var(--widget-background);
+    cursor: pointer;
+    border: .2rem solid var(--background-color);
+}
+
+.check-box.checked .switch {
+    left: unset;
+    right: -.25rem;
+    background: var(--accent-color);
+}
+
+.check-box label {
+    user-select: none;
+}

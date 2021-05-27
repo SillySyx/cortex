@@ -30,24 +30,18 @@
 	user-select: none;
 }
 
-.main-button:hover {
+.main-button:hover:not(.disabled) {
 	background-color: var(--mainbutton-hover-background);
 	filter: var(--mainbutton-hover-glow);
 }
 
-.main-button.active, .main-button.active:hover {
+.main-button.active, .main-button.active:hover:not(.disabled) {
 	background-color: var(--mainbutton-active-background);
 }
 
 .main-button.disabled {
 	opacity: .4;
 	cursor: initial;
-}
-
-.main-button.disabled:hover {
-	background-color: var(--mainbutton-background);
-	transform: none;
-	filter: none;
 }
 
 .link-button {

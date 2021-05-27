@@ -51,7 +51,7 @@
 	background-color: var(--errormessage-button-background);
 }
 
-.error-message-content .error-button:hover {
+.error-message-content .error-button:hover:not(.disabled) {
 	background-color: var(--errormessage-button-background-hover);
 	filter: var(--errormessage-button-background-glow);
 }
