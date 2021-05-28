@@ -23,6 +23,7 @@
 }
 
 .check-box .switch {
+    transition: all .2s ease;
     position: absolute;
     top: -.25rem;
     left: -.25rem;
@@ -35,8 +36,7 @@
 }
 
 .check-box.checked .switch {
-    left: unset;
-    right: -.25rem;
+    left: calc(100% - 1.25rem);
     background: var(--accent-color);
 }
 
