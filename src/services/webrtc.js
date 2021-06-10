@@ -1,12 +1,8 @@
 export class WebRtcService {
     constructor(id) {
-        this.socket = new WebSocket("wss://webrtc-signal.azurewebsites.net");
+        this.socket = new WebSocket("wss://cortex-webrtc-signaling.herokuapp.com/");
 
-        const configuration = {
-            iceServers: [
-                { urls: ["stun:stun.l.google.com:19302"] },
-            ],
-        };
+        const configuration = {};
         this.rtc = new RTCPeerConnection(configuration);
 
         this.connected = () => { };
